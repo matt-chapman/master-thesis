@@ -1,0 +1,247 @@
+\documentclass{uvamscse}
+
+\usepackage[sorting=nty,style=numeric,backend=biber]{biblatex}
+\usepackage{courier}
+
+\newcommand{\cmd}[1]{\texttt{$\backslash$#1}}
+
+\title{Detecting Online Conversations Going Viral}
+\coverpic[200pt]{figures/Buzzcapture_thunder.png}
+\subtitle{A Master Thesis Plan}
+\date{Spring 2017}
+
+\author{Matt Chapman}
+\authemail{matthew.chapman@student.uva.nl}
+\host{Buzzcapture, \url{http://buzzcapture.com}}
+\supervisor{Evangelos Kanoulas}
+
+\bibliography{thesis.bib}
+
+\begin{document}
+\maketitle
+
+\chapter{Introduction}
+
+\section{General Project Information}
+
+\subsection{Project Title}
+
+``Detection of online discussions going viral''
+
+\subsection{Student Details}
+
+\noindent
+\textbf{Name:} Matthew Chapman\\
+\textbf{UvA ID:} 11403772\\
+\textbf{E-Mail:} \texttt{matthew.chapman@student.uva.nl}\\
+\textbf{Course:} Master Software Engineering\\
+
+
+\subsection{Host Organisation}
+
+\noindent
+\textit{Buzzcapture}\\
+Overtoom 197\\
+1054 HT Amsterdam\\
+The Netherlands\\
+\url{http://www.buzzcapture.com}\\
+
+
+\subsection{Contact Person}
+
+\noindent
+\textbf{Name:} Wouter Koot\\
+\textbf{Title:} Lead Developer\\
+\textbf{E-Mail:} \texttt{wouter@buzzcapture.com}\\
+\textbf{Tel:} +31 (0)20 320 0377\\
+\textbf{Mob:} +31 (0)63 012 0616\\
+
+
+\section{Project Summary}
+
+Buzzcapture provides a tool called BrandMonitor that allows clients to watch in real-time how their brand is being perceived and talked about by the internet-using public. It makes use of scraping various popular social media sites for posts (as well as handling various sources of print media) and carrying out operations such as volume calculations and sentiment analysis. This information is then presented to the client through the BrandMonitor interface.
+
+At this time there is a rudimentary system in place for informing clients that conversations regarding their particular “brand” are going viral. The current system uses volume analysis over a configurable time parameter, and informs the client if the conversations concerning their brand increase in volume by \(\%n\) over the given time. While this approach is functional, Buzzcapture desires to have a \textit{smarter} way of handling this functionality - preferably through predicting the increase in media volume in advance of the volume actually increasing. This will allow for clients to be made aware of these volume increases occurring before they present a problem for their brand.
+
+Approaches have been explored in the past by researchers such as \citeauthor{BuntainChanges2014} - who have applied change detection algorithms to various data sets such as bridge sensors (to identify cracks in the structure before they became visible) and BitCoin market data to predict currency valuations\cite{BuntainChanges2014}. There is a wealth of mature research available on the subject of change detection algorithms, but they have not (as far as could be found at the time of writing) been applied to data sets specific to social media monitoring and viral conversation detection. This is where I intend to conduct novel and relevant research - investigating if and how these change detection algorithms can be useful for the purposes of anomaly detection in social media analysis.
+
+\chapter{Project Planning}
+
+\section{Problem Analysis}
+
+As stated in the Project Summary section of this document, the project is being carried out at a company called Buzzcapture, which provides various Software as a Service (SAAS) products to clients for the purposes of monitoring their brand in both online (social) media and in print media. The main project is called BrandMonitor, which serves to provide a dashboard to clients wishing to monitor their media presence and understand how their brand is performing in relation to others.
+
+One of the uses of this product is to allow clients to see when their brand is the subject of a growing conversation or topic. At the time of writing, clients can activate a function in BrandMonitor that notifies them (either via e-mail or SMS) when the volume metric breaks a certain threshold in a certain timescale. For example, a client can opt to be notified when the volume of mentions of their brand doubles over the course of an hour. Buzzcapture considers this functionality to be too basic, and wishes to implement a system that utilises a method of detecting sudden increases in traffic and notifying clients as soon as possible once this occurs.
+
+The problems occur when considering existing change detection algorithms. The first issue here is that these algorithms detect changes, as opposed to predict them. It will be necessary to adapt the results such that the algorithms produce results that are useful and meaningful to the clients of the host organisation. Results that are computed an hour (for example) after the spike are not useful - the clients of my host company require that notifications are sent as soon as possible. The second issue is that at the time of writing, I was unable to locate research to indicate how the various change prediction algorithms perform with regards to social media data. Because post volume data for social networking sites is a simple time-indexed value, it stands to reason that the existing algorithms may well work perfectly fine when applied to this data. However, this cannot be assumed, and it is a research question that I aim to answer in this thesis project.
+
+Data accquired from statistical analysis of social trends and volume is both multi-variate, and parametric. Multi-variate data is data that has several underlying variables that influence how it acts. In the example of social media data, this means that the volume of conversations on a specific topic may be influenced by several factors such as time of day or the availability of information on the topic. Parametric data is data that follows a particular distribution of probability, which is based on a fixed parameter set. Being that social media conversation volume can be considered to have these properties, it can be said that one of several existing parametric change detection algorithms will be adequate for the needs of the host organisation.
+
+The existing research into change detection algorithms provides considerable insight into the situations in which they are best suited for use. For example, \citeauthor{BuntainChanges2014} ran tests on three different change detection algorithms: \citeauthor{galeano2007covariance}'s Likelihood Ratio and CUSUM (Cumulative Sum) tests\cite{galeano2007covariance}, and \citeauthor{desobry2005online}'s Kernel Change Detection test\cite{desobry2005online}. These algorithms were applied to various data sets to show, for example, detection of musical note segmentation and denial-of-service detection. While this is an important proof of validity for these algorithms, as stated earlier - it cannot be assumed that these algorithms will adapt well to social media data.
+
+Work has also been carried out by \citeauthor{kifer2004detecting} on the subject of applying change detecton algorithms to \textit{data streams} as opposed to static data\cite{kifer2004detecting}. Their work confirmed an existing hypothesis in the statistical community: that there is no single approach that could be considered best in all situations. Importantly, they also included in their test harness for the algorithms, a measure for late detections - wherein a change is detected that does not exist within the bounds of the moving window in which algorithms are operating. This is of particular value to me due to the necessity that I am able to detect changes in the data stream swiftly, with a minimum of lag between the event occuring and it being detected.
+
+\citetitle{basseville1993detection} is a book written by \citeauthor{basseville1993detection}, specifically (as the title may imply) on the subject of change detection algorithms. It has proved an invaluable source of understanding so far on the subject, and provides a considerable amount of background on the subject. As it was published in 1993, it is clearly before the time of social media, but nevertheless is still very relevant. It provides an excellent summary of a possible framework for evaluating change detection algorithms\cite{basseville1993detection}:
+
+\begin{enumerate}
+	\item mean time between false alarms;
+	\item probability of false detections;
+	\item mean delay for detection;
+	\item probability of nondetection;
+	\item accuracy of the change time and magnitude estimates
+\end{enumerate}
+
+This will likely prove invaluable in the formulation of a strong test framework in which I can evaluate approaches for change detection in social media data.
+
+Buzzcapture’s product is also built on the Elasticsearch platform, which does provide support for calculating moving averages of data, as well as statistical anomaly detection\cite{ESMovingAverages}. However, while this may prove an effective solution, it does not provide enough of a basis for a research topic, so will likely be touched upon only in passing, in the final research report.
+
+The other concern in conducting this research is scalability of the various algorithms that I could implement and test. Buzzcapture operates an online SAAS product as their main source of income, and it is important that whatever algorithm performs best on their dataset does not impact the availability of this product to their clients. As such, the algorithm must not only perfom well in terms of accurately determining change points as soon as possible when they occur, but perform the computations quickly. Algorithm performance on data streams (as opposed to static data) will play a very important part in the evaluation of said algorithms.
+
+\section{Research Questions}
+
+\begin{itemize}
+	\item How can one detect spikes or statistical anomalies in social media data?
+	\item How could one detect such spikes or statistical anomalies soon enough for such a detection to
+be useful?
+\end{itemize}
+
+\section{Research Method}
+
+Buzzcapture have considerable amounts of past data available for analysis. Because old data is available, it’s behaviour is already known and documented: peaks and troughs in conversation volume exist at known points.
+
+I believe that the best method to test and evaluate the various existing change detection algorithms will be to apply them to this data and see how well large increases in volume are detected, and how soon after a peak starts to build it can be detected.
+
+I will apply change detection algorithms to data that abruptly ends before a peak in volume occurs, and see how soon before this peak the change will be detected by the algorithm. In this way I will be able to compare the algorithm’s performance to the existing solution - which is a simple volume comparation over a variable time slice.
+
+I will follow the suggestion from \citeauthor{basseville1993detection} on a test harness, and focus on the following attributes:
+\begin{enumerate}
+	\item mean delay for detection;
+	\item probability of nondetection;
+	\item algorithm performance when applied to live streaming data in production
+\end{enumerate}
+
+The reader will note that there are no metrics in place for the analysis of false detections. I believe that to cover every criteria suggested by \citeauthor{basseville1993detection} would result in a project that would have considerable creep in scope. As the timeline for completion of this research project is fairly short and rigid, it is necessary for me to define a clear focus on attributes that will allow me to complete the research within the time given. After consulting with Buzzcapture, I have deemed the evaluation of algorithms based on metrics concerning false detections to be superfluous - as detection of a change event in the data only results in a notification being sent to a client, there are no negative consequences of which to speak, of a false positive detection taking place.
+
+\section{Expected Results}
+
+My hypothesis is as follows:\\
+
+\noindent\textit{No single method will prove more effective than the others tested, given the test harness that I detailed in my research method.}\\
+
+\noindent I expect that there will be some deviation in detection delay, probability of non-detection and algorithm performance when I evaluate the approaches to this problem, but I do not believe that there will be significant enough deviation between the algorithms to be able to declare a single one better than all of the others.
+
+\section{Required Expertise}
+
+The following expertise is required for the successful completion of this project: 
+
+\begin{itemize}
+	\item Python 2.7
+	\item ElasticSearch
+	\item Java
+	\item MySQL
+	\item Data Science:
+	\begin{itemize}
+		\item Change detection/prediction algorithms
+		\item Statistical analysis of data (and associated mathematical notation)
+		\item Expression of statistical operations in Python
+		Plotting results using matplotlib
+	\end{itemize}
+	\item Understanding of the Buzzcapture toolchain, workflow and products
+\end{itemize}
+
+\section{Timeline}
+
+The following is a time-line for project completion: 
+
+\begin{itemize}
+\item \textbf{Begin:} 1st April 2017
+\item \textit{End of full-time work:} 30th June 2017
+\item \textit{Final work deadline:} 15th August 2017
+\item \textbf{Final possible defence date:} 31st August 2017
+\end{itemize}
+
+Assuming a 12 week project (full time), I propose that the work is split in the following way: 
+
+\begin{itemize}
+\item \textbf{Week 1:} Initial settle-in at Buzzcapture
+\item \textbf{Week 2:} Collation of data for testing
+\item \textbf{Week 3:} Performance of necessary transformations of data
+\item \textbf{Week 4-8:} First implementation of algorithm implementations
+\item \textbf{Week 9:} Development and testing of test harness
+\item \textbf{Week 10:} Generation of first results
+\item \textbf{Week 11-12:} Writeup of results and implementation of algorithm in production
+\end{itemize}
+
+It is assumed that throughout the process detailed above, the final thesis document will be treated as an ongoing task, with various sub-reports and drafts completed during the project.
+
+\section{Risks}
+
+There are a number of risks associated with undertaking this project:
+\begin{itemize}
+\item This area of research requires some understanding of data science - which is a subject not covered in the formal education I have received thus far. To mitigate this I will ensure that I study the required material to gain such an understanding, as well as consulting with researchers or staff (both UvA and Buzzcapture) that have worked in the field.
+\item The area of research is fairly broad, with a wealth of approaches available to me. To mitigate this, I will need to ensure that my project remains focussed on a well defined subset of the field, with as well constructed timeline for success.
+\item The host company (Buzzcapture) where this project will be undertaken, works primarily to develop web applications, within the team that I will be working. I will need to ensure that I take sufficient time outside of working hours to cultivate a thorough understanding of the technologies in use to create and maintain the BrandMonitor product.
+\end{itemize}
+
+\chapter{Literature Survey}
+
+\noindent\cite{BuntainChanges2014}: \textbf{\fullcite{BuntainChanges2014}}\smallskip
+
+\noindent One of the first papers on the subject I read, this paper discusses and compares three different types of change detection algorithm: the \textit{Likelihood Ratio Test} (LRT), the \textit{Cumulative Sum} (CUSUM) test, and the \textit{Kernel-based Change Detection} (KCD) algorithm. I have also been in touch with one of the authors of this paper, who has kindly provided me with the source code implementations of these algorithms. The algorithms were applied to several data sets, such as historical Bitcoin valuations and data from structural stress sensors.\bigskip
+
+\noindent\cite{kawahara2009change}: \textbf{\fullcite{kawahara2009change}}\smallskip
+
+\noindent This is a paper proposing what the authors call a ``novel non-parametric change detection algorithm''\cite{kawahara2009change}. It is applied alongside four other approaches, against three different data sets generated by models borrowed from other research papers on time-series data change detection. The approaches are evaluated according to accuracy rate and degree, though not for performance or other relevant metrics.\bigskip
+
+\noindent\cite{kifer2004detecting}: \textbf{\fullcite{kifer2004detecting}}\smallskip
+
+\noindent This paper, much like the one written by Kawahara and Sugiyama presents a novel change detection algorithm for evaluation. However, this particular paper differs in that the presented algorithm is also useful for estimation of the detected change. They also discuss the use of a `two window' approach to applying change detection algorithms to data streams, so as to limit memory usage in practice. This part in particular seems relevant to the research I will be undertaking.\bigskip
+
+\noindent\cite{galeano2007covariance}: \textbf{\fullcite{galeano2007covariance}}\smallskip
+
+\noindent This paper served as the basis of two of the algorithms tested in the paper written by \citeauthor{BuntainChanges2014} This paper also provides it’s own evaluations of the approaches contained therein.\bigskip
+
+\noindent\cite{desobry2005online}: \textbf{\fullcite{desobry2005online}}\smallskip
+
+\noindent Desobry, Davy, and Doncarli write concerning an implementation of a Kernel Change Detection (KCD) algorithm that is considered \textit{online} - that is, applicable to moving and updating data sets such as those that I shall be working with at Buzzcapture. This is particularly important, as the approach they take to change detection is considered against data sources that could be considered similar to those that I will be working with.\bigskip
+
+\noindent\cite{tartakovsky2006detection}: \textbf{\fullcite{tartakovsky2006detection}}\smallskip
+
+\noindent This paper discusses applying a CUSUM (Cumulative Sum) approach for detection of network intrusions. The approach taken by Tartakovsky et al. was intended to research the possibility of change detection while maintaining a low rate of false alarms. The idea was to apply an algorithm for this purpose that would not need to take into account pre-change and post-change models in order to be effective.\bigskip
+
+\noindent\cite{tartakovsky2005nonparametric}: \textbf{\fullcite{tartakovsky2005nonparametric}}\smallskip
+
+\noindent A collection of papers and discussions by the same authors as the above papers, expanding somewhat on the problem they tackled and the solutions found.\bigskip
+
+\noindent\cite{matteson2014nonparametric}: \textbf{\fullcite{matteson2014nonparametric}}\smallskip
+
+Discussion of an `offline' (that is, applying an algorithm to a fixed data-set as opposed to processing moving `live' data) approach to change detection in multi-variate data. The authors carry out a simulation study to compare various approaches to this problem and present their results.\bigskip
+
+\noindent\cite{siegmund1995using}: \textbf{\fullcite{siegmund1995using}}\smallskip
+
+\noindent A paper on using a \textit{Generalized Likelihood Ratio} test for the detection of change points in a data set. An old piece of text that pre-dates social media, yet is still useful in explaining how the GLR test can be used for the detection of change points. The GLR approach is compared against standard CUSUM tests.\bigskip
+
+\noindent\cite{willsky1976generalized}: \textbf{\fullcite{willsky1976generalized}}\smallskip
+
+\noindent Much like the paper written by Siegmund and Venkatraman, this paper pre-dates social media as a data source to which change detection algorithms could be applied. It is however, a useful look into how change detection algorithms have progressed and improved over the years. This paper is primarily focussed on uses of change detection in automated controls (being that it was published in the IEEE Transactions on Automatic Control), but is still a useful resource to understand how change detection algorithms can be evaluated.\bigskip
+
+\noindent\cite{lai1999efficient}: \textbf{\fullcite{lai1999efficient}}\smallskip
+
+\noindent Another paper concerning change point detection in control systems, Lai and Shan write primarily regarding Generalised Likelihood Ratio tests, and how these can be ‘configured’, specifically with regards to window size.\bigskip
+
+\noindent\cite{bersimis2007multivariate}: \textbf{\fullcite{bersimis2007multivariate}}\smallskip
+
+\noindent Control charts are a mechanism used in various industries to decide whether a given process is `in control' or `out of control'. In this way, control charts are used to discover outlying or anomalous results in a given data set, or inform operators of a sudden change in the data. This makes control charts particularly relevant to my research. In fact, one source I have mentioned earlier in this document, \cite{ESMovingAverages}, talks specifically about implementing an effective control chart natively in ElasticSearch.
+
+This particular paper discusses various approaches to control charts, and the methods behind their operation.\bigskip
+
+\noindent\cite{downey2008novel}: \textbf{\fullcite{downey2008novel}}\smallskip
+
+\noindent Downey discusses his creation of a `novel change detection algorithm' that can also be used for ``...predicting the distribution of the next point in the series.''\cite{downey2008novel}
+
+He discusses in some detail the difference between online and offline change detection algorithms, and compares his implementation of a new algorithm with implementations of existing and established algorithms.
+
+\printbibliography
+
+
+\end{document}
