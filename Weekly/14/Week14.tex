@@ -1,0 +1,32 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[sorting=nty,style=numeric,backend=biber]{biblatex}
+\usepackage{courier}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{calc}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!80!black},
+    urlcolor={blue!80!black}
+}
+\usepackage{multicol}
+
+\newcommand{\acite}[2]{
+\noindent\cite{#1}~\parbox[t]{\linewidth-17.8pt}{\vspace{-.65em}\textbf{\fullcite{#1}}}\begin{quote}#2\end{quote}
+}
+
+\nocite{*}
+\title{Weekly Progress Report}
+\date{Week 14, 03/04 - 07/04}
+\author{Matt Chapman}
+\bibliography{../../bib/library.bib}
+
+\begin{document}
+\maketitle
+
+\newpage
+\printbibliography
+
+\end{document}
