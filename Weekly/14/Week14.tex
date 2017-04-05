@@ -1,23 +1,7 @@
-\documentclass[a4paper]{scrartcl}
-\usepackage[utf8]{inputenc}
-\usepackage[sorting=nty,style=numeric,backend=biber]{biblatex}
-\usepackage{courier}
-\usepackage[hidelinks]{hyperref}
-\usepackage{xcolor}
-\usepackage{calc}
-\hypersetup{
-    colorlinks,
-    linkcolor={red!50!black},
-    citecolor={blue!80!black},
-    urlcolor={blue!80!black}
-}
-\usepackage{multicol}
-
-\newcommand{\acite}[2]{
-\noindent\cite{#1}~\parbox[t]{\linewidth-17.8pt}{\vspace{-.65em}\textbf{\fullcite{#1}}}\begin{quote}#2\end{quote}
-}
+\documentclass{mattreport}
 
 \title{Weekly Progress Report}
+\subtitle{Detecting Conversations Going Viral}
 \date{Week 14, 03/04 - 07/04}
 \author{Matt Chapman}
 \bibliography{../../bib/library.bib}
@@ -34,7 +18,12 @@ I have chosen to work exclusively with Dutch language Twitter data for the follo
 \begin{itemize}
 	\item The vast majority of Buzzcapture clients are Dutch companies, so it is more likely that I will be able to find relevant data by restricting gathered conversations by language.
 	\item Twitter is \emph{the} platform for breaking news and discussions thereof. It is likely that changes in volume that the likes of which I am looking for, will happen on Twitter before they happen on other platforms such as Facebook, Pinterest or Facebook.
+	\item Conversation volume is much higher on Twitter than on Facebook or other competing services. As such spikes in conversation volume are likely to be higher and more easily annotated by hand for both testing and demonstrating the effectiveness of a given algorithm.
 \end{itemize}
+
+\section{Additional Research}
+
+In addition to making some decisions regarding the experimental dataset, I have also carried out some additional research into the field.
 
 \newpage
 \printbibliography
