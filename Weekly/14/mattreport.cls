@@ -8,7 +8,7 @@
 \usepackage{calc}
 \hypersetup{
     colorlinks,
-    linkcolor={red!50!black},
+    linkcolor={blue!80!black},
     citecolor={blue!80!black},
     urlcolor={blue!80!black}
 }
