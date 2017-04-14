@@ -1,0 +1,19 @@
+\ProvidesClass{mattreport}
+\LoadClass[a4paper]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[sorting=nty,style=numeric,backend=biber]{biblatex}
+\usepackage{courier}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{calc}
+\hypersetup{
+    colorlinks,
+    linkcolor={blue!80!black},
+    citecolor={blue!80!black},
+    urlcolor={blue!80!black}
+}
+\usepackage{multicol}
+
+\newcommand{\acite}[2]{
+\noindent\cite{#1}~\parbox[t]{\linewidth-17.8pt}{\vspace{-.65em}\textbf{\fullcite{#1}}}\begin{quote}#2\end{quote}
+}
