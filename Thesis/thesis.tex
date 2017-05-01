@@ -1,8 +1,10 @@
 \documentclass{uvamscse}
 \usepackage{todonotes}
+\usepackage[backend=biber, style=numeric, citestyle=numeric, sorting=nty]{biblatex}
 
 \input{program-listings}
 \newcommand{\cmd}[1]{\texttt{$\backslash$#1}}
+
 
 \title{Detecting Conversations Going Viral}
 % \coverpic[100pt]{figures/terminal.png}
@@ -12,11 +14,13 @@
 \author{Matt Chapman}
 \authemail{matthew.chapman@student.uva.nl}
 \host{Buzzcapture International, \url{http://www.buzzcapture.com}}
+\supervisor{Evangelos Kanoulas, Universiteit van Amsterdam}
 
 \abstract{
 
 }
 
+\bibliography{../bib/library.bib}
 
 \begin{document}
 \nocite{*}
@@ -26,8 +30,7 @@
 
 
 {%\tiny
-\bibliographystyle{abbrv}
-\bibliography{../bib/library.bib}
+\printbibliography
 }
 
 \end{document}
