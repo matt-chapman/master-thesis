@@ -29,11 +29,10 @@ See:
 
 4 generalised measures: Expected Gain, Normalized Cumulative Gain, Gain Minus Pain and Latency.
 
-| Name | Description |
-| --- | --- |
-| EG | |
-| NCG | |
-| GMP | |
-| Latency | |
+Important to note that these measures concern (for the most part) the relevance of a given tweet. Not immediately useful to this project, but could be adapted to provide a meaningful scoring mechanism.
 
 Gain calculated as a measure of relevance - non relevance nets a 0.0, relevance nets a 0.5, high relevance nets a 1.0.
+
+## Suggestions
+
+
