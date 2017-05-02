@@ -35,4 +35,18 @@ Gain calculated as a measure of relevance - non relevance nets a 0.0, relevance 
 
 ## Suggestions
 
+* Adapt TREC2016 scoring - altering gain calculations to swap relevancy of a given tweet to relevancy of a detection. We need some banded threshold values to be able to define "relevance" mathematically. Perhaps some function of spike size?
 
+* Measure latency between actual (human annotated) spike, and detection. Define minimum and maximum values for this and score accordingly. Early effective detections should be rewarded, late detections penalised.
+
+* Can I find algorithm implementations in R? There is a nice binding library in ```rpy2``` and R seems to be the current method in _vogue_ for statistical analysis.
+
+## Baseline
+
+* Implement static mean method
+* Implement Z-Score change detection (distance from the sample mean to the population mean in units of the standard error) with windows - see [IPYNB](https://nbviewer.jupyter.org/github/amanahuja/change-detection-tutorial/blob/master/ipynb/section_03_Windows.ipynb)
+
+The two methods above will show:
+
+* Ineffective detections as noise increases (static mean)
+* Late (thus, useless) detections (Z-Score & Window)
