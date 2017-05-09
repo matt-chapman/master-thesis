@@ -23,7 +23,7 @@ class MeanDetector(ChangeDetector):
     """
 
     def __init__(self, threshold=0.05):
-        super( MeanDetector, self ).__init__()
+        super(MeanDetector, self).__init__()
 
         # Save hyper-parameter(s)
         self.threshold = threshold

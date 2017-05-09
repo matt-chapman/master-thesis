@@ -59,7 +59,7 @@ def online_simulator(self, signal, change_detector):
             # stopping rule was triggered
             return True, self.dict_to_arrays(all_residuals)
 
-            # Rule wasn't triggered by end of signal
+    # Rule wasn't triggered by end of signal
     return False, self.dict_to_arrays(all_residuals)
 
 
@@ -75,6 +75,7 @@ def run_online_simulation(signal, change_detector, scale=True):
         # Return residuals
         residuals = results[1]
         return residuals
+
 
 def print_sim_results(signal, results, **kwargs):
     """
