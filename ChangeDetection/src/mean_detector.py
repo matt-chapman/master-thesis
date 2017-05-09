@@ -2,11 +2,7 @@ from change_detector import ChangeDetector
 from scaffold import OnlineSimulator, plot_signal_and_residuals
 
 import numpy as np
-import matplotlib.pyplot as plt
-
-signal = np.ones(150)
-signal[:100] *= 50
-signal[100:] *= 40
+np.random.seed(65535)
 
 
 class MeanDetector(ChangeDetector):
@@ -51,7 +47,27 @@ class MeanDetector(ChangeDetector):
         if self.diff_ > threshold_level:
             self.rules_triggered = True
 
-if __name__ == '__main__':
+
+def main(noise=0.0):
+
+    # make a signal with one change
+    signal = np.ones(150)
+    signal[:100] *= 50
+    signal[100:] *= 40
+
+    # if we want a noisy signal...
+    if noise > 0.0:
+        # figure out the size of the change and make noise of that size
+        jump_size = signal[0] - signal[-1]
+        noise = np.random.normal(
+            size=signal.shape,
+            scale=jump_size * noise)
+        signal += noise
+
+    # make a detector, run the simulator, plot the results
     detector = MeanDetector(threshold=0.05)
     OnlineSimulator(detector, signal).run()
     plot_signal_and_residuals(signal=signal, residuals=detector.residuals_, stop_point=detector.rules_triggered)
+
+if __name__ == '__main__':
+    main(noise=0.1)
