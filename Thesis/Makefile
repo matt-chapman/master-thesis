@@ -1,4 +1,5 @@
 all: *.tex Makefile
+	cp ~/Documents/Bibliographies/Matt\ Chapman\ Thesis.bib ../bib/library.bib
 	pdflatex thesis
 	bibtex thesis
 	pdflatex -interaction=batchmode thesis

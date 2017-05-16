@@ -257,5 +257,4 @@ class OnlineSimulator(object):
             if stop_point is not None:
                 ax.vlines(x=stop_point, ymin=0, ymax=ax.get_ylim()[1],
                           colors='r', linestyles='dotted')
-
         plt.show()

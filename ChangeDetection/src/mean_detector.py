@@ -1,6 +1,6 @@
 from change_detector import ChangeDetector
 from scaffold import OnlineSimulator, plot_signal_and_residuals
-
+import pandas as pd
 import numpy as np
 np.random.seed(65535)
 
@@ -29,6 +29,7 @@ class MeanDetector(ChangeDetector):
 
         # new residuals(s)
         self.diff_ = np.nan
+        self.mean_ = np.nan
 
     def update_residuals(self, new_signal_value):
         self._update_base_residuals(new_signal_value)
@@ -64,10 +65,13 @@ def main(noise=0.0):
             scale=jump_size * noise)
         signal += noise
 
+    dates = pd.date_range('1/1/2017', periods=150, freq='D')
+
+    ts = pd.DataFrame(signal, index=dates)
+
     # make a detector, run the simulator, plot the results
     detector = MeanDetector(threshold=0.05)
-    OnlineSimulator(detector, signal).run()
-    plot_signal_and_residuals(signal=signal, residuals=detector.residuals_, stop_point=detector.rules_triggered)
+    OnlineSimulator(detector, ts).run(plot=True)
 
 if __name__ == '__main__':
-    main(noise=0.1)
+    main(noise=0.0)

@@ -1,15 +1,29 @@
-\documentclass{uvamscse}
-\usepackage{todonotes}
-\usepackage[backend=biber, style=numeric, citestyle=numeric, sorting=nty]{biblatex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PREAMBLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\documentclass{uvamscse}	% UvA thesis class
+
+% numeric citations, name/title/year sorting
+\usepackage[backend=biber, style=alphabetic, citestyle=alphabetic, sorting=nty]{biblatex}
+
+% program listings environment, see uvamscse.cls
 \input{program-listings}
 \newcommand{\cmd}[1]{\texttt{$\backslash$#1}}
 
+% todo notes, inc. some custom colours
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
 
-\title{Detecting Conversations Going Viral}
-% \coverpic[100pt]{figures/terminal.png}
-\subtitle{Evaluation of time-aware change detection algorithms}
-% \date{Spring 2014}
+\usepackage[colorinlistoftodos,prependcaption,textsize=small]{todonotes}
+\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
+\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
+\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
+\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+
+\title{Detecting Online Conversations Going Viral}
+\coverpic[250pt]{figures/Buzzcapture_thunder.png}
+\subtitle{Time-series aware evaluation of change detection algorithms}
+\date{Spring 2017}
 
 \author{Matt Chapman}
 \authemail{matthew.chapman@student.uva.nl}
@@ -17,7 +31,7 @@
 \supervisor{Evangelos Kanoulas, Universiteit van Amsterdam}
 
 \abstract{
-
+	\todo[inline]{Write abstract}
 }
 
 \bibliography{../bib/library.bib}
@@ -28,9 +42,89 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\chapter{Problem Statement \& Motivation}
 
-{%\tiny
+\section{Problem Statement}
+
+Within the domain of change detection algorithms there are a number of available methods for evaluating the efficiency
+and accuracy of a given algorithm, depending on how the problem is framed. The different problem framings available are,
+for example:\unsure{are these definitions correct?}
+
+\begin{description}
+	\item[Classification] Wherein the algorithm result fits into one of two (or more) classes, for example correct or
+	incorrect.
+	\item[Clustering] Wherein the algorithm results are formed into clusters and evaluated using clustering metrics.
+	\item[Partitioning] Like clustering, but?\unsure{How is this different from clustering?}
+	\item[Retrieval] Wherein the results of the algorithm are scored as a \emph{retrieval problem}, where detection
+	relevance is taken into account, perhaps along with some form of temporal or redundancy penalty.
+\end{description}
+
+With this research, it is intended to address this dichotomy between approaches, and further suggest an evaluation
+approach that is suitable for use when attempting to evaluate change detection algorithms applied to time-series data
+specifically.
+
+While change detection itself has been around since the 1930's (and \emph{online} change detection since the 1950's) it
+is still a field that attracts new thoughts and approaches - one example of which being \citeauthor{Ginsberg2009}'s
+\citetitle{Ginsberg2009} \cite{Ginsberg2009}.
+
+Various attempts have been made to evaluate the myriad approaches to change detection (\cite{Buntain2014} for example)
+but each of these attempts tend to frame the problem somewhat differently, or do not take into account change detection
+in time-series data.
+
+\improvement[inline]{this needs expansion, I think}
+
+\section{Motivation}
+
+Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally
+referred to as \emph{control charts}. Since the inception of approaches such as CUSUM that provide the possibility for
+on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic
+detection, online reputation management and infrastructure error detection, change detection is hugely useful.
+
+This particular research is motivated specifically by the online reputation management sector. The business hosting this
+research project (Buzzcapture International [\url{http://www.buzzcapture.com}]) is a Dutch online reputation management 
+company that provides services to other businesses throughout europe. Chief among these is the BrandMonitor application,
+ which, among other features, provides a rudimentary notification system for clients that is triggered once there is an
+ increase in conversation volume of \(\%n\). It is the intention of this research to provide a robust evaluation method
+ for change detection algorithms such that an approach that is most effective for this particular use case can be 
+ selected and implemented.
+
+\chapter{Research Method}
+
+\section{Data Preparation}
+
+\section{Scoring Metrics}
+
+Example function:
+
+\begin{equation}
+	f(relevance, temporal\_penalty, redundancy\_penalty)
+\end{equation}
+
+\improvement[inline]{start designing scoring methods}
+
+Possible relevance measure, where $t_0$ is the earliest a spike can be detected and $t_n$ is the time that the signal 
+returns to normal. $f(x)$ describes the function of the curve:
+
+\begin{equation}
+	\int^{t_0}_{t_n} f(x) dx
+\end{equation}
+\info{planning to do something with the area under the curve for relevance}
+\todo[inline]{start desigining relevance measure}
+
+\chapter{Background \& Context}
+
+\chapter{Research}
+
+\chapter{Results}
+
+\chapter{Analysis \& Conclusions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \printbibliography
-}
+
+\newpage
+
+\listoftodos[ToDo Notes]
 
 \end{document}
