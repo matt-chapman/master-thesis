@@ -13,4 +13,4 @@ changes <- cpt.mean(as.vector(x), method="BinSeg", penalty = "MBIC" , class = TR
 # plot dataset as line graph, draw vlines at change points
 plot(changes)
 lines(x, type="l")
-abline(v=changes@cpts, col="blue")
+abline(v=changes@cpts, col="blue", lty=2)
