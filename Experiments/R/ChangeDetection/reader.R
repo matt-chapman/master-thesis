@@ -2,6 +2,7 @@ library(readr)
 library(changepoint)
 library(scales)
 library(ggthemes)
+library(ggplot2)
 
 # read in the CSV
 data <- read_csv("~/shortexport.csv")
@@ -11,7 +12,7 @@ order(data$postingdate)
 sums <- as.data.frame(table(factor(format(data$postingdate, "%Y-%m-%d"))))
 colnames(sums) <- c("Date", "Freq")
 # detect changes, store results
-changes <- cpt.mean(sums[["Freq"]], method="BinSeg", penalty = "MBIC" , class = TRUE, minseglen = 2)
+changes <- cpt.meanvar(sums[["Freq"]], method="BinSeg", penalty = "MBIC",test.stat="Exponential", class = TRUE, minseglen = 2)
 changepoints <- as.vector(changes@cpts)
 
 # plot dataset as line graph, draw vlines at change points

@@ -8,3 +8,6 @@ all: *.tex Makefile
 
 clean:
 	rm -f *~ *.bak *.aux *.log *.toc *.blg *.bbl *.dvi *.ps
+
+bibupdate:
+	cp ~/Documents/Bibliographies/Matt\ Chapman\ Thesis.bib ../bib/library.bib

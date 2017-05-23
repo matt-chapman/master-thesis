@@ -46,61 +46,112 @@
 
 \section{Problem Statement}
 
-Within the domain of change detection algorithms there are a number of available methods for evaluating the efficiency
-and accuracy of a given algorithm, depending on how the problem is framed. The different problem framings available are,
-for example:\unsure{are these definitions correct?}
+Within the domain of change detection algorithms there are a number of available methods for evaluating the efficiency and accuracy of a given algorithm, depending on how the problem is framed. The different problem framings available are, for example:\unsure{are these definitions correct?}
 
 \begin{description}
-	\item[Classification] Wherein the algorithm result fits into one of two (or more) classes, for example correct or
-	incorrect.
+	\item[Classification] Wherein the algorithm result fits into one of two (or more) classes, for example correct or incorrect.
 	\item[Clustering] Wherein the algorithm results are formed into clusters and evaluated using clustering metrics.
 	\item[Partitioning] Like clustering, but?\unsure{How is this different from clustering?}
-	\item[Retrieval] Wherein the results of the algorithm are scored as a \emph{retrieval problem}, where detection
-	relevance is taken into account, perhaps along with some form of temporal or redundancy penalty.
+	\item[Retrieval] Wherein the results of the algorithm are scored as a \emph{retrieval problem}, where detection relevance is taken into account, perhaps along with some form of temporal or redundancy penalty.
 \end{description}
 
-With this research, it is intended to address this dichotomy between approaches, and further suggest an evaluation
-approach that is suitable for use when attempting to evaluate change detection algorithms applied to time-series data
-specifically.
+With this research, it is intended to address this dichotomy between approaches, and further suggest an evaluation approach that is suitable for use when attempting to evaluate change detection algorithms applied to time-series data specifically.
 
-While change detection itself has been around since the 1930's (and \emph{online} change detection since the 1950's) it
-is still a field that attracts new thoughts and approaches - one example of which being \citeauthor{Ginsberg2009}'s
-\citetitle{Ginsberg2009} \cite{Ginsberg2009}.
+While change detection itself has been around since the 1930's (and \emph{online} change detection since the 1950's) it is still a field that attracts new thoughts and approaches - one example of which being \citeauthor{Ginsberg2009}'s \citetitle{Ginsberg2009} \cite{Ginsberg2009}.
 
-Various attempts have been made to evaluate the myriad approaches to change detection (\cite{Buntain2014} for example)
-but each of these attempts tend to frame the problem somewhat differently, or do not take into account change detection
-in time-series data.
+Various attempts have been made to evaluate the myriad approaches to change detection (\cite{Buntain2014} for example) but each of these attempts tend to frame the problem somewhat differently, or do not take into account change detection in time-series data.
 
 This research intends to address the following research questions:
 
 \begin{description}
 	\item[RQ1] Are there deficiencies in existing methods for evaluating change detection algorithms?
-	\item[RQ2] Do certain measures perform better as an evaluation method when applied against changes detected in a 
-	data stream with certain properties?
-	\item[RQ3] Is there room for adjustment in existing measures, such that they can be made more effective for the 
-	evaluation of change detection algorithms?
+	\item[RQ2] Do certain measures perform better as an evaluation method when applied against changes detected in a data stream with certain properties?
+	\item[RQ3] Is there room for adjustment in existing measures, such that they can be made more effective for the evaluation of change detection algorithms?
 \end{description}
 
 \improvement[inline]{this needs expansion, I think}
 
 \section{Motivation}
 
-Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally
-referred to as \emph{control charts}. Since the inception of approaches such as CUSUM that provide the possibility for
-on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic
-detection, online reputation management and infrastructure error detection, change detection is hugely useful.
+Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally referred to as \emph{control charts}. Since the inception of approaches such as CUSUM that provide the possibility for on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic detection, online reputation management and infrastructure error detection, change detection is hugely useful.
 
-This particular research is motivated specifically by the online reputation management sector. The business hosting this
-research project (Buzzcapture International [\url{http://www.buzzcapture.com}]) is a Dutch online reputation management 
-company that provides services to other businesses throughout europe. Chief among these is the BrandMonitor application,
- which, among other features, provides a rudimentary notification system for clients that is triggered once there is an
- increase in conversation volume of \(\%n\). It is the intention of this research to provide a robust evaluation method
- for change detection algorithms such that an approach that is most effective for this particular use case can be 
- selected and implemented.
+This particular research is motivated specifically by the online reputation management sector. The business hosting this research project (Buzzcapture International [\url{http://www.buzzcapture.com}]) is a Dutch online reputation management company that provides services to other businesses throughout europe. Chief among these is the BrandMonitor application, which, among other features, provides a rudimentary notification system for clients that is triggered once there is an increase in conversation volume of \(\%n\). It is the intention of this research to provide a robust evaluation method for change detection algorithms such that an approach that is most effective for this particular use case can be selected and implemented.
 
 \chapter{Research Method}
 
+\section{Existing Approaches}
+
+As briefly discussed in the introduction to this thesis, there are a number of pre-existing approaches for the evaluation of change detection methods. Here some examples are detailed:
+
+\begin{description}
+	\item[F1 Score]\unsure{cite this?} This measure is utilised for testing accuracy in problems of binary classification. It considers two	different measures, \emph{presision} and \emph{recall}. The F1 score can be described in general terms as follows:
+
+	\begin{equation}
+		F_1 = 2 \cdot \frac{1}{\frac{1}{recall} + \frac{1}{precision}} = 2 \cdot \frac{precision \cdot recall}{precision+recall}
+	\end{equation}
+
+	$recall$ is computed as the number of correct positive results, divided by the number of positive results that should have been detected. $precision$ is computed as the number of correct positive results divided by the number of all possible positive results.
+
+	As the F1 score is a binary classification measure, it can only be used to test the precision of an algorithm in a single domain, that is, was the change detected or not.
+
+	\item[Rand Index] This measure is for computing the similarity between two clusters of data points. It is generally	considered an accuracy score for clustering mechanisms. The Rand Index is defined as:
+
+	\begin{equation}
+		R = \frac{a+b}{a+b+c+d}
+	\end{equation}
+
+	Where:\todo{define}
+
+\end{description}
+
+\section{Evaluation Pipeline}
+
+\subsection{Introduction}
+
+The method of evaluating the approaches will be developed using R. R is a combined language and environment created for the purpose of statistical computing \cite{RCoreTeam2017}. Thanks to the availability of the \texttt{changepoint} package in R\cite{Killick2014}, it is possible for me to experiment with different change detection approaches without needing to implement them from scratch, myself.
+
+R also allows for the generation of test data using method calls such as \texttt{rnorm()}, which has considerably sped up my workflow compared to carrying out the same operations in Python. The R package \texttt{ggplot2} \cite{Wickham2009} also provides a number of powerful tools for data visualisation directly in R.
+
+\subsection{Changepoint}
+
+\texttt{changepoint} is a powerful R package that provides a number of different change detection algorithms, along with various approaches to penalty values. \texttt{changepoint} offers change detection in mean, variance and combinations of the two, using 
+
 \section{Data Preparation}
+
+There are two data sets that will be used in this research. The first is a collection of 30.9M Dutch language tweets collected between 01/01/2017 and 28/02/2017. The data will be filtered for certain terms in the tweet 'body' to generate collections of tweets that would be considered 'relevant' to a particular business or individual. In this way, I will be able to simulate BrandMonitor queries myself, without the need of the software itself.
+
+\begin{figure}[t]
+	\includegraphics[scale=0.5]{figures/twitter-totals-full.png}
+	\centering
+	\caption{Twitter Data Set}
+	\label{fig:totals_graph}
+\end{figure}
+
+\improvement[inline]{Make graph prettier}
+
+The final result of the prepared data\todo{finish getting data together} shall be 5 different subsets of varying size and nature. For example, data sets with large changes in variance (noise), and extremely large/small changes in mean.
+
+\subsection{The Nature of Twitter Data}
+
+It is important, as part of this research, to understand the nature of the data being studied.
+
+\begin{figure}[t]
+	\includegraphics[scale=0.5]{figures/ing-totals-full.png}
+	\centering
+	\caption{"ING" postings by date}
+	\label{fig:ing_totals_graph}
+\end{figure}
+
+Figure \ref{fig:ing_totals_graph} shows the distribution of twitter postings mentioning ``ING'' between 01/01/2017 and 28/02/2017. At first glance, this data has a number of interesting change points that we may wish to detect. Firstly, we shall examine what kind of distribution this data falls under. Carrying out the Shapiro-Wilk normality test\todo{cite} gives us a $p\-value$ of 0.0001037, well below the normally accepted 0.05. We can further see that this data set does not fit a normal distribution by generating a Q-Q plot of the data using R. \ref{fig:ing_QQ_plot} shows the completed QQ plot, which demonstrates the lack of normal distribution.
+
+\begin{figure}[t]
+	\includegraphics[scale=0.5]{figures/qqplot-ing.png}
+	\centering
+	\caption{Q-Q plot of ING postings}
+	\label{fig:ing_QQ_plot}
+\end{figure}
+
+The second type of data that will be used is entirely simulated. This will be achieved using R's facilities for generating sets of random data that fits a normal distribution. In this way it will be possible to demonstrate how (if at all) change detection algorithms handle data with different distribution models differently.
 
 \section{Scoring Metrics}
 
@@ -112,8 +163,7 @@ Example function:
 
 \improvement[inline]{start designing scoring methods}
 
-Possible relevance measure, where $t_0$ is the earliest a spike can be detected and $t_n$ is the time that the signal 
-returns to normal. $f(x)$ describes the function of the curve:
+Possible relevance measure, where $t_0$ is the earliest a spike can be detected and $t_n$ is the time that the signal returns to normal. $f(x)$ describes the function of the curve:
 
 \begin{equation}
 	\int^{t_0}_{t_n} f(x) dx
