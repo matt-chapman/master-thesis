@@ -2,17 +2,24 @@ library(readr)
 library(changepoint)
 
 ing <- "~/Repos/master-thesis/Data/ing.csv"
-rabo <- "~/Repos/master-thesis/Data/rabobank.csv"
+rabobank <- c("~/Repos/master-thesis/Data/rabobank.csv", "~/Repos/master-thesis/Data/rabobank_points.csv")
 reddit <- "~/Repos/master-thesis/Data/reddit.csv"
 
 ProcessData <- function(input, daily=TRUE) {
   # Switch depending on export type
   if (daily) {
-    dataset <- read_delim(file = input, 
+    dataset <- read_delim(file = input[1], 
                           ",", escape_double = FALSE, col_types = cols(Date = col_date(format = "%d-%m-%Y")), 
                           trim_ws = TRUE)
     colnames(dataset) <- c("Date", "Freq")
-    return(dataset)
+    
+    points <- read_csv(file = input[2], 
+             col_names = FALSE, col_types = cols(X1 = col_date(format = "%Y-%m-%d")))
+    
+    points.vector <- as.Date(points$X1)
+    
+    return(list("data" = dataset, "points" = points.vector))
+    
   } else {
     data.preprocess <- read_csv(input)
     # order the dataset by postingdate
@@ -25,9 +32,8 @@ ProcessData <- function(input, daily=TRUE) {
 }
 
 GetPenalties <- function(input, daily=TRUE){
-  dataset <- ProcessData(input, daily)
-  par(mfrow = c(1,3))
-  
+  dataset.collection <- ProcessData(input, daily)
+
   mean.pelt.crops <- cpt.mean(dataset$Freq,
                         method="PELT",
                         penalty = "CROPS",
@@ -59,8 +65,10 @@ GetPenalties <- function(input, daily=TRUE){
 
 RunExperiment <- function(input, daily=TRUE) {
   
-  dataset <- ProcessData(input, daily)
-  
+  dataset.collection <- ProcessData(input, daily)
+  dataset <- dataset.collection$data
+  points <- dataset.collection$points
+
   # set up the plot area
   par(mfrow = c(3,3))
 
@@ -73,6 +81,8 @@ RunExperiment <- function(input, daily=TRUE) {
                         minseglen = 5)
   
   plot(mean.pelt, main="Mean w/PELT", ylab="Postings")
+  abline(v=33, col="blue", lty=2)
+  abline(v=40, col="blue", lty=2)
   
   # Mean SegNeigh
   mean.segneigh <- cpt.mean(dataset$Freq,
@@ -80,6 +90,8 @@ RunExperiment <- function(input, daily=TRUE) {
                             penalty = "Hannan-Quinn")
   
   plot(mean.segneigh, main="Mean w/SegNeigh", ylab="Postings")
+  abline(v=33, col="blue", lty=2)
+  abline(v=40, col="blue", lty=2)
   
   # Mean BinSeg
   mean.binseg <- cpt.mean(dataset$Freq,
@@ -88,6 +100,8 @@ RunExperiment <- function(input, daily=TRUE) {
                           penalty = "Hannan-Quinn")
   
   plot(mean.binseg, main="Mean w/BinSeg", ylab="Postings")
+  abline(v=33, col="blue", lty=2)
+  abline(v=40, col="blue", lty=2)
   
   # Var PELT
   var.pelt <- cpt.var(dataset$Freq,
@@ -96,6 +110,8 @@ RunExperiment <- function(input, daily=TRUE) {
                       minseglen = 5)
   
   plot(var.pelt, main="Variance w/PELT", ylab="Postings")
+  abline(v=33, col="blue", lty=2)
+  abline(v=40, col="blue", lty=2)
   
   # Var SegNeigh
   var.segneigh <- cpt.var(dataset$Freq,
@@ -112,6 +128,8 @@ RunExperiment <- function(input, daily=TRUE) {
                         Q=4)
   
   plot(var.binseg, main="Variance w/BinSeg", ylab="Postings")
+  abline(v=33, col="blue", lty=2)
+  abline(v=40, col="blue", lty=2)
   
   # MeanVar PELT
   meanvar.pelt <- cpt.meanvar(dataset$Freq,
@@ -121,6 +139,8 @@ RunExperiment <- function(input, daily=TRUE) {
                               minseglen = 5)
   
   plot(meanvar.pelt, main="Mean & Variance w/PELT", ylab="Postings")
+  abline(v=33, col="blue", lty=2)
+  abline(v=40, col="blue", lty=2)
   
   # MeanVar SegNeigh
   meanvar.segneigh <- cpt.meanvar(dataset$Freq,
@@ -128,6 +148,8 @@ RunExperiment <- function(input, daily=TRUE) {
                                   penalty = "Hannan-Quinn")
   
   plot(meanvar.segneigh, main="Mean & Variance w/SegNeigh", ylab="Postings")
+  abline(v=33, col="blue", lty=2)
+  abline(v=40, col="blue", lty=2)
   
   # MeanVar BinSeg
   meanvar.binseg <- cpt.meanvar(dataset$Freq,
@@ -137,6 +159,8 @@ RunExperiment <- function(input, daily=TRUE) {
                                 Q=4)
   
   plot(meanvar.binseg, main="Mean & Variance w/BinSeg", ylab="Postings")
+  abline(v=33, col="blue", lty=2)
+  abline(v=40, col="blue", lty=2)
   
 }
 
