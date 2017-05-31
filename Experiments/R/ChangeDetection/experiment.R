@@ -2,23 +2,18 @@ library(readr)
 library(changepoint)
 
 ing <- "~/Repos/master-thesis/Data/ing.csv"
-rabobank <- c("~/Repos/master-thesis/Data/rabobank.csv", "~/Repos/master-thesis/Data/rabobank_points.csv")
+rabobank <- "~/Repos/master-thesis/Data/rabobank.csv"
 reddit <- "~/Repos/master-thesis/Data/reddit.csv"
 
 ProcessData <- function(input, daily=TRUE) {
   # Switch depending on export type
   if (daily) {
-    dataset <- read_delim(file = input[1], 
+    dataset <- read_delim(file = input, 
                           ",", escape_double = FALSE, col_types = cols(Date = col_date(format = "%d-%m-%Y")), 
                           trim_ws = TRUE)
     colnames(dataset) <- c("Date", "Freq")
     
-    points <- read_csv(file = input[2], 
-             col_names = FALSE, col_types = cols(X1 = col_date(format = "%Y-%m-%d")))
-    
-    points.vector <- as.Date(points$X1)
-    
-    return(list("data" = dataset, "points" = points.vector))
+    return(dataset)
     
   } else {
     data.preprocess <- read_csv(input)
@@ -32,7 +27,7 @@ ProcessData <- function(input, daily=TRUE) {
 }
 
 GetPenalties <- function(input, daily=TRUE){
-  dataset.collection <- ProcessData(input, daily)
+  dataset <- ProcessData(input, daily)
 
   mean.pelt.crops <- cpt.mean(dataset$Freq,
                         method="PELT",
@@ -65,9 +60,7 @@ GetPenalties <- function(input, daily=TRUE){
 
 RunExperiment <- function(input, daily=TRUE) {
   
-  dataset.collection <- ProcessData(input, daily)
-  dataset <- dataset.collection$data
-  points <- dataset.collection$points
+  dataset <- ProcessData(input, daily)
 
   # set up the plot area
   par(mfrow = c(3,3))
@@ -77,8 +70,8 @@ RunExperiment <- function(input, daily=TRUE) {
   # Mean PELT
   mean.pelt <- cpt.mean(dataset$Freq,
                         method="PELT",
-                        penalty = "Hannan-Quinn",
-                        minseglen = 5)
+                        penalty = "Hannan-Quinn"
+                        )
   
   plot(mean.pelt, main="Mean w/PELT", ylab="Postings")
   abline(v=33, col="blue", lty=2)
