@@ -1,0 +1,48 @@
+---
+title: "Data Distributions"
+author: "Matt Chapman"
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document: default
+---
+
+# Known probability distributions
+
+```{r, message=FALSE, warning=FALSE}
+norm <- rnorm(n = 200, mean = 10, sd = 1)
+binom <- rbinom(n = 200, size = 20, prob = 0.5)
+pois <- rpois(n = 200, lambda = 3)
+exp <- rexp(n = 200, rate = 100)
+gam <- rgamma(n = 200, rate = 1, scale = 1, shape = 1)
+
+par(mfrow = c(2,3))
+hist(norm, main="Normal")
+hist(binom, main="Binomial")
+hist(pois, main="Poisson")
+hist(exp, main="Exponential")
+hist(gam, main="Gamma")
+
+```
+
+
+# Histogram plots of rabobank, reddit, ing
+
+```{r, message=FALSE, warning=FALSE}
+source('~/Repos/master-thesis/Experiments/R/ChangeDetection/experiment.R')
+par(mfrow = c(1,3))
+rabodata <- ProcessData(rabobank)
+redditdata <- ProcessData(reddit)
+ingdata <- ProcessData(ing)
+
+hist(rabodata$Freq, main="Rabobank", xlab = "Postings")
+hist(redditdata$Freq, main="Reddit", xlab = "Postings")
+hist(ingdata$Freq, main="ING", xlab = "Postings")
+```
+
+# Example Experiment Output
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+
+RunExperiment(rabobank)
+```

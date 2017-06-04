@@ -233,3 +233,4 @@ fabric.properties
 .ipynb_checkpoints/
 Testing/data/
 .Rproj.user
+.RData

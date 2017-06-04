@@ -9,17 +9,6 @@
 \input{program-listings}
 \newcommand{\cmd}[1]{\texttt{$\backslash$#1}}
 
-% todo notes, inc. some custom colours
-\usepackage{xargs}                      % Use more than one optional parameter in a new commands
-\usepackage[pdftex,dvipsnames]{xcolor}  % Coloured text etc.
-
-\usepackage[colorinlistoftodos,prependcaption,textsize=small]{todonotes}
-\newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
-\newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
-\newcommandx{\info}[2][1=]{\todo[linecolor=OliveGreen,backgroundcolor=OliveGreen!25,bordercolor=OliveGreen,#1]{#2}}
-\newcommandx{\improvement}[2][1=]{\todo[linecolor=Plum,backgroundcolor=Plum!25,bordercolor=Plum,#1]{#2}}
-\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
-
 \title{Detecting Online Conversations Going Viral}
 \coverpic[250pt]{figures/Buzzcapture_thunder.png}
 \subtitle{Time-series aware evaluation of change detection algorithms}
@@ -51,17 +40,19 @@ Within the domain of change detection algorithms there are a number of available
 \begin{description}
 	\item[Classification] Wherein the algorithm result fits into one of two (or more) classes, for example correct or incorrect.
 	\item[Clustering] Wherein the algorithm results are formed into clusters and evaluated using clustering metrics.
-	\item[Partitioning] Like clustering, but?\unsure{How is this different from clustering?}
+	\item[Partitioning] Wherein the data set is segmented according to change point location, and then evaluated in a similar way to clustering.
 	\item[Retrieval] Wherein the results of the algorithm are scored as a \emph{retrieval problem}, where detection relevance is taken into account, perhaps along with some form of temporal or redundancy penalty.
 \end{description}
 
-With this research, it is intended to address this dichotomy between approaches, and further suggest an evaluation approach that is suitable for use when attempting to evaluate change detection algorithms applied to time-series data specifically.
+With this research, it is intended to address this dichotomy between approaches, and further suggest an evaluation approach that is suitable for use when attempting to evaluate change detection algorithms applied to time-series data gathered from social media specifically.
 
 While change detection itself has been around since the 1930's (and \emph{online} change detection since the 1950's) it is still a field that attracts new thoughts and approaches - one example of which being \citeauthor{Ginsberg2009}'s \citetitle{Ginsberg2009} \cite{Ginsberg2009}.
 
-Various attempts have been made to evaluate the myriad approaches to change detection (\cite{Buntain2014} for example) but each of these attempts tend to frame the problem somewhat differently, or do not take into account change detection in time-series data.
+Various attempts have been made to evaluate the myriad approaches to change detection (\cite{Buntain2014} for example) but each of these attempts tend to frame the problem somewhat differently.
 
 This research intends to address the following research questions:
+
+\todo[inline]{These will change later in the project}
 
 \begin{description}
 	\item[RQ1] Are there deficiencies in existing methods for evaluating change detection algorithms?
@@ -73,7 +64,7 @@ This research intends to address the following research questions:
 
 \section{Motivation}
 
-Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally referred to as \emph{control charts}. Since the inception of approaches such as CUSUM that provide the possibility for on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic detection, online reputation management and infrastructure error detection, change detection is hugely useful.
+Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally referred to as \emph{control charts}. Since the inception of approaches such as CUSUM that provide the possibility for on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic detection, online reputation management and infrastructure error detection, change detection is hugely useful both as an academic problem and in production systems of myriad application.
 
 This particular research is motivated specifically by the online reputation management sector. The business hosting this research project (Buzzcapture International [\url{http://www.buzzcapture.com}]) is a Dutch online reputation management company that provides services to other businesses throughout europe. Chief among these is the BrandMonitor application, which, among other features, provides a rudimentary notification system for clients that is triggered once there is an increase in conversation volume of \(\%n\). It is the intention of this research to provide a robust evaluation method for change detection algorithms such that an approach that is most effective for this particular use case can be selected and implemented.
 
@@ -120,7 +111,7 @@ R also allows for the generation of test data using method calls such as \texttt
 
 There are two data sets that will be used in this research. The first is a collection of 30.9M Dutch language tweets collected between 01/01/2017 and 28/02/2017. The data will be filtered for certain terms in the tweet 'body' to generate collections of tweets that would be considered 'relevant' to a particular business or individual. In this way, I will be able to simulate BrandMonitor queries myself, without the need of the software itself.
 
-\begin{figure}[t]
+\begin{figure}[hbt]
 	\includegraphics[scale=0.5]{figures/twitter-totals-full.png}
 	\centering
 	\caption{Twitter Data Set}
@@ -133,18 +124,18 @@ The final result of the prepared data\todo{finish getting data together} shall b
 
 \subsection{The Nature of Twitter Data}
 
-It is important, as part of this research, to understand the nature of the data being studied.
+It is important, as part of this research, to understand the nature of the data being studied. The main reason for this is that several of the algorithms being evaluated require one to specify either a test statistic or the distribution of the data (as closely) as possible to give optimal results
 
-\begin{figure}[t]
+\begin{figure}[hbt]
 	\includegraphics[scale=0.5]{figures/ing-totals-full.png}
 	\centering
 	\caption{"ING" postings by date}
 	\label{fig:ing_totals_graph}
 \end{figure}
 
-Figure \ref{fig:ing_totals_graph} shows the distribution of twitter postings mentioning ``ING'' between 01/01/2017 and 28/02/2017. At first glance, this data has a number of interesting change points that we may wish to detect. Firstly, we shall examine what kind of distribution this data falls under. Carrying out the Shapiro-Wilk normality test\todo{cite} gives us a $p\-value$ of 0.0001037, well below the normally accepted 0.05. We can further see that this data set does not fit a normal distribution by generating a Q-Q plot of the data using R. \ref{fig:ing_QQ_plot} shows the completed QQ plot, which demonstrates the lack of normal distribution.
+Figure \ref{fig:ing_totals_graph} shows the distribution of twitter postings mentioning ``ING'' between 01/01/2017 and 28/02/2017. At first glance, this data has a number of interesting change points that we may wish to detect. Firstly, we shall examine what kind of distribution this data falls under. Carrying out the Shapiro-Wilk normality test gives us a \emph{p-value} of 0.0001037, well below the normally accepted 0.05. We can further see that this data set does not fit a normal distribution by generating a Q-Q plot of the data using R. \ref{fig:ing_QQ_plot} shows the completed QQ plot, which demonstrates the lack of normal distribution.
 
-\begin{figure}[t]
+\begin{figure}[hbt]
 	\includegraphics[scale=0.5]{figures/qqplot-ing.png}
 	\centering
 	\caption{Q-Q plot of ING postings}
@@ -152,6 +143,14 @@ Figure \ref{fig:ing_totals_graph} shows the distribution of twitter postings men
 \end{figure}
 
 The second type of data that will be used is entirely simulated. This will be achieved using R's facilities for generating sets of random data that fits a normal distribution. In this way it will be possible to demonstrate how (if at all) change detection algorithms handle data with different distribution models differently.
+
+\section{Algorithm Configuration}
+
+Change detection is an \emph{unbounded} problem. Left without some system of constraint, the algorithm could theoretically run to infinity. Indeed, one of the algorithms utilised in this research, PELT\todo[inline]{citation needed}, when left unbounded, will detect every data point in the time-series as a change point. This result is \textit{technically} correct, but not useful for our purposes. For this reason, the algorithms implement a penalty system, allowing for an optimal number of changepoints to be detected.
+
+\subsection{Penalty Scores}
+
+Penalty scores operate as a mechanism for optimising an unbounded problem such as the one being addressed here. Given time series data points $y_1,\ldots,y_n$, the result of a given algorithm shall be a set of $m$ changepoints such that their locations $\tau_{1:m} = (\tau_1,\ldots,\tau_m)$, where $\tau_i$ is an integer between 1 and $n-1$ inclusive.
 
 \section{Scoring Metrics}
 
