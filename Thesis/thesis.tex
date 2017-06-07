@@ -165,6 +165,10 @@ Change detection is an \emph{unbounded} problem. Left without some system of con
 
 Penalty scores operate as a mechanism for optimising an unbounded problem such as the one being addressed here. Haynes et al. define the problem as follows \cite{Haynes2014}: Given time series data points $y_1,\ldots,y_n$, the result of a given algorithm shall be a set of $m$ changepoints such that their locations $\tau_{1:m} = (\tau_1,\ldots,\tau_m)$, where $\tau_i$ is an integer between 1 and $n-1$ inclusive.
 
+\begin{equation}
+    Q_m(y_{1:n}) = \min_{\tau_{1:m}} \{ \sum^{m+1}_{i=1}[C(y_{(\tau_{i - 1} + 1):\tau_i})] \}
+\end{equation}
+
 There are a number of established approaches to calculating penalty values for unbounded problems, chiefly among which are Schwarz Information Criterion (SIC), Bayesian Information Criterion (BIC), Akaike Information Criterion (AIC) and Hannan-Quinn\todo{cite}. Of these approaches, it is necessary to experiment to find the scheme that produces the `correct' number of changepoints for a given dataset.
 
 \section{Scoring Metrics}
