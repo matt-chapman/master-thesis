@@ -1,8 +1,27 @@
 library(changepoint)
+library(ROCR)
 
 #' segment data set based on changepoints
 SegmentDataset <- function(dataset, points) {
   
+}
+
+#' calculate F1 score based on ground truth
+CalculateF1 <- function(dataset, points, truth) {
+  algo.predictions <- numeric(length(dataset))
+  ground.truth <- numeric(length(dataset))
+  
+  for(i in truth) {
+    ground.truth[i] <- 1
+  }
+  
+  for(i in points) {
+    algo.predictions[i] <- 1
+  }
+  
+  pred.obj <- prediction(algo.predictions, ground.truth)
+  perf <- performance(pred.obj, "f")
+  plot(perf)
 }
 
 #' main experiment method
