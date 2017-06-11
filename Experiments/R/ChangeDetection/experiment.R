@@ -1,5 +1,6 @@
 library(changepoint)
 library(ROCR)
+options( warn = -1 )
 
 #' segment data set based on changepoints
 SegmentDataset <- function(dataset, points) {
@@ -21,7 +22,7 @@ CalculateF1 <- function(dataset, points, truth) {
   
   pred.obj <- prediction(algo.predictions, ground.truth)
   perf <- performance(pred.obj, "f")
-  plot(perf)
+  print(perf)
 }
 
 #' main experiment method
@@ -48,8 +49,8 @@ RunExperiment <- function(input, daily = TRUE) {
   )
   
   plot(mean.pelt, main = "Mean w/PELT", ylab = "Postings")
-  
   PlotGroundTruth(groundtruth.indexed)
+  CalculateF1(mean.pelt@data.set, mean.pelt@cpts, groundtruth.indexed)
   
   # Mean SegNeigh
   mean.segneigh <- cpt.mean(dataset$Freq,
@@ -59,7 +60,7 @@ RunExperiment <- function(input, daily = TRUE) {
   
   plot(mean.segneigh, main = "Mean w/SegNeigh", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  
+  CalculateF1(mean.segneigh@data.set, mean.segneigh@cpts, groundtruth.indexed)
   
   # Mean BinSeg
   mean.binseg <- cpt.mean(
@@ -73,7 +74,7 @@ RunExperiment <- function(input, daily = TRUE) {
   
   plot(mean.binseg, main = "Mean w/BinSeg", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  
+  CalculateF1(mean.binseg@data.set, mean.binseg@cpts, groundtruth.indexed)
   
   # Var PELT
   var.pelt <- cpt.var(
@@ -85,7 +86,7 @@ RunExperiment <- function(input, daily = TRUE) {
   
   plot(var.pelt, main = "Variance w/PELT", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  
+  CalculateF1(var.pelt@data.set, var.pelt@cpts, groundtruth.indexed)
   
   # Var SegNeigh
   var.segneigh <- cpt.var(dataset$Freq,
@@ -95,6 +96,7 @@ RunExperiment <- function(input, daily = TRUE) {
   
   plot(var.segneigh, main = "Variance w/SegNeigh", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
+  CalculateF1(var.segneigh@data.set, var.segneigh@cpts, groundtruth.indexed)
   
   # Var BinSeg
   var.binseg <- cpt.var(dataset$Freq,
@@ -105,7 +107,7 @@ RunExperiment <- function(input, daily = TRUE) {
   
   plot(var.binseg, main = "Variance w/BinSeg", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  
+  CalculateF1(var.binseg@data.set, var.binseg@cpts, groundtruth.indexed)
   
   # MeanVar PELT
   meanvar.pelt <- cpt.meanvar(
@@ -118,7 +120,7 @@ RunExperiment <- function(input, daily = TRUE) {
   
   plot(meanvar.pelt, main = "Mean & Variance w/PELT", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  
+  CalculateF1(meanvar.pelt@data.set, meanvar.pelt@cpts, groundtruth.indexed)
   
   # MeanVar SegNeigh
   meanvar.segneigh <- cpt.meanvar(dataset$Freq,
@@ -128,7 +130,7 @@ RunExperiment <- function(input, daily = TRUE) {
   
   plot(meanvar.segneigh, main = "Mean & Variance w/SegNeigh", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  
+  CalculateF1(meanvar.segneigh@data.set, meanvar.segneigh@cpts, groundtruth.indexed)
   
   # MeanVar BinSeg
   meanvar.binseg <- cpt.meanvar(
@@ -141,5 +143,6 @@ RunExperiment <- function(input, daily = TRUE) {
   
   plot(meanvar.binseg, main = "Mean & Variance w/BinSeg", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
+  CalculateF1(meanvar.binseg@data.set, meanvar.binseg@cpts, groundtruth.indexed)
   
 }
