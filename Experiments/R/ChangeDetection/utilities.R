@@ -1,6 +1,15 @@
 library(readr)
 library(changepoint)
 
+#' Split a vector at given indices
+SplitVector <- function(data, splitpoints) {
+  unname(split(data, cumsum(seq_along(data) %in% splitpoints)))
+}
+
+AnnotateClusters <- function(data, splitpoints) {
+  cumsum(seq_along(data) %in% splitpoints)
+}
+
 #' Read in csv files and format properly
 ProcessData <- function(query, daily = TRUE) {
   if (query == "ing") {

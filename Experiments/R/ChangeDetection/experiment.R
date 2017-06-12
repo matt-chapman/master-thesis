@@ -2,11 +2,6 @@ library(changepoint)
 library(ROCR)
 options( warn = -1 )
 
-#' segment data set based on changepoints
-SegmentDataset <- function(dataset, points) {
-  
-}
-
 #' calculate F1 score based on ground truth
 CalculateF1 <- function(dataset, points, truth) {
   algo.predictions <- numeric(length(dataset))
@@ -22,7 +17,7 @@ CalculateF1 <- function(dataset, points, truth) {
   
   pred.obj <- prediction(algo.predictions, ground.truth)
   perf <- performance(pred.obj, "f")
-  print(perf)
+  print(perf@y.values)
 }
 
 #' main experiment method
@@ -51,6 +46,7 @@ RunExperiment <- function(input, daily = TRUE) {
   plot(mean.pelt, main = "Mean w/PELT", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
   CalculateF1(mean.pelt@data.set, mean.pelt@cpts, groundtruth.indexed)
+  print(AnnotateClusters(mean.pelt@data.set, mean.pelt@cpts))
   
   # Mean SegNeigh
   mean.segneigh <- cpt.mean(dataset$Freq,
