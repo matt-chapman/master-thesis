@@ -101,6 +101,8 @@ As briefly discussed in the introduction to this thesis, there are a number of p
 	$recall$ is computed as the number of correct positive results, divided by the number of positive results that should have been detected. $precision$ is computed as the number of correct positive results divided by the number of all possible positive results.
 
 	As the F1 score is a binary classification measure, it can only be used to test the precision of an algorithm in a single domain, that is, was the change detected or not.
+	
+	When calculating an F1 score, it is generally accepted that a classification is given a score between 1 and 0, such that real numbers between 1 and 0 can be used to show to what degree something was classified into one group or another. The F1 score also results in a real number between 1 and 0.
 
 	\item[Rand Index] This measure is for computing the similarity between two clusters of data points. It is used for calculating the overall accuracy of a given clustering approach, when compared against a set of ground truth clusters. The Rand Index is defined as:
 
@@ -108,7 +110,7 @@ As briefly discussed in the introduction to this thesis, there are a number of p
 		R = \frac{a+b}{a+b+c+d}
 	\end{equation}
 	
-	Given a set of data points $S$, partitioned through two different methods, which we shall refer to as $X$ and $Y$. Based on this knowledge we can define the following:
+	Given a set of data points $S$, partitioned through two different methods, which we shall refer to as $X$ and $Y$. Based on this knowledge the following can be defined:
 	
 	\begin{itemize}
 		\item $a$ = total number of pairs that were partitioned into the \emph{same} subset by both $X$ and $Y$
@@ -133,15 +135,25 @@ As briefly discussed in the introduction to this thesis, there are a number of p
 
 \subsection{Introduction}
 
-The method of evaluating the approaches will be developed using \textsf{R}. \textsf{R} is a combined language and environment created for the purpose of statistical computing \cite{RCoreTeam2017}. Thanks to the availability of the \texttt{changepoint} package in \textsf{R}\cite{Killick2014}, it is possible for me to experiment with different change detection approaches without needing to implement them from scratch, myself.
+The method of evaluating the approaches will be developed using a combination of Python and \textsf{R}. \textsf{R} is a combined language and environment created for the purpose of statistical computing \cite{RCoreTeam2017}. Thanks to the availability of the \texttt{changepoint} package in \textsf{R}\cite{Killick2014}, it is possible for for experiments with different change detection approaches to be carried out without the need to create a bespoke implementation.
 
-\textsf{R} also allows for the generation of test data using method calls such as \texttt{rnorm()}, which has considerably sped up my workflow compared to carrying out the same operations in Python. The \textsf{R} package \texttt{ggplot2} \cite{Wickham2009} also provides a number of powerful tools for data visualisation directly in \textsf{R}.
+\textsf{R} also allows for the generation of test data using method calls such as \texttt{rnorm()}. The \textsf{R} package \texttt{ggplot2} \cite{Wickham2009} also provides a number of powerful tools for data visualisation directly in \textsf{R}.
 
-\subsection{Changepoint}
+Python is being utilised also due to the availability of relevant software packages for the purposes of evaluation measure calculation.
+
+\subsection{Changepoint Detection}
 
 \texttt{changepoint} is a powerful R package that provides a number of different change detection algorithms, along with various approaches to penalty values. \texttt{changepoint} offers change detection in mean, variance and combinations of the two, using the AMOC, PELT, Binary Segmentation and Segment Neighbourhood algorithms\todo{cite these}.
 
 \texttt{Changepoint} was developed by Rebecca Killick and Idris A. Eckley\todo{cite} and is provided free of charge under the GNU general public license \cite{Killick2014}.
+
+\subsection{Calculation of Evaluation Measures}
+
+The \texttt{ROCR} package in \textsf{R} is being utilised for the calculation of Precision, Recall and F1 scores when treating change detection as a classification problem. \texttt{ROCR} provides a number of functions, and is primarily developed for plotting two different performance measures against each other for the purposes of classification evaluation given a cut-off parameter. \texttt{ROCR} was developed by Tobias Sing et. al. and is provided free of charge under a GPL license\todo{cite}
+
+For the calculation of the Rand Index and Adjusted Rand Index the \textsf{R} package \texttt{phyclust} is being used. This package was developed by Wei-Chen Chen, for the purposes of providing a phyloclustering implementation. While this approach is not something being examined in this thesis, the package does provide an implementation of the Rand Index and Adjusted Rand Index metrics, which are relevant to this research. This package is also provided free of charge under the GPL license.\todo{cite}
+
+Calculating the BCubed precision, recall and f-score metrics is being carried out in Python, using the \texttt{python-bcubed} project. This is a small utility library for the calculation of BCubed metrics, developed by Hugo Hromic and provided under the MIT license.\todo{cite} In order to interface with this library via \textsf{R}, the package \texttt{rPython} is being used. This package provides functionality for running Python code and retrieving results in \textsf{R}, and was developed by Carlos J. Gil Bellosta. It is provided under a GPL-2 license.\todo{cite}
 
 \section{Data Preparation}
 
