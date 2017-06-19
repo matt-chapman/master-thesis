@@ -1,6 +1,21 @@
 library(readr)
 library(changepoint)
 
+#' Generates gaussian noise & poisson process signal, approx 10 jumps
+GenerateSignal <- function() {
+  set.seed(10)
+  # number of changepoints
+  N <- rpois(1,10)
+  # true changepoints
+  true.cpt <- sample(1000,N)
+  
+  # generate the signal
+  m1 <- matrix(rep(1:1000,N),1000,N,byrow=FALSE)
+  m2 <- matrix(rep(true.cpt,1000),1000,N,byrow=TRUE)
+  x <- rnorm(1000) + apply(m1>=m2,1,sum)
+  return(x)
+}
+
 #' Split a vector at given indices
 SplitVector <- function(data, splitpoints) {
   unname(split(data, cumsum(seq_along(data) %in% splitpoints)))

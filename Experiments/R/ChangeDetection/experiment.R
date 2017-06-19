@@ -19,7 +19,7 @@ CalculateF1 <- function(dataset, points, truth) {
   
   pred.obj <- prediction(algo.predictions, ground.truth)
   perf <- performance(pred.obj, "f")
-  # print(perf@y.values)
+  print(perf@y.values)
 }
 
 #' Calculate Rand & Adjusted Rand
@@ -42,6 +42,10 @@ CalculateBCubed <- function(input, changepoints, truthpoints) {
 
 #' main experiment method
 RunExperiment <- function(input, daily = TRUE) {
+  
+  penalty.function = "Hannan-Quinn"
+  min.seglength = 0
+  
   dataset <- ProcessData(input, daily)
   groundtruth <- GetGroundTruth(input)
   
@@ -61,8 +65,8 @@ RunExperiment <- function(input, daily = TRUE) {
   mean.pelt <- cpt.mean(
     dataset$Freq,
     method = "PELT",
-    penalty = "Hannan-Quinn",
-    minseglen = 5
+    penalty = penalty.function,
+    minseglen = min.seglength
   )
   
   plot(mean.pelt, main = "Mean w/PELT", ylab = "Postings")
@@ -72,10 +76,12 @@ RunExperiment <- function(input, daily = TRUE) {
   write.csv(AnnotateClusters(mean.pelt@data.set, mean.pelt@cpts), "MeanPeltClusters.csv")
   
   # Mean SegNeigh
-  mean.segneigh <- cpt.mean(dataset$Freq,
-                            method = "SegNeigh",
-                            penalty = "Hannan-Quinn",
-                            Q = 5)
+  mean.segneigh <- cpt.mean(
+    dataset$Freq,
+    method = "SegNeigh",
+    penalty = penalty.function,
+    minseglen = min.seglength
+  )
   
   plot(mean.segneigh, main = "Mean w/SegNeigh", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
@@ -87,10 +93,8 @@ RunExperiment <- function(input, daily = TRUE) {
   mean.binseg <- cpt.mean(
     dataset$Freq,
     method = "BinSeg",
-    test.stat = "CUSUM",
-    penalty = "Hannan-Quinn",
-    minseglen = 5,
-    Q = 5
+    penalty = penalty.function,
+    minseglen = min.seglength
   )
   
   plot(mean.binseg, main = "Mean w/BinSeg", ylab = "Postings")
@@ -103,8 +107,8 @@ RunExperiment <- function(input, daily = TRUE) {
   var.pelt <- cpt.var(
     dataset$Freq,
     method = "PELT",
-    penalty = "Hannan-Quinn",
-    minseglen = 5
+    penalty = penalty.function,
+    minseglen = min.seglength
   )
   
   plot(var.pelt, main = "Variance w/PELT", ylab = "Postings")
@@ -114,10 +118,12 @@ RunExperiment <- function(input, daily = TRUE) {
   write.csv(AnnotateClusters(var.pelt@data.set, var.pelt@cpts), "VarPeltClusters.csv")
   
   # Var SegNeigh
-  var.segneigh <- cpt.var(dataset$Freq,
-                          method = "SegNeigh",
-                          penalty = "Hannan-Quinn",
-                          Q = 5)
+  var.segneigh <- cpt.var(
+    dataset$Freq,
+    method = "SegNeigh",
+    penalty = penalty.function,
+    minseglen = min.seglength
+  )
   
   plot(var.segneigh, main = "Variance w/SegNeigh", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
@@ -126,11 +132,12 @@ RunExperiment <- function(input, daily = TRUE) {
   write.csv(AnnotateClusters(var.segneigh@data.set, var.segneigh@cpts), "VarSegNeighClusters.csv")
   
   # Var BinSeg
-  var.binseg <- cpt.var(dataset$Freq,
-                        method = "BinSeg",
-                        #test.stat = "CSS",
-                        penalty = "Hannan-Quinn",
-                        Q = 5)
+  var.binseg <- cpt.var(
+    dataset$Freq,
+    method = "BinSeg",
+    penalty = penalty.function,
+    minseglen = min.seglength
+  )
   
   plot(var.binseg, main = "Variance w/BinSeg", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
@@ -143,8 +150,8 @@ RunExperiment <- function(input, daily = TRUE) {
     dataset$Freq,
     method = "PELT",
     test.stat = "Poisson",
-    penalty = "Hannan-Quinn",
-    minseglen = 5
+    penalty = penalty.function,
+    minseglen = min.seglength
   )
   
   plot(meanvar.pelt, main = "Mean & Variance w/PELT", ylab = "Postings")
@@ -154,10 +161,12 @@ RunExperiment <- function(input, daily = TRUE) {
   write.csv(AnnotateClusters(meanvar.pelt@data.set, meanvar.pelt@cpts), "MeanVarPeltClusters.csv")
   
   # MeanVar SegNeigh
-  meanvar.segneigh <- cpt.meanvar(dataset$Freq,
-                                  method = "SegNeigh",
-                                  penalty = "Hannan-Quinn",
-                                  Q = 5)
+  meanvar.segneigh <- cpt.meanvar(
+    dataset$Freq,
+    method = "SegNeigh",
+    penalty = penalty.function,
+    minseglen = min.seglength
+  )
   
   plot(meanvar.segneigh, main = "Mean & Variance w/SegNeigh", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
@@ -170,8 +179,8 @@ RunExperiment <- function(input, daily = TRUE) {
     dataset$Freq,
     method = "BinSeg",
     test.stat = "Poisson",
-    penalty = "Hannan-Quinn",
-    Q = 5
+    penalty = penalty.function,
+    minseglen = min.seglength
   )
   
   plot(meanvar.binseg, main = "Mean & Variance w/BinSeg", ylab = "Postings")
