@@ -1,11 +1,12 @@
 import csv
 import bcubed
-import pprint as pp
+import sys
+
 
 clustering = {}
 truth = {}
 
-with open('MeanVarBinSegClusters.csv') as f:
+with open(str(sys.argv[1])) as f:
     f.readline()
     reader = csv.reader(f)
     clustering = dict((rows[0], set(rows[1])) for rows in reader)
@@ -15,17 +16,11 @@ with open('GroundTruthClusters.csv') as f:
     f.readline()
     reader = csv.reader(f)
     truth = dict((rows[0], set(rows[1])) for rows in reader)
-    # print truth
 
-# print clustering
-# print truth
 
 precision = bcubed.precision(clustering, truth)
 recall = bcubed.recall(clustering, truth)
 fscore = bcubed.fscore(precision, recall)
-
-# pp.pprint(clustering)
-# pp.pprint(truth)
 
 print "BCubed Precision: {0}".format(precision)
 print "BCUbed Recall: {0}".format(recall)
