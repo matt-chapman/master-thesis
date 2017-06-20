@@ -2,7 +2,7 @@ library(readr)
 library(changepoint)
 
 #' Generates gaussian noise & poisson process signal, approx 10 jumps
-GenerateSignal <- function() {
+GenerateNormalSignal <- function() {
   set.seed(10)
   # number of changepoints
   N <- rpois(1,10)
@@ -12,8 +12,14 @@ GenerateSignal <- function() {
   # generate the signal
   m1 <- matrix(rep(1:1000,N),1000,N,byrow=FALSE)
   m2 <- matrix(rep(true.cpt,1000),1000,N,byrow=TRUE)
-  x <- rnorm(1000) + apply(m1>=m2,1,sum)
-  return(x)
+  x <- as.data.frame(rnorm(1000) + apply(m1>=m2,1,sum))
+  colnames(x) <- "Freq"
+  return(list(x, true.cpt))
+}
+
+GenerateDataSet <- function(n = 1000, point) {
+  data <- runif(n, 1, 5)
+  data[point:-1] 
 }
 
 #' Split a vector at given indices
@@ -74,7 +80,7 @@ GetGroundTruth <- function(query) {
   
   groundtruth <-
     read_csv(
-      "~/Repos/master-thesis/Data/rabobank_points.csv",
+      input,
       col_names = FALSE,
       col_types = cols(X1 = col_date(format = "%Y-%m-%d"))
     )

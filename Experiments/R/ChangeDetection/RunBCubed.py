@@ -22,6 +22,6 @@ precision = bcubed.precision(clustering, truth)
 recall = bcubed.recall(clustering, truth)
 fscore = bcubed.fscore(precision, recall)
 
-print "BCubed Precision: {0}".format(precision)
-print "BCUbed Recall: {0}".format(recall)
-print "BCubed F-Score: {0}".format(fscore)
+print precision
+print recall
+print fscore

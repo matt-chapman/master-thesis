@@ -3,6 +3,7 @@ library(caret)
 library(phyclust)
 library(rPython)
 options(warn = -1)
+options(digits=10)
 
 source("utilities.R")
 
@@ -25,7 +26,8 @@ CalculateF1 <- function(dataset, points, truth) {
     mode = "prec_recall"
   )
   
-  print(result$byClass)
+  return(c(result$byClass['Precision'], result$byClass['Recall'], result$byClass['F1']))
+
 }
 
 #' Calculate Rand & Adjusted Rand
@@ -36,29 +38,50 @@ CalculateRand <- function(input, changepoints, truthpoints) {
   clustering <- clustering + 1
   truth <- truth + 1
   
-  print(RRand(truth, clustering))
+  result <- RRand(truth, clustering)
+  return(c(result['Rand'], result['adjRand']))
 }
 
 #' Call python script to calculate BCubed values
 CalculateBCubed <- function(input) {
-  print(system(paste("python RunBCubed.py", input), intern = T))
+  result <- system(paste("python RunBCubed.py", input), intern = T)
+  return(c(result[1], result[2], result[3]))
 }
 
 #' main experiment method
-RunExperiment <- function(input, daily = TRUE) {
+RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
   penalty.function = "Hannan-Quinn"
   min.seglength = 0
   
-  dataset <- ProcessData(input, daily)
-  groundtruth <- GetGroundTruth(input)
+  if(no.process == FALSE) {
+    dataset <- ProcessData(input)
+    groundtruth <- GetGroundTruth(input)
+    #get indices for ground truth
+    library(foreach)
+    groundtruth.indexed <-
+      foreach(i = groundtruth) %do% which(dataset$Date == i)
+    
+    write.csv(AnnotateClusters(dataset$Freq, groundtruth.indexed),
+              "GroundTruthClusters.csv")
+  } else {
+    dataset <- input
+    groundtruth.indexed <- truth 
+    write.csv(AnnotateClusters(dataset$Freq, groundtruth.indexed), "GroundTruthClusters.csv")
+  }
   
-  #get indices for ground truth
-  library(foreach)
-  groundtruth.indexed <-
-    foreach(i = groundtruth) %do% which(dataset$Date == i)
+  full.results = data.frame(
+    'Algorithm' = character(0),
+    'Precision' = numeric(0),
+    'Recall' = numeric(0),
+    'F1' = numeric(0),
+    'Rand' = numeric(0),
+    'Adj Rand' = numeric(0),
+    'BCubed Precision' = numeric(0),
+    'BCubed Recall' = numeric(0),
+    'BCubed FScore' = numeric(0)
+    )
   
-  write.csv(AnnotateClusters(dataset$Freq, groundtruth.indexed),
-            "GroundTruthClusters.csv")
+
   
   # set up the plot area
   par(mfrow = c(3, 3))
@@ -73,15 +96,27 @@ RunExperiment <- function(input, daily = TRUE) {
     minseglen = min.seglength
   )
   
-  print('/// Mean PELT ///')
-  
+  algo <- 'Mean PELT'
   plot(mean.pelt, main = "Mean w/PELT", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  CalculateF1(mean.pelt@data.set, mean.pelt@cpts, groundtruth.indexed)
-  CalculateRand(mean.pelt@data.set, mean.pelt@cpts, groundtruth.indexed)
+  f1 <- CalculateF1(mean.pelt@data.set, mean.pelt@cpts, groundtruth.indexed)
+  rand <- CalculateRand(mean.pelt@data.set, mean.pelt@cpts, groundtruth.indexed)
   write.csv(AnnotateClusters(mean.pelt@data.set, mean.pelt@cpts),
             "MeanPeltClusters.csv")
-  CalculateBCubed("MeanPeltClusters.csv")
+  bcubed <- CalculateBCubed("MeanPeltClusters.csv")
+  
+  frame <- data.frame(
+    'Algorithm' = algo,
+    'Precision' = f1['Precision'],
+    'Recall' = f1['Recall'],
+    'F1' = f1['F1'],
+    'Rand' = rand['Rand'],
+    'Adj Rand' = rand['adjRand'],
+    'BCubed Precision' = as.numeric(bcubed[1]),
+    'BCubed Recall' = as.numeric(bcubed[2]),
+    'BCubed FScore' = as.numeric(bcubed[3])
+  )
+  full.results <- rbind(frame, full.results)
   
   # Mean SegNeigh
   mean.segneigh <- cpt.mean(
@@ -91,21 +126,33 @@ RunExperiment <- function(input, daily = TRUE) {
     minseglen = min.seglength
   )
   
-  print('/// Mean SegNeigh ///')
-  
+  algo <- 'Mean SegNeigh'
   plot(mean.segneigh, main = "Mean w/SegNeigh", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  CalculateF1(mean.segneigh@data.set,
+  f1 <- CalculateF1(mean.segneigh@data.set,
               mean.segneigh@cpts,
               groundtruth.indexed)
-  CalculateRand(mean.segneigh@data.set,
+  rand <- CalculateRand(mean.segneigh@data.set,
                 mean.segneigh@cpts,
                 groundtruth.indexed)
   write.csv(
     AnnotateClusters(mean.segneigh@data.set, mean.segneigh@cpts),
     "MeanSegNeighClusters.csv"
   )
-  CalculateBCubed("MeanSegNeighClusters.csv")
+  bcubed <- CalculateBCubed("MeanSegNeighClusters.csv")
+  
+  frame <- data.frame(
+    'Algorithm' = algo,
+    'Precision' = f1['Precision'],
+    'Recall' = f1['Recall'],
+    'F1' = f1['F1'],
+    'Rand' = rand['Rand'],
+    'Adj Rand' = rand['adjRand'],
+    'BCubed Precision' = as.numeric(bcubed[1]),
+    'BCubed Recall' = as.numeric(bcubed[2]),
+    'BCubed FScore' = as.numeric(bcubed[3])
+  )
+  full.results <- rbind(frame, full.results)
   
   # Mean BinSeg
   mean.binseg <- cpt.mean(
@@ -115,21 +162,34 @@ RunExperiment <- function(input, daily = TRUE) {
     minseglen = min.seglength
   )
   
-  print('/// Mean BinSeg ///')
+  algo <- 'Mean BinSeg'
   
   plot(mean.binseg, main = "Mean w/BinSeg", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  CalculateF1(mean.binseg@data.set,
+  f1 <- CalculateF1(mean.binseg@data.set,
               mean.binseg@cpts,
               groundtruth.indexed)
-  CalculateRand(mean.binseg@data.set,
+  rand <- CalculateRand(mean.binseg@data.set,
                 mean.binseg@cpts,
                 groundtruth.indexed)
   write.csv(
     AnnotateClusters(mean.binseg@data.set, mean.binseg@cpts),
     "MeanBinSegClusters.csv"
   )
-  CalculateBCubed("MeanBinSegClusters.csv")
+  bcubed <- CalculateBCubed("MeanBinSegClusters.csv")
+  
+  frame <- data.frame(
+    'Algorithm' = algo,
+    'Precision' = f1['Precision'],
+    'Recall' = f1['Recall'],
+    'F1' = f1['F1'],
+    'Rand' = rand['Rand'],
+    'Adj Rand' = rand['adjRand'],
+    'BCubed Precision' = as.numeric(bcubed[1]),
+    'BCubed Recall' = as.numeric(bcubed[2]),
+    'BCubed FScore' = as.numeric(bcubed[3])
+  )
+  full.results <- rbind(frame, full.results)
   
   # Var PELT
   var.pelt <- cpt.var(
@@ -139,15 +199,28 @@ RunExperiment <- function(input, daily = TRUE) {
     minseglen = min.seglength
   )
   
-  print('/// Var PELT ///')
+  algo <- 'Var PELT'
   
   plot(var.pelt, main = "Variance w/PELT", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  CalculateF1(var.pelt@data.set, var.pelt@cpts, groundtruth.indexed)
-  CalculateRand(var.pelt@data.set, var.pelt@cpts, groundtruth.indexed)
+  f1 <- CalculateF1(var.pelt@data.set, var.pelt@cpts, groundtruth.indexed)
+  rand <- CalculateRand(var.pelt@data.set, var.pelt@cpts, groundtruth.indexed)
   write.csv(AnnotateClusters(var.pelt@data.set, var.pelt@cpts),
             "VarPeltClusters.csv")
-  CalculateBCubed("VarPeltClusters.csv")
+  bcubed <- CalculateBCubed("VarPeltClusters.csv")
+  
+  frame <- data.frame(
+    'Algorithm' = algo,
+    'Precision' = f1['Precision'],
+    'Recall' = f1['Recall'],
+    'F1' = f1['F1'],
+    'Rand' = rand['Rand'],
+    'Adj Rand' = rand['adjRand'],
+    'BCubed Precision' = as.numeric(bcubed[1]),
+    'BCubed Recall' = as.numeric(bcubed[2]),
+    'BCubed FScore' = as.numeric(bcubed[3])
+  )
+  full.results <- rbind(frame, full.results)
   
   # Var SegNeigh
   var.segneigh <- cpt.var(
@@ -157,21 +230,34 @@ RunExperiment <- function(input, daily = TRUE) {
     minseglen = min.seglength
   )
   
-  print('/// Var SegNeigh ///')
+  algo <- 'Var SegNeigh'
   
   plot(var.segneigh, main = "Variance w/SegNeigh", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  CalculateF1(var.segneigh@data.set,
+  f1 <- CalculateF1(var.segneigh@data.set,
               var.segneigh@cpts,
               groundtruth.indexed)
-  CalculateRand(var.segneigh@data.set,
+  rand <- CalculateRand(var.segneigh@data.set,
                 var.segneigh@cpts,
                 groundtruth.indexed)
   write.csv(
     AnnotateClusters(var.segneigh@data.set, var.segneigh@cpts),
     "VarSegNeighClusters.csv"
   )
-  CalculateBCubed("VarSegNeighClusters.csv")
+  bcubed <- CalculateBCubed("VarSegNeighClusters.csv")
+  
+  frame <- data.frame(
+    'Algorithm' = algo,
+    'Precision' = f1['Precision'],
+    'Recall' = f1['Recall'],
+    'F1' = f1['F1'],
+    'Rand' = rand['Rand'],
+    'Adj Rand' = rand['adjRand'],
+    'BCubed Precision' = as.numeric(bcubed[1]),
+    'BCubed Recall' = as.numeric(bcubed[2]),
+    'BCubed FScore' = as.numeric(bcubed[3])
+  )
+  full.results <- rbind(frame, full.results)
   
   # Var BinSeg
   var.binseg <- cpt.var(
@@ -181,42 +267,67 @@ RunExperiment <- function(input, daily = TRUE) {
     minseglen = min.seglength
   )
   
-  print('/// Var BinSeg ///')
+  algo <- 'Var BinSeg'
   
   plot(var.binseg, main = "Variance w/BinSeg", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  CalculateF1(var.binseg@data.set, var.binseg@cpts, groundtruth.indexed)
-  CalculateRand(var.binseg@data.set, var.binseg@cpts, groundtruth.indexed)
+  f1 <- CalculateF1(var.binseg@data.set, var.binseg@cpts, groundtruth.indexed)
+  rand <- CalculateRand(var.binseg@data.set, var.binseg@cpts, groundtruth.indexed)
   write.csv(
     AnnotateClusters(var.binseg@data.set, var.binseg@cpts),
     "VarBinSegClusters.csv"
   )
-  CalculateBCubed("VarBinSegClusters.csv")
+  bcubed <- CalculateBCubed("VarBinSegClusters.csv")
+  
+  frame <- data.frame(
+    'Algorithm' = algo,
+    'Precision' = f1['Precision'],
+    'Recall' = f1['Recall'],
+    'F1' = f1['F1'],
+    'Rand' = rand['Rand'],
+    'Adj Rand' = rand['adjRand'],
+    'BCubed Precision' = as.numeric(bcubed[1]),
+    'BCubed Recall' = as.numeric(bcubed[2]),
+    'BCubed FScore' = as.numeric(bcubed[3])
+  )
+  full.results <- rbind(frame, full.results)
   
   # MeanVar PELT
   meanvar.pelt <- cpt.meanvar(
     dataset$Freq,
     method = "PELT",
-    test.stat = "Poisson",
     penalty = penalty.function,
     minseglen = min.seglength
   )
   
-  print('/// MeanVar PELT ///')
+  algo <- 'MeanVar PELT'
   
   plot(meanvar.pelt, main = "Mean & Variance w/PELT", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  CalculateF1(meanvar.pelt@data.set,
+  f1 <- CalculateF1(meanvar.pelt@data.set,
               meanvar.pelt@cpts,
               groundtruth.indexed)
-  CalculateRand(meanvar.pelt@data.set,
+  rand <- CalculateRand(meanvar.pelt@data.set,
                 meanvar.pelt@cpts,
                 groundtruth.indexed)
   write.csv(
     AnnotateClusters(meanvar.pelt@data.set, meanvar.pelt@cpts),
     "MeanVarPeltClusters.csv"
   )
-  CalculateBCubed("MeanVarPeltClusters.csv")
+  bcubed <- CalculateBCubed("MeanVarPeltClusters.csv")
+  
+  frame <- data.frame(
+    'Algorithm' = algo,
+    'Precision' = f1['Precision'],
+    'Recall' = f1['Recall'],
+    'F1' = f1['F1'],
+    'Rand' = rand['Rand'],
+    'Adj Rand' = rand['adjRand'],
+    'BCubed Precision' = as.numeric(bcubed[1]),
+    'BCubed Recall' = as.numeric(bcubed[2]),
+    'BCubed FScore' = as.numeric(bcubed[3])
+  )
+  full.results <- rbind(frame, full.results)
   
   # MeanVar SegNeigh
   meanvar.segneigh <- cpt.meanvar(
@@ -226,44 +337,74 @@ RunExperiment <- function(input, daily = TRUE) {
     minseglen = min.seglength
   )
   
-  print('/// MeanVar SegNeigh ///')
+  algo <- 'MeanVar SegNeigh'
   
   plot(meanvar.segneigh, main = "Mean & Variance w/SegNeigh", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  CalculateF1(meanvar.segneigh@data.set,
+  f1 <- CalculateF1(meanvar.segneigh@data.set,
               meanvar.segneigh@cpts,
               groundtruth.indexed)
-  CalculateRand(meanvar.segneigh@data.set,
+  rand <- CalculateRand(meanvar.segneigh@data.set,
                 meanvar.segneigh@cpts,
                 groundtruth.indexed)
   write.csv(
     AnnotateClusters(meanvar.segneigh@data.set, meanvar.segneigh@cpts),
     "MeanVarSegNeighClusters.csv"
   )
-  CalculateBCubed("MeanVarSegNeighClusters.csv")
+  bcubed <- CalculateBCubed("MeanVarSegNeighClusters.csv")
+  
+  frame <- data.frame(
+    'Algorithm' = algo,
+    'Precision' = f1['Precision'],
+    'Recall' = f1['Recall'],
+    'F1' = f1['F1'],
+    'Rand' = rand['Rand'],
+    'Adj Rand' = rand['adjRand'],
+    'BCubed Precision' = as.numeric(bcubed[1]),
+    'BCubed Recall' = as.numeric(bcubed[2]),
+    'BCubed FScore' = as.numeric(bcubed[3])
+  )
+  full.results <- rbind(frame, full.results)
   
   # MeanVar BinSeg
   meanvar.binseg <- cpt.meanvar(
     dataset$Freq,
     method = "BinSeg",
-    test.stat = "Poisson",
     penalty = penalty.function,
     minseglen = min.seglength
   )
   
-  print('/// MeanVar BinSeg ///')
+  algo <- 'MeanVar BinSeg'
   
   plot(meanvar.binseg, main = "Mean & Variance w/BinSeg", ylab = "Postings")
   PlotGroundTruth(groundtruth.indexed)
-  CalculateF1(meanvar.binseg@data.set,
+  f1 <- CalculateF1(meanvar.binseg@data.set,
               meanvar.binseg@cpts,
               groundtruth.indexed)
-  CalculateRand(meanvar.binseg@data.set,
+  rand <- CalculateRand(meanvar.binseg@data.set,
                 meanvar.binseg@cpts,
                 groundtruth.indexed)
   write.csv(
     AnnotateClusters(meanvar.binseg@data.set, meanvar.binseg@cpts),
     "MeanVarBinSegClusters.csv"
   )
-  CalculateBCubed("MeanVarBinSegClusters.csv")
+  bcubed <- CalculateBCubed("MeanVarBinSegClusters.csv")
+  
+  frame <- data.frame(
+    'Algorithm' = algo,
+    'Precision' = f1['Precision'],
+    'Recall' = f1['Recall'],
+    'F1' = f1['F1'],
+    'Rand' = rand['Rand'],
+    'Adj Rand' = rand['adjRand'],
+    'BCubed Precision' = as.numeric(bcubed[1]),
+    'BCubed Recall' = as.numeric(bcubed[2]),
+    'BCubed FScore' = as.numeric(bcubed[3])
+  )
+  full.results <- rbind(frame, full.results)
+  
+  rownames(full.results) <- NULL
+  write.csv(full.results, "fullmeasures.csv")
+  
+  return(full.results)
 }
