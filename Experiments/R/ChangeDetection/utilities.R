@@ -94,6 +94,12 @@ PlotGroundTruth <- function(groundtruth) {
   }
 }
 
+PlotChangePoints <- function(points) {
+  for (point in points) {
+    abline(v = point, col = "red")
+  }
+}
+
 #' utility for running CROPS algorithm
 GetPenalties <- function(input, daily = TRUE) {
   dataset <- ProcessData(input, daily)

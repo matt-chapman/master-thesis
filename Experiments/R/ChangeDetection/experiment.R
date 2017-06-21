@@ -7,47 +7,6 @@ options(digits=10)
 
 source("utilities.R")
 
-#' calculate F1 score based on ground truth
-CalculateF1 <- function(dataset, points, truth) {
-  algo.predictions <- numeric(length(dataset))
-  ground.truth <- numeric(length(dataset))
-  
-  for (i in truth) {
-    ground.truth[i] <- 1
-  }
-  
-  for (i in points) {
-    algo.predictions[i] <- 1
-  }
-  
-  result <- confusionMatrix(
-    data = algo.predictions,
-    reference = ground.truth,
-    mode = "prec_recall"
-  )
-  
-  return(c(result$byClass['Precision'], result$byClass['Recall'], result$byClass['F1']))
-
-}
-
-#' Calculate Rand & Adjusted Rand
-CalculateRand <- function(input, changepoints, truthpoints) {
-  clustering <- AnnotateClusters(input, changepoints)
-  truth <- AnnotateClusters(input, truthpoints)
-  
-  clustering <- clustering + 1
-  truth <- truth + 1
-  
-  result <- RRand(truth, clustering)
-  return(c(result['Rand'], result['adjRand']))
-}
-
-#' Call python script to calculate BCubed values
-CalculateBCubed <- function(input) {
-  result <- system(paste("python RunBCubed.py", input), intern = T)
-  return(c(result[1], result[2], result[3]))
-}
-
 #' main experiment method
 RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
   penalty.function = "Hannan-Quinn"
