@@ -17,11 +17,6 @@ GenerateNormalSignal <- function() {
   return(list(x, true.cpt))
 }
 
-GenerateDataSet <- function(n = 1000, point) {
-  data <- runif(n, 1, 5)
-  data[point:-1] 
-}
-
 #' Split a vector at given indices
 SplitVector <- function(data, splitpoints) {
   unname(split(data, cumsum(seq_along(data) %in% splitpoints)))
