@@ -74,4 +74,4 @@ def main(noise=0.0):
     OnlineSimulator(detector, ts).run(plot=True)
 
 if __name__ == '__main__':
-    main(noise=0.0)
+    main(noise=0.5)

@@ -81,8 +81,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
   mean.segneigh <- cpt.mean(
     dataset$Freq,
     method = "SegNeigh",
-    penalty = penalty.function,
-    minseglen = min.seglength
+    penalty = penalty.function
   )
   
   algo <- 'Mean SegNeigh'
@@ -185,8 +184,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
   var.segneigh <- cpt.var(
     dataset$Freq,
     method = "SegNeigh",
-    penalty = penalty.function,
-    minseglen = min.seglength
+    penalty = penalty.function
   )
   
   algo <- 'Var SegNeigh'
@@ -292,8 +290,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
   meanvar.segneigh <- cpt.meanvar(
     dataset$Freq,
     method = "SegNeigh",
-    penalty = penalty.function,
-    minseglen = min.seglength
+    penalty = penalty.function
   )
   
   algo <- 'MeanVar SegNeigh'
