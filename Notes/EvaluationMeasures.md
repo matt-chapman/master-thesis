@@ -14,10 +14,6 @@ F1-Score, 'Accuracy'
 
 TP, FP, TN, TP - so just F1 Score, binary classification
 
-* Tartakovsky et al, The quickest sequential detection of intrusions in computer networks
-
-No idea
-
 * Matteson et al, A nonparametric approach for multiple change point analysis of multivariate data
 
 Rand (accuracy) & Adjusted Rand (similarity)
@@ -32,7 +28,7 @@ Mean delay vs false alarm probability
 
 * Desobry et al, An online kernel change detection algorithm
 
-ROC Analysis (ROCR) - False alarm rate vs true alarm rate
+ROC Analysis (ROCR again) - False alarm rate vs true alarm rate
 
 * Kifer at al, Detecting Change in Data Streams
 
