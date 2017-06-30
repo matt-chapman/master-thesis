@@ -147,6 +147,7 @@ Experiment5 <- function() {
     'F1' = numeric(0),
     'Rand' = numeric(0),
     'Adj Rand' = numeric(0),
+    'BCubedAlt' = numeric(0),
     'BCubed Precision' = numeric(0),
     'BCubed Recall' = numeric(0),
     'BCubed FScore' = numeric(0)
@@ -155,12 +156,13 @@ Experiment5 <- function() {
   changepoints = numeric(0)
   numchangepoints = 0
   
-  for (i in c(51, seq(1, 40, 10), seq(60, 500, 10))) {
+  for (i in c(51, seq(55, 500, 5))) {
     data <- c(rep(0, 50), rep(1, 450))
     changepoints <- c(changepoints, i)
     numchangepoints <- numchangepoints + 1
     interim <- CalculateArbitrary(data, changepoints, 51)
     interim$Distance <- numchangepoints
+    interim$BCubedAlt <- AlternativeBCubed(data, changepoints, 51)
     results <- rbind(interim, results)
   }
   

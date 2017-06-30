@@ -1,10 +1,10 @@
 library(caret)
 library(phyclust)
+library(ROCR)
 library(rPython)
 
 #' calculate scores based on generated data
 CalculateArbitrary <- function(dataset, points, truth) {
-  
   f1 <- CalculateF1(dataset, points, truth)
   rand <- CalculateRand(dataset, points, truth)
   
@@ -55,8 +55,26 @@ CalculateF1 <- function(dataset, points, truth) {
     mode = "prec_recall"
   )
   print(result)
-  return(c(result$byClass['Precision'], result$byClass['Recall'], result$byClass['F1']))
+  return(c(
+    result$byClass['Precision'],
+    result$byClass['Recall'],
+    result$byClass['F1'],
+    result$overall['Accuracy']
+  ))
   
+}
+
+BuildROCPlot <- function(dataset, points, truth) {
+  algo.predictions <- numeric(length(dataset))
+  ground.truth <- numeric(length(dataset))
+  
+  for (i in truth) {
+    ground.truth[i] <- 1
+  }
+  
+  for (i in points) {
+    algo.predictions[i] <- 1
+  }
 }
 
 #' Calculate Rand & Adjusted Rand
@@ -75,4 +93,23 @@ CalculateRand <- function(input, changepoints, truthpoints) {
 CalculateBCubed <- function(input) {
   result <- system(paste("python RunBCubed.py", input), intern = T)
   return(c(result[1], result[2], result[3]))
+}
+
+AlternativeBCubed <- function(dataset, points, truth) {
+  algo.predictions <- numeric(length(dataset))
+  ground.truth <- numeric(length(dataset))
+  
+  for (i in truth) {
+    ground.truth[i] <- 1
+  }
+  
+  ground.truth <- ground.truth + 1
+  
+  for (i in points) {
+    algo.predictions[i] <- 1
+  }
+  
+  algo.predictions <- algo.predictions + 1
+  
+  return(BCubed_metric(ground.truth, algo.predictions, 0.5))
 }

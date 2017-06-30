@@ -3,7 +3,7 @@ library(caret)
 library(phyclust)
 library(rPython)
 options(warn = -1)
-options(digits=10)
+options(digits=12)
 
 source("utilities.R")
 
@@ -33,6 +33,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
     'Precision' = numeric(0),
     'Recall' = numeric(0),
     'F1' = numeric(0),
+    'Accuracy' = numeric(0),
     'Rand' = numeric(0),
     'Adj Rand' = numeric(0),
     'BCubed Precision' = numeric(0),
@@ -69,6 +70,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
     'Precision' = f1['Precision'],
     'Recall' = f1['Recall'],
     'F1' = f1['F1'],
+    'Accuracy' = f1['Accuracy'],
     'Rand' = rand['Rand'],
     'Adj Rand' = rand['adjRand'],
     'BCubed Precision' = as.numeric(bcubed[1]),
@@ -104,6 +106,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
     'Precision' = f1['Precision'],
     'Recall' = f1['Recall'],
     'F1' = f1['F1'],
+    'Accuracy' = f1['Accuracy'],
     'Rand' = rand['Rand'],
     'Adj Rand' = rand['adjRand'],
     'BCubed Precision' = as.numeric(bcubed[1]),
@@ -141,6 +144,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
     'Precision' = f1['Precision'],
     'Recall' = f1['Recall'],
     'F1' = f1['F1'],
+    'Accuracy' = f1['Accuracy'],
     'Rand' = rand['Rand'],
     'Adj Rand' = rand['adjRand'],
     'BCubed Precision' = as.numeric(bcubed[1]),
@@ -172,6 +176,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
     'Precision' = f1['Precision'],
     'Recall' = f1['Recall'],
     'F1' = f1['F1'],
+    'Accuracy' = f1['Accuracy'],
     'Rand' = rand['Rand'],
     'Adj Rand' = rand['adjRand'],
     'BCubed Precision' = as.numeric(bcubed[1]),
@@ -208,6 +213,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
     'Precision' = f1['Precision'],
     'Recall' = f1['Recall'],
     'F1' = f1['F1'],
+    'Accuracy' = f1['Accuracy'],
     'Rand' = rand['Rand'],
     'Adj Rand' = rand['adjRand'],
     'BCubed Precision' = as.numeric(bcubed[1]),
@@ -241,6 +247,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
     'Precision' = f1['Precision'],
     'Recall' = f1['Recall'],
     'F1' = f1['F1'],
+    'Accuracy' = f1['Accuracy'],
     'Rand' = rand['Rand'],
     'Adj Rand' = rand['adjRand'],
     'BCubed Precision' = as.numeric(bcubed[1]),
@@ -278,6 +285,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
     'Precision' = f1['Precision'],
     'Recall' = f1['Recall'],
     'F1' = f1['F1'],
+    'Accuracy' = f1['Accuracy'],
     'Rand' = rand['Rand'],
     'Adj Rand' = rand['adjRand'],
     'BCubed Precision' = as.numeric(bcubed[1]),
@@ -314,6 +322,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
     'Precision' = f1['Precision'],
     'Recall' = f1['Recall'],
     'F1' = f1['F1'],
+    'Accuracy' = f1['Accuracy'],
     'Rand' = rand['Rand'],
     'Adj Rand' = rand['adjRand'],
     'BCubed Precision' = as.numeric(bcubed[1]),
@@ -351,6 +360,7 @@ RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
     'Precision' = f1['Precision'],
     'Recall' = f1['Recall'],
     'F1' = f1['F1'],
+    'Accuracy' = f1['Accuracy'],
     'Rand' = rand['Rand'],
     'Adj Rand' = rand['adjRand'],
     'BCubed Precision' = as.numeric(bcubed[1]),
