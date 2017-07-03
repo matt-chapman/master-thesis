@@ -5,6 +5,11 @@
 % numeric citations, name/title/year sorting
 %\usepackage[backend=biber, style=alphabetic, citestyle=alphabetic, sorting=nty]{biblatex}
 
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usetikzlibrary{positioning}
+
 % program listings environment, see uvamscse.cls
 \input{program-listings}
 \newcommand{\cmd}[1]{\texttt{$\backslash$#1}}
@@ -63,7 +68,7 @@ This thesis will analyse three different change detection algorithms: \emph{Prun
 
 The algorithms will then be applied to a collection of datasets falling into two categories: real-world conversation volume data taken from Twitter, and simulated data generated according to certain constraints which will also be discussed in \autoref{Research Method}.
 
-The results provided by each technique will then be evaluated according to the following measures: Precision, Recall, F1 score, Rand Index, Adjusted Rand Index, Bcubed Precision, Bcubed Recall, Bcubed F-Score, and an information retrieval score based upon those in the \emph{TREC 2016} guidelines\todo{cite}. Once these measures have been calculated, a meta-analysis will take place to evaluate the effectiveness of these methods when compared with each other and by-eye analysis from social media domain experts.
+The results provided by each technique will then be evaluated according to the following measures: Precision, Recall, F1 score, Rand Index, Adjusted Rand Index, Bcubed Precision, Bcubed Recall and Bcubed F-Score. Once these measures have been calculated, a meta-analysis will take place to evaluate the effectiveness of these methods when compared with each other and by-eye analysis from social media domain experts.
 
 This thesis intends to answer the following research questions:
 
@@ -71,6 +76,7 @@ This thesis intends to answer the following research questions:
 	\item[RQ1] Are existing change point detection algorithms effective at detecting changes in social media data in a timely fashion?
 	\item[RQ2] Are measures not specifically defined for the purpose of change detection evaluation effective in this domain?
 	\item[RQ3] Do the aforementioned measures agree with by-eye analysis of results from change detection methods?
+	\item[RQ4] If existing measures are deficient in some way, what would an `ideal' measure look like?\todo{reword}
 \end{description}
 
 \improvement[inline]{this needs expansion, I think}
@@ -86,23 +92,70 @@ It is the intention of this thesis to not only answer the research questions set
 \chapter{Research Method}
 \label{Research Method}
 
+This thesis consists of three distinct parts:
+
+\begin{itemize}
+  \item Meta-analysis of evaluation measures
+  \item Evaluation of change detection approaches based on the measures discussed in the previous part
+  \item Application of change detection approaches to real world data and evaluation based on requirements elicitation and evaluation measures.
+\end{itemize}
+
+
 \section{Evaluation Measures}
 
 As briefly discussed in the introduction to this thesis, there are a number of pre-existing approaches for the evaluation of change detection methods. Here, the measures being evaluated are briefly explained:
 
 \begin{description}
-	\item[F1 Score]\unsure{cite this?} This measure is utilised for testing accuracy in problems of binary classification. It considers two different measures, \emph{precision} and \emph{recall}. The F1 score can be described in general terms as follows:
+	\item[F1 Score]\unsure{cite this?} This measure is utilised for testing accuracy in problems of binary classification. It considers two different measures, \emph{precision} and \emph{recall}, and takes a harmonic mean of the two measures to compute the final score.
+	
+	To calculate Precision and Recall, a \emph{confusion matrix} is first constructed to provide values for the total number of true positives, false negatives, false positives and true negatives:
+	
+	\begin{center}
+	    \begin{tikzpicture}[box/.style={draw,rectangle,minimum size=2cm,text width=1.5cm,align=center}]
+            \matrix (conmat) [row sep=.1cm,column sep=.1cm] {
+            \node (tpos) [box,
+               label=left:\( \mathbf{p'} \),
+                label=above:\( \mathbf{p} \),
+            ] {True \\ Positive};
+            &
+            \node (fneg) [box,
+                label=above:\textbf{n},
+                label=above right:\textbf{Totals},
+                label=right:\( \mathrm{P}' \)] {False \\ Negative};
+            \\
+            \node (fpos) [box,
+                label=left:\( \mathbf{n'} \),
+                label=below left:\textbf{Totals},
+                label=below:P] {False \\ Positive};
+            &
+            \node (tneg) [box,
+                label=right:\( \mathrm{N}' \),
+                label=below:N] {True \\ Negative};
+            \\
+            };
+    
+            \node [rotate=90,left=.05cm of conmat,anchor=center,text width=1.5cm,align=center] {
+                \textbf{Actual Value}
+            };
+            \node [above=.05cm of conmat] {\textbf{Prediction Outcome}};
+        \end{tikzpicture}
+	\end{center}
+
+	$Recall$ is computed as the number of correct positive results, divided by the number of positive results that should have been detected. $Precision$ is computed as the number of correct positive results divided by the number of all possible positive results:
+	
+	\begin{eqnarray}
+	    Precision = \frac{TP}{TP + FP}\\
+	    Recall = \frac{TP}{TP + FN}
+	\end{eqnarray}
+	
+	The F1 score calculation (the harmonic mean of both recall and precision) can be described in general terms as follows:
 
 	\begin{equation}
 		F_1 = 2 \cdot \frac{1}{\frac{1}{recall} + \frac{1}{precision}} = 2 \cdot \frac{precision \cdot recall}{precision+recall}
 		\label{equ:F1}
 	\end{equation}
 
-	$recall$ is computed as the number of correct positive results, divided by the number of positive results that should have been detected. $precision$ is computed as the number of correct positive results divided by the number of all possible positive results.
-
-	As the F1 score is a binary classification measure, it can only be used to test the precision of an algorithm in a single domain, that is, was the change detected or not.
-	
-	When calculating an F1 score, it is generally accepted that a classification is given a score between 1 and 0, such that real numbers between 1 and 0 can be used to show to what degree something was classified into one group or another. The F1 score also results in a real number between 1 and 0.
+	As the F1 score is a binary classification measure, it can only be used to test the precision of an algorithm in a single domain, that is, was the change detected or not. Precision, Recall and F1 Score all provide a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $
 
 	\item[Rand Index] This measure is for computing the similarity between two clusters of data points. It is used for calculating the overall accuracy of a given clustering approach, when compared against a set of ground truth clusters. The Rand Index is defined as:
 
@@ -117,9 +170,9 @@ As briefly discussed in the introduction to this thesis, there are a number of p
 		\item $b$ = total number of pairs that were partitioned into \emph{different} subsets by both $X$ and $Y$
 		\item $c$ = total number of pairs that were partitioned into the \emph{same} subset by $X$ and into a different subset by $Y$
 		\item $d$ = total number of pairs that were partitioned into the \emph{same} subset by $Y$ and into a different subset by $X$
-	\end{itemize}
+	\end{itemize}\todo{reword, wikipedia}
 	
-	Intuitively, it can be stated that $a+b$ is the total number of agreements between methods $X$ and $Y$, while $c+d$ is the total number of disagreements. This calculation will return $0$ for completely different clusters and $1$ for identical clusters.
+	Intuitively, it can be stated that $a+b$ is the total number of agreements between methods $X$ and $Y$, while $c+d$ is the total number of disagreements. This calculation will return $0$ for completely different clusters and $1$ for identical clusters. The Rand Index provides a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $
 	
 	\item[Adjusted Rand Index]Similar to the Rand Index, but adjusted to take into account the random chance of pairs being assigned to the same cluster by both approaches being compared. While the Rand Index is suited for comparing a segmentation method against a known-good \emph{oracle} method, the adjusted index is more suited to comparing two differing approaches \cite{Matteson2012}. It is defined as:
 	
@@ -128,6 +181,38 @@ As briefly discussed in the introduction to this thesis, there are a number of p
 	\end{equation}
 	
 	where $R_{expected}$ is defined as the expected Rand Index score for two completely random classifications of the given data\todo{cite, https://arxiv.org/pdf/1306.4933.pdf} and $R_{max}$ is defined as the maximum Rand Index value - generally $1$.
+	
+	The Adjusted Rand Index provides a score $s$ such that $ \{s\in\mathbb{R} \mid -1\leq s \leq 1\} $. This is different to the score returned by the `basic' Rand Index, in that it is possible for a negative value to be returned.
+		
+	\item[BCubed] BCubed is similar to the Adjusted Rand Index, in that it is adjusted to be appropriate for all constraints in a clustering problem. It was developed by Bagga and Baldwin\todo{cite} in 1998.
+	
+	BCubed operates in a similar way to the Recall and Precision classification metrics, in that it computes precision and recall values, before calculating a harmonic mean of the two metrics. BCubed also makes use of an additional \emph{correctness} function defined as follows, where $e$ and $e'$ are equivalent elements in a ground truth and computed clustering respectively, $L$ is a computed label and $C$ is a ground truth category:
+	
+	\begin{equation}
+	\label{eqn:correctness}
+	    \text{Correctness}(e,e') = 
+	    \begin{cases}
+	        1 & \text{iff $L(e) = L(e') \leftrightarrow C(e) = C(e')$}\\
+	        0 & \text{otherwise}
+	    \end{cases}
+	\end{equation}
+	
+	\autoref{eqn:correctness} can be stated intuitively as returning $1$ if and only if both the ground truth and computed clusterings place the element $e$ into the same cluster, returning $0$ in all other cases.
+	
+	Precision and Recall can then be calculated as follows:
+	
+    \begin{align}
+    \label{eqn:bcubed-precision}
+        \text{Precision} &= Avg_e [Avg_{e' . C(e) = C(e')}[Correctness(e,e')]]\\
+        \label{eqn:bcubed-recall}
+        \text{Recall} &= Avg_e [Avg_{e' . L(e) = L(e')}[Correctness(e,e')]]
+    \end{align}
+
+To obtain the F score, a harmonic mean of Precision and Recall is taken in the same manner as the F1 score for binary classification:
+
+\begin{equation}
+    F_{bc} = 2 \cdot \frac{1}{\frac{1}{Recall_{bc}} + \frac{1}{Precision_{bc}}}
+\end{equation}
 
 \end{description}
 
@@ -202,9 +287,17 @@ Penalty scores operate as a mechanism for optimising an unbounded problem such a
 
 \autoref{boundingfunc} is an equation showing the optimisation problem that change point detection presents. Intuitively, the equation shows that the optimal number of change points results from minimising the sum of the cost function.
 
-There are a number of established approaches to calculating penalty values for unbounded problems, chiefly among which are Schwarz Information Criterion (SIC), Bayesian Information Criterion (BIC), Akaike Information Criterion (AIC) and Hannan-Quinn\todo{cite}. Of these approaches, it is necessary to experiment to find the scheme that produces the `correct' number of changepoints for a given dataset.
+There are a number of established approaches to calculating penalty values for unbounded problems, chiefly among which are Schwarz Information Criterion (SIC)/Bayesian Information Criterion (BIC), Akaike Information Criterion (AIC) and Hannan-Quinn\todo{cite}. Of these approaches, it is necessary to experiment to find the scheme that produces the `correct' number of changepoints for a given dataset. The penalty schemes are defined as follows:
 
-\subsection{Distribution Assumptions}tau
+\begin{align}
+    \text{SIC} &= \ln(n) k - 2 \ln(\hat{L})\\
+    \text{AIC} &= 2k - 2 \ln(\hat{L})\\
+    \text{HQC} &= -2L_{max} + 2k \ln(\ln(n))
+\end{align}
+
+Where $n$ is the total number of observations, $k$ is the number of \emph{free parameters}\footnote{variables that are unable to be predicted by a given model} and $\hat{L}$ is the maximum value of a likelihood function.\todo{reword, wikipedia}
+
+\subsection{Distribution Assumptions}
 
 \section{Scoring Metrics}
 
