@@ -242,7 +242,7 @@ Calculating the BCubed precision, recall and f-score metrics is being carried ou
 
 \section{Data Preparation}
 
-Two distinct studies are being carried out in this thesis. The first is a simulation study carried out using simulated time series data of a known probability distribution, with added change points at various time indices. This is generated in \textsf{R} and created to allow for a baseline comparison of change point detection methods and evaluation measures.
+Two distinct studies are being carried out in this thesis. The first is a simulation study carried out using simulated time series data with added change points at various time indices. This is generated in \textsf{R} and created to allow for a baseline comparison of change point detection methods and evaluation measures.
 
 The simulated data is accompanied by a list of known change points. As the data is being generated programatically, it is not necessary to carry out annotation of this data in order to know at what time index these changes occur. This set of known change points is used as the \emph{ground truth} 
 
@@ -252,25 +252,25 @@ The final result of the prepared data\todo{finish getting data together} shall b
 
 \subsection{The Nature of Twitter Data}
 
-It is important, as part of this research, to understand the nature of the data being studied. The main reason for this is that several of the algorithms being evaluated require one to specify either a test statistic or the distribution of the data (as closely) as possible to give optimal results. For example, for detection of changes in mean using the \texttt{changepoint} package, one must specify whether the data follows a normal distribution, or whether to use the CUSUM (cumulative sum) test statistic that makes no assumptions about the distribution of the data.
-
-%\begin{figure}[hbt]
-%	\includegraphics[scale=0.5]{figures/ing-totals-full.png}
-%	\centering
-%	\caption{"ING" postings by date}
-%	\label{fig:ing_totals_graph}
-%\end{figure}
-
-Figure \ref{fig:ing_totals_graph} shows the distribution of twitter postings mentioning ``ING'' between 01/01/2017 and 28/02/2017. At first glance, this data has a number of interesting change points that we may wish to detect. Firstly, we shall examine what kind of distribution this data falls under. Carrying out the Shapiro-Wilk normality test gives us a \emph{p-value} of 0.0001037, well below the normally accepted 0.05. We can further see that this data set does not fit a normal distribution by generating a Q-Q plot of the data using R. \ref{fig:ing_QQ_plot} shows the completed QQ plot, which demonstrates the lack of normal distribution.
-
-%\begin{figure}[hbt]
-%	\includegraphics[scale=0.5]{figures/qqplot-ing.png}
-%	\centering
-%	\caption{Q-Q plot of ING postings}
-%	\label{fig:ing_QQ_plot}
-%\end{figure}
-
-The second type of data that will be used is entirely simulated. This will be achieved using R's facilities for generating sets of random data that fits a normal distribution. In this way it will be possible to demonstrate how (if at all) change detection algorithms handle data with different distribution models differently.
+%It is important, as part of this research, to understand the nature of the data being studied. The main reason for this is that several of the algorithms being evaluated require one to specify either a test statistic or the distribution of the data (as closely) as possible to give optimal results. For example, for detection of changes in mean using the \texttt{changepoint} package, one must specify whether the data follows a normal distribution, or whether to use the CUSUM (cumulative sum) test statistic that makes no assumptions about the distribution of the data.
+%
+%%\begin{figure}[hbt]
+%%	\includegraphics[scale=0.5]{figures/ing-totals-full.png}
+%%	\centering
+%%	\caption{"ING" postings by date}
+%%	\label{fig:ing_totals_graph}
+%%\end{figure}
+%
+%Figure \ref{fig:ing_totals_graph} shows the distribution of twitter postings mentioning ``ING'' between 01/01/2017 and 28/02/2017. At first glance, this data has a number of interesting change points that we may wish to detect. Firstly, we shall examine what kind of distribution this data falls under. Carrying out the Shapiro-Wilk normality test gives us a \emph{p-value} of 0.0001037, well below the normally accepted 0.05. We can further see that this data set does not fit a normal distribution by generating a Q-Q plot of the data using R. \ref{fig:ing_QQ_plot} shows the completed QQ plot, which demonstrates the lack of normal distribution.
+%
+%%\begin{figure}[hbt]
+%%	\includegraphics[scale=0.5]{figures/qqplot-ing.png}
+%%	\centering
+%%	\caption{Q-Q plot of ING postings}
+%%	\label{fig:ing_QQ_plot}
+%%\end{figure}
+%
+%The second type of data that will be used is entirely simulated. This will be achieved using R's facilities for generating sets of random data that fits a normal distribution. In this way it will be possible to demonstrate how (if at all) change detection algorithms handle data with different distribution models differently.
 
 \section{Algorithm Configuration}
 
@@ -278,7 +278,7 @@ Change detection is an \emph{unbounded} problem. Left without some system of con
 
 \subsection{Penalty Scores}
 
-Penalty scores operate as a mechanism for optimising an unbounded problem such as the one being addressed here. Haynes et al. define the problem as follows \cite{Haynes2014}: Given time series data points $y_1,\ldots,y_n$, the result of a given algorithm shall be a set of $m$ changepoints such that their locations $\tau_{1:m} = (\tau_1,\ldots,\tau_m)$, where $\tau_i$ is an integer between 1 and $n-1$ inclusive.
+Penalty scores operate as a mechanism for optimising an unbounded problem such as the one being addressed here. Haynes et al. define the problem as follows \cite{Haynes2014}: Given time series data points $y_1,\ldots,y_n$, the series will contain $m$ changepoints such that their locations $\tau_{1:m} = (\tau_1,\ldots,\tau_m)$, where $\{\tau_i \in \mathbb{Z} \mid 1 \leqslant \tau_i \leqslant n-1\}$. $\tau_0$ is assumed to be 0, and $\tau_{m+1}$ is assumed to be $n$. In this way we can state that a given change detection algorithm will split the time series into $m + 1$ segments such that segment $i$ contains the points $y_{(\tau_{i-1}+1):\tau_i} = (y_{\tau_{i-1} + 1},\dots,y_{\tau_i})$.
 
 \begin{equation}
 \label{boundingfunc}
