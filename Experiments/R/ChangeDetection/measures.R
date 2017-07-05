@@ -27,7 +27,7 @@ CalculateArbitrary <- function(dataset, points, truth) {
   )
   
   par(mfrow = c(1, 1))
-  plot(dataset)
+  plot(dataset, type = 'l')
   PlotGroundTruth(truth)
   PlotChangePoints(points)
   

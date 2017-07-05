@@ -201,6 +201,83 @@ Experiment6 <- function() {
   
 }
 
+#' add true and detected changepoints
+Experiment7 <- function() {
+  results = data.frame(
+    row.names = 'Distance',
+    'Distance' = numeric(0),
+    'Precision' = numeric(0),
+    'Recall' = numeric(0),
+    'F1' = numeric(0),
+    'Rand' = numeric(0),
+    'Adj Rand' = numeric(0),
+    'BCubed Precision' = numeric(0),
+    'BCubed Recall' = numeric(0),
+    'BCubed FScore' = numeric(0)
+  )
+
+  changes <- c(rep(0,25), rep(1,25))
+  data <- changes
+  changepoints <- 28
+  truthpoints <- 26
+  interim <- CalculateArbitrary(data, changepoints, truthpoints)
+  interim$Distance <- 1
+  results <- rbind(interim, results)
+  
+  for(i in seq(50, 1000, 50)) {
+    data <- c(data, changes)
+    truthpoints <- c(truthpoints, (i+1), (i+26))
+    changepoints <- c(changepoints, (i+2), (i+28))
+    interim <- CalculateArbitrary(data, changepoints, truthpoints)
+    interim$Distance <- i
+    results <- rbind(interim, results)
+  }
+
+  return(results)
+}
+
+#' add true and detected changepoints
+Experiment8 <- function() {
+  results = data.frame(
+    row.names = 'Distance',
+    'Distance' = numeric(0),
+    'Precision' = numeric(0),
+    'Recall' = numeric(0),
+    'F1' = numeric(0),
+    'Rand' = numeric(0),
+    'Adj Rand' = numeric(0),
+    'BCubed Precision' = numeric(0),
+    'BCubed Recall' = numeric(0),
+    'BCubed FScore' = numeric(0)
+  )
+  
+  data <- numeric(1050)
+  changepoints <- numeric(0)
+  truthpoints <- numeric(0)
+  #data[i:j] <- data[i:j] + 1
+
+  #interim <- CalculateArbitrary(data, changepoints, truthpoints)
+  #interim$Distance <- 1
+  #results <- rbind(interim, results)
+  x <- 0
+  for(i in seq(25, 1000, 50)) {
+    j <- i + 25
+    data[i:j] <- data[i:j] + 1
+    truth1 <- i + 1
+    truth2 <- j + 1
+    point1 <- truth1 + 2
+    point2 <- truth2 + 2
+    x <- x + 1
+    truthpoints <- c(truthpoints, truth1, truth2)
+    changepoints <- c(changepoints, point1, point2)
+    interim <- CalculateArbitrary(data, changepoints, truthpoints)
+    interim$Distance <- x
+    results <- rbind(interim, results)
+  }
+  
+  return(results)
+}
+
 PlotResults <- function(data, xlab) {
   colours <-
     c(

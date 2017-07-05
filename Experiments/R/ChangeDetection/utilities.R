@@ -2,8 +2,10 @@ library(readr)
 library(changepoint)
 
 #' Generates gaussian noise & poisson process signal, approx 10 jumps
+#' 
+#' could do multiple jumps or fixed number of jumps, take stat. significance
 GenerateNormalSignal <- function() {
-  set.seed(10)
+  # set.seed(10)
   # number of changepoints
   N <- rpois(1,10)
   # true changepoints
