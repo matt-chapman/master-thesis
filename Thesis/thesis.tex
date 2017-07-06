@@ -46,15 +46,15 @@
 \section{Problem Statement}
 \label{Problem Statement}
 
-When asserting the veracity of an approach to a particular problem in software engineering, this is almost always achieved by utilising some sort of metric or measure. To give an example, when evaluating the quality of some new piece of software, this could be done through calculating measures such as McCabe Complexity \todo{cite} or unit test coverage.
+When asserting the veracity of an approach to a particular problem in software engineering, this is almost always achieved by utilising some sort of metric or measure. To give an example, when evaluating the quality of some new piece of software, this could be done through calculating measures such as McCabe Complexity \cite{ThomasJ.McCabe1976} or unit test coverage.
 
-The problem of detecting change points in a data stream is no different. There exists within this field a number of metrics that may be used to prove the accuracy and effectiveness of a given approach, and these often fall into one of three categories: binary classification (e.g. F1 score), clustering (e.g. BCubed, or the Rand Index), or information retrieval (e.g. TREC retrieval score)\todo{cite this}.
+The problem of detecting change points in a data stream is no different. There exists within this field a number of metrics that may be used to prove the accuracy and effectiveness of a given approach, and these often fall into one of three categories: binary classification (e.g. F1 score), clustering (e.g. BCubed, or the Rand Index), or information retrieval (utilising scoring systems such as those utilised in the TREC 2016 Real Time Summarisaion Track: \cite{trec2016}).
 
 Being that there are myriad ways to detect change points in a data stream, it is necessary to implement the application of some evaluation measure to back up an assertion that, for example, approach \emph{A} is better than approach \emph{B} for some data set $y_s$. The application of these measures can, in some cases, result in more questions than answers, especially in situations where two different measures may disagree with the results of the aforementioned approaches \emph{A} and \emph{B}.
 
 However, for the number of change point detection methods that exist, there is an almost equal number of ways to evaluate the results of the methods. There is little agreement between researchers on the `correct' method to use, and as this research will show, there are problems that exist when utilising measures that have generally been widely accepted for this purpose.
 
-Outside of the `normal' applications of change point detection (for example, spotting the onset of `storm seasons' in oceanographic data \todo{cite} or the detection of past changes in the valuation of a currency, such as BitCoin \todo{cite}, there is also an application for change point detection as an `event detection' mechanism, when applied to data such as that sourced from online social media platforms.
+Outside of the `normal' applications of change point detection (for example, spotting the onset of `storm seasons' in oceanographic data \cite{Killick2011} or the detection of past changes in the valuation of a currency, such as BitCoin \cite{Buntain2014}, there is also an application for change point detection as an `event detection' mechanism, when applied to data such as that sourced from online social media platforms.
 
 There exists methods of event detection in social media data utilising approaches such as term frequency counting, lexicon-based recognition and context-free-grammar algorithms \todo{cite yordi}. However, these approaches rely on (sometimes computationally expensive) analysis of the content of messages being posted on social media platforms. Being that change point detection (and especially \emph{online} change point detection algorithms can be utilised for the detection of past events, it stands to reason that these algorithms can also be utilised for event detection when applied to pre-computed data such as conversation volume or reach of a particular conversation. There certainly exists a requirement in the field of online reputation management to be able to inform businesses (in a timely manner) that a spike in conversation volume is occurring, and thus they may need to carry out some action to mitigate reputational damage if the conversation sentiment is negative.
 
@@ -81,11 +81,296 @@ From these research questions, the following sub-questions have been formulated:
 
 This particular research is motivated specifically by the online reputation management sector. The business hosting this research project (Buzzcapture International [\url{http://www.buzzcapture.com}]) is a Dutch consultancy that provides online reputation management services to other businesses throughout Europe. Chief among these services is the BrandMonitor application, which, among other features, provides a rudimentary notification system for clients that is triggered once there is an absolute increase in conversation volume (conversation volume being defined as the number of tweets relevant to the client over a given time period).
 
-Buzzcapture made a project available to students of the Universiteit van Amsterdam, wherein they would provide a method for more effectively providing these notifications, based on more than just an arbitrary threshold on conversation volume or some other computed metric. Upon accepting this project, research was carried out into the field of change detection algorithms, during which it was found that there was not a \emph{single} accepted approach for evaluating measures. Indeed, for every publication that described some novel change point detection algorithm, there was a slightly different approach for evaluating it, and proving the veracity of algorithm in a certain situation. Most publications made use of some sort of binary classification measure, while others had small variations on that theme, providing additional takes on the binary classification approach using methods such as \emph{Receiver Operating Characteristic} curves. Additionally, there were publications that made use of clustering measures, calculated using a segmentation of the time series based on computed change points. \todo{cite}
+Buzzcapture made a project available to students of the Universiteit van Amsterdam, wherein they would provide a method for more effectively providing these notifications, based on more than just an arbitrary threshold on conversation volume or some other computed metric. Upon accepting this project, research was carried out into the field of change detection algorithms, during which it was found that there was not a \emph{single} accepted approach for evaluating measures. Indeed, for every publication that described some novel change point detection algorithm, there was a slightly different approach for evaluating it, and proving the veracity of algorithm in a certain situation. Most publications made use of some sort of binary classification measure (for example, \cite{Qahtan2015}, \cite{Buntain2014}, \cite{Pelecanos2010}), while others had small variations on that theme, providing additional takes on the binary classification approach using methods such as \emph{Receiver Operating Characteristic} curves (for example \cite{Fawcett1999} \& \cite{Desobry2005}). Additionally, there were publications that made use of clustering measures, calculated using a segmentation of the time series based on computed change points, such as \cite{Matteson2012}.
 
 It is the intention of this thesis to not only answer the research questions set out in \autoref{Problem Statement}, but also to provide a robust recommendation and working prototype of a change detection methodology which could then eventually be implemented into the Brand Monitor tool to supply timely and relevant notifications to clients when a conversation concerning their brand exhibits a change in behaviour or otherwise `goes viral'.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Background \& Context}
+
+\section{Change Detection Algorithms}
+
+Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally referred to as \emph{control charts}. Since the inception of approaches such as CUSUM that provide the possibility for on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic detection, online reputation management and infrastructure error detection, change detection is hugely useful both as an academic problem and in production systems of myriad application.
+
+\subsection{Pruned Exact Linear Time}
+
+Pruned Exact Linear Time (henceforth referred to as \emph{PELT} is a modern change point detection method proposed by R. Killick et. al in `Optimal Detection Changepoints With a Linear Computational Cost', in 2012 \cite{Killick2011a}.
+
+PELT is an \emph{exact} method of computing change points, based on segmentation of data streams, in the same manner as Segment Neighbourhood and Binary Segmentation. PELT is a modification of the \emph{Optimal Partitioning} method proposed by Brad Jackson et. al in 2003, in \todo{cite}.
+
+Jackson's method has a computational cost of $O(n^2)$, while Killick's PELT method improves on this with a computational complexity of $O(n)$\todo{cite}.
+
+The PELT method works similarly to Segment Neighbourhood and Binary Segmentation approaches, in that it attempts to fit a model of segmentation of a given data set, minimising the cost of the segmentation to achieve an optimal distribution of segments and therefore change points.
+
+\autoref{alg:pelt} describes a pseudocode implementation of the PELT algorithm, as described in \cite{Eckley2011}\newline
+
+\begin{algorithm}[H]
+    \label{alg:pelt}
+    \caption{PELT Method for change point detection}
+    \DontPrintSemicolon
+    \SetKwInOut{Initialise}{Initialise}
+    \KwIn{A set of data of the form, $(y_1, y_2, \ldots,y_n)$ where $y_i \in \mathbb{R}$.\newline
+        A measure of fit $C(.)$ dependent on the data.\newline
+        A penalty constant $\beta$ which does not depend on the number or location of change points.\newline
+        A constant $K$ that satisfies $C(y_{(t+1):s}) + C(y_{(s+1):T}) + K \leq C(y_{t+1):T})$\newline}
+    \Initialise{Let $n$ = length of data and set $F(0) = -\beta$, $cp(0) = NULL$\newline}
+    \For{$\tau* = 1,\ldots,n$}{
+        Calculate $F(\tau*) = min_{\tau \in R_{\tau*}} \lbrack F(\tau) + C(y_{\tau+1:\tau*}) + \beta \rbrack$\;
+        Let $\tau^1 = arg \Big\{ min_{\tau \in R_{\tau*}} \lbrack F(\tau) + C(y_{(\tau+1):\tau*}) + \beta \rbrack \Big\}$\;
+        Set $cp(\tau*) = \lbrack cp(\tau^1), \tau^1 \rbrack$\;
+        Set $R_{\tau^* + 1} = \{\tau \in R_{\tau^*} \cup \{\tau^*\} : F(\tau) + C(y_{\tau+1:\tau^*}) + K \leq F(\tau^*)\}$
+    }
+    \KwOut{the change points recorded in $cp(n)$}
+\end{algorithm}
+
+\subsection{Segment Neighbourhoods}
+
+Proposed by Auger and Lawrence in 1989\todo{cite}, Segment Neighbourhood (\emph{SegNeigh}) is another example of an exact segmentation algorithm for the detection of change points in data. SegNeigh utilises dynamic programming to search the segmentation space (defined as the maximum number of change points in a given data stream) and then compute the cost function for every possible segmentation of the data. In this way, the location and number of change points can be computed exactly by taking the segmentation that returns the lowest cost function result.
+
+\autoref{alg:segneigh} describes a pseudocode implementation of the SegNeigh algorithm, as described in \cite{Eckley2011}\newline
+
+\begin{algorithm}[H]
+\label{alg:segneigh}
+    \caption{Generic Segment Neighbourhoods method for change point detection}
+    \DontPrintSemicolon
+    \SetKwInOut{Initialise}{Initialise}
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    \KwIn{A set of data of the form, $(y_1, y_2, \dots, y_n)$\newline
+        A measure of fit $R(.)$ dependent on the data which needs to be minimised.\newline
+        An integer, $M-1$ specifying the maximum number of change points to find.}
+    \Initialise{Let $n$ = length of data.\newline
+        Calculate $q^1_{i,j} = R(y_{i:j})$ for all $i, j \in \lbrack 1,n \rbrack$ such that $i < j$.\newline}
+        
+    \For{$m = 2, \ldots ,M$}{
+        \For{$j \in \{1,2,\ldots , n\}$}{
+            Calculate $q^m_{1,j} = min_{v \in \lbrack 1,j \rbrack }(q^{m-1}_{1,v} + q^1_{v + 1, j})$\;
+        }
+        Set $\tau_{m, 1}$ to be the $v$ that minimises $(q^{m-1}_{1,v} + q^1_{v + 1, n})$\;
+        \For{$i \in \{ 2, 3, \ldots , M \}$}{
+            Let $\tau_{m,i}$ to be the $v$ that minimises $(q^{m-i-1}_{1,v} + q^1_{v + 1, cp_{m,i-1}})$\;
+        }
+        
+    }
+        
+    \KwOut{For $m = 1, \ldots , M$: the total measure of fit, $q^m_{1,n}$ for $m-1$ change points and the location of the change points for that fit, $\tau_{m,1:m}$.}
+\end{algorithm}
+
+\subsection{Binary Segmentation}
+
+Binary Segmentation is a popular method for change point detection, widely utilised and cited in change point related literature such as \todo{cite}. Binary segmentation is a method that recursively applies a single change point detection method. On the first iteration, if a change point is detected, the data is split around that change point (resulting in two data sets) and the change point method is run again on the two resulting data sets. This process is repeated such that many data set segments are created, and runs until no further change points are detected.
+
+Binary Segmentation is an \emph{approximate} change point detection approach, and returns estimated change point locations - unlike PELT and SegNeigh - which return exact change point locations.
+
+\autoref{alg:binseg} describes a pseudocode implementation of the BinSeg algorithm, as described in \cite{Eckley2011}\newline
+
+\begin{algorithm}[H]
+    \label{alg:binseg}
+    \caption{Generic Binary Segmentation method for change point detection}
+    \DontPrintSemicolon
+    \SetKwInOut{Initialise}{Initialise}
+    \SetKwInOut{Input}{Input}
+    \SetKwInOut{Output}{Output}
+    \KwIn{A set of data of the form, $(y_1, y_2, \dots, y_n)$\newline
+    A test statistic $\Lambda(.)$ dependent on the data\newline
+    An estimator of change point position $\hat{\tau}(.)$\newline
+    A rejection threshold $C$.\newline}
+    \Initialise{Let $C=\emptyset$, and $S = \{ \lbrack 1,n \rbrack \}$\newline}
+    \While{$S \neq \emptyset$}{
+        Choose an element of $S$, denote element as $\lbrack s,t \rbrack$\;
+        \If{$\Lambda(y_{s:t}) < C$}{
+            remove $\lbrack s,t \rbrack$ from $S$\;
+        }
+        \If{$\Lambda(y_{s:t})$}{
+        
+            remove $\lbrack s, t \rbrack$ from $S$\;
+            calculate $r = \hat{\tau}(y_{s:t}) + s - 1$, and add $r$ to $C$\;
+            
+            \If{$r \neq s$}{
+                add $\lbrack s, r \rbrack$ to $S$\;
+            }
+            
+            \If{$r \neq t - 1$}{
+                add $\lbrack r + 1, t \rbrack$ to $S$\;
+            }
+        }
+    }
+    \KwOut{the set of change points recorded in $C$}
+\end{algorithm}
+
+\section{Algorithm Configuration}
+
+Change detection is an \emph{unbounded} problem. Left without some system of constraint, the algorithm could theoretically run to infinity. Indeed, one of the algorithms utilised in this research, PELT\todo{citation needed}, when left unbounded, will detect every data point in the time-series as a change point. This result is \textit{technically} correct, but not useful for our purposes. For this reason, the algorithms implement a penalty system, allowing for an optimal number of change points to be detected.
+
+\subsection{Penalty Scores}
+
+Penalty scores operate as a mechanism for optimising an unbounded problem such as the one being addressed here. Haynes et al. define the problem as follows \cite{Haynes2014}: Given time series data points $y_1,\ldots,y_n$, the series will contain $m$ change points such that their locations $\tau_{1:m} = (\tau_1,\ldots,\tau_m)$, where $\{\tau_i \in \mathbb{Z} \mid 1 \leqslant \tau_i \leqslant n-1\}$. $\tau_0$ is assumed to be 0, and $\tau_{m+1}$ is assumed to be $n$. In this way we can state that a given change detection algorithm will split the time series into $m + 1$ segments such that segment $i$ contains the points $y_{(\tau_{i-1}+1):\tau_i} = (y_{\tau_{i-1} + 1},\dots,y_{\tau_i})$. A \emph{cost function} for a segmentation of the data set $y_s$ can be defined as $C = (y_{s+1:t})$. This cost function defines a cost for a given segmentation containing points $y_{s+1:t}$. To illustrate, the cost function $C$, in the context of binary classification, returns a value that increases for an `incorrect' classification and decreases for a `correct' classification.
+
+At this point it can be stated that the \emph{constrained minimisation problem} is as follows:
+
+\begin{equation}
+\label{unbounded}
+    Q_m(y_{1:n}) = \min_{\tau_{1:m}} \Bigg\{ \sum^{m+1}_{i=1}[C(y_{(\tau_{i - 1} + 1):\tau_i})] \Bigg\}
+\end{equation}
+
+\autoref{unbounded} is an equation showing the optimisation problem that change point detection presents. If the equation is taken intuitively, it shows that for a dataset with a \emph{known} number of change points, the segmentation of the data around the change points can be effectively estimated by obtaining the segmentation that returns the minimum cost based on the cost function $C$.
+
+However, the problem being solved by many change detection algorithms involves an unknown number of change points, at unknown locations. In this case we can estimate the following to obtain the number and location of the change points:
+
+\begin{equation}
+\label{eqn:penalty}
+    \min_{m} \big\{ Q_m(y_{1:n}) + f(m) \big\}
+\end{equation}
+
+\autoref{eqn:penalty} includes a \emph{penalty function} $f(m)$ that increases proportionally with the number of change points $m$. Essentially, as the segmentation calculated as $Q_m$ increases in size, so does the result of the penalty function $f(m)$. These two elements are at-odds with each other, presenting a problem that requires optimisation to correctly estimate the number and location of change points in the data set $y_s$. If $f(m)$ increases in a linear fashion with $m$, we can define a \emph{penalised minimisation problem} in the following manner:
+
+\begin{equation}
+\label{bounded}
+    Q_m(y_{1:n}, \beta) = \min_{m,\tau_{1:m}} \Bigg\{ \sum^{m+1}_{i=1}[C(y_{(\tau_{i - 1} + 1):\tau_i}) + \beta] \Bigg\}
+\end{equation}
+
+In this equation, $\beta$ is the penalty function defined previously as $f(m)$.
+
+There are a number of established approaches to calculating penalty values for unbounded problems, chiefly among which are Schwarz Information Criterion (SIC)/Bayesian Information Criterion (BIC) \cite{Schwarz1978}, Akaike Information Criterion (AIC) \cite{Akaike1974} and Hannan-Quinn \cite{Journal2009}. Of these approaches, it is necessary to experiment to find the scheme that produces the `correct' number of change points for a given dataset. The penalty schemes are defined as follows:
+
+\begin{align}
+    \text{SIC} &= \ln(n) k - 2 \ln(\hat{L})\\
+    \text{AIC} &= 2k - 2 \ln(\hat{L})\\
+    \text{HQC} &= -2L_{max} + 2k \ln(\ln(n))
+\end{align}
+
+Where $n$ is the total number of observations, $k$ is the number of \emph{free parameters}\footnote{variables that are unable to be predicted by a given model} and $\hat{L}$ is the maximum value of a likelihood function.\todo{reword, wikipedia}
+
+The penalty function returns a value which is represented by $\beta$ in \autoref{bounded}, which then limits the number of possible segmentations returned by $Q$. In this way, varying the penalty function $\beta$ can alter the results given by a change detection algorithm by increasing or decreasing the number of change points detected.
+
+The \texttt{changepoint} package requires the provision of a penalty function for each algorithm, which has been arbitrarily chosen as `SIC' for this research. This decision is based upon advice published in \cite{Eckley2011}, in which it is stated that AIC (while popular in the field of change point detection as a penalty term) tends to asymptotically overestimate $k$.
+
+While the selection of an optimal penalty term for a given data set and change point detection algorithm is an open research question in itself, 
+
+\subsection{Distribution Assumptions}
+
+It is also important to note that many change point detection methods make an assumption about the underlying distribution of the data being analysed. This distribution can be, for example, a normal distribution, poisson 
+
+\section{Evaluation Measures}
+
+As briefly discussed in the introduction to this thesis, there are a number of pre-existing approaches for the evaluation of change detection methods. Here, the measures being evaluated are briefly explained:
+
+\subsection{F1 Score}
+
+\unsure{cite this?} This measure is utilised for testing accuracy in problems of binary classification. It considers two different measures, \emph{precision} and \emph{recall}, and takes a harmonic mean of the two measures to compute the final score.
+	
+	To calculate Precision and Recall, a \emph{confusion matrix} is first constructed to provide values for the total number of true positives, false negatives, false positives and true negatives:
+	
+	\begin{center}
+	    \begin{tikzpicture}[box/.style={draw,rectangle,minimum size=2cm,text width=1.5cm,align=center}]
+            \matrix (conmat) [row sep=.1cm,column sep=.1cm] {
+            \node (tpos) [box,
+               label=left:\( \mathbf{p'} \),
+                label=above:\( \mathbf{p} \),
+            ] {True \\ Positive};
+            &
+            \node (fneg) [box,
+                label=above:\textbf{n},
+                label=above right:\textbf{Totals},
+                label=right:\( \mathrm{P}' \)] {False \\ Negative};
+            \\
+            \node (fpos) [box,
+                label=left:\( \mathbf{n'} \),
+                label=below left:\textbf{Totals},
+                label=below:P] {False \\ Positive};
+            &
+            \node (tneg) [box,
+                label=right:\( \mathrm{N}' \),
+                label=below:N] {True \\ Negative};
+            \\
+            };
+    
+            \node [rotate=90,left=.05cm of conmat,anchor=center,text width=1.5cm,align=center] {
+                \textbf{Actual Value}
+            };
+            \node [above=.05cm of conmat] {\textbf{Prediction Outcome}};
+        \end{tikzpicture}
+	\end{center}
+
+	$Recall$ is computed as the number of correct positive results, divided by the number of positive results that should have been detected. $Precision$ is computed as the number of correct positive results divided by the number of all possible positive results:
+	
+	\begin{eqnarray}
+	    Precision = \frac{TP}{TP + FP}\\
+	    Recall = \frac{TP}{TP + FN}
+	\end{eqnarray}
+	
+	The F1 score calculation (the harmonic mean of both recall and precision) can be described in general terms as follows:
+
+	\begin{equation}
+		F_1 = 2 \cdot \frac{1}{\frac{1}{recall} + \frac{1}{precision}} = 2 \cdot \frac{precision \cdot recall}{precision+recall}
+		\label{equ:F1}
+	\end{equation}
+
+	As the F1 score is a binary classification measure, it can only be used to test the precision of an algorithm in a single domain, that is, was the change detected or not. Precision, Recall and F1 Score all provide a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $
+
+\subsection{Rand Index}
+
+This measure is for computing the similarity between two clusters of data points. It is used for calculating the overall accuracy of a given clustering approach, when compared against a set of ground truth clusters. The Rand Index is defined as:
+
+	\begin{equation}
+		R = \frac{a+b}{a+b+c+d}
+	\end{equation}
+	
+	Given a set of data points $S$, partitioned through two different methods, which we shall refer to as $X$ and $Y$. Based on this knowledge the following can be defined:
+	
+	\begin{itemize}
+		\item $a$ = total number of pairs that were partitioned into the \emph{same} subset by both $X$ and $Y$
+		\item $b$ = total number of pairs that were partitioned into \emph{different} subsets by both $X$ and $Y$
+		\item $c$ = total number of pairs that were partitioned into the \emph{same} subset by $X$ and into a different subset by $Y$
+		\item $d$ = total number of pairs that were partitioned into the \emph{same} subset by $Y$ and into a different subset by $X$
+	\end{itemize}\todo{reword, wikipedia}
+	
+	Intuitively, it can be stated that $a+b$ is the total number of agreements between methods $X$ and $Y$, while $c+d$ is the total number of disagreements. This calculation will return $0$ for completely different clusters and $1$ for identical clusters. The Rand Index provides a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $
+	
+\subsection{Adjusted Rand Index}
+	
+Similar to the Rand Index, but adjusted to take into account the random chance of pairs being assigned to the same cluster by both approaches being compared. While the Rand Index is suited for comparing a segmentation method against a known-good \emph{oracle} method, the adjusted index is more suited to comparing two differing approaches \cite{Matteson2012}. It is defined as:
+	
+	\begin{equation}
+	    R_{adjusted} = \frac{R - R_{expected}}{R_{max} - R_{expected}}
+	\end{equation}
+	
+	where $R_{expected}$ is defined as the expected Rand Index score for two completely random classifications of the given data\todo{cite, https://arxiv.org/pdf/1306.4933.pdf} and $R_{max}$ is defined as the maximum Rand Index value - generally $1$.
+	
+	The Adjusted Rand Index provides a score $s$ such that $ \{s\in\mathbb{R} \mid -1\leq s \leq 1\} $. This is different to the score returned by the `basic' Rand Index, in that it is possible for a negative value to be returned.
+		
+\subsection{BCubed}
+		
+BCubed is similar to the Adjusted Rand Index, in that it is adjusted to be appropriate for all constraints in a clustering problem. It was developed by Bagga and Baldwin\todo{cite} in 1998.
+	
+	BCubed operates in a similar way to the Recall and Precision classification metrics, in that it computes precision and recall values, before calculating a harmonic mean of the two metrics. BCubed also makes use of an additional \emph{correctness} function defined as follows, where $e$ and $e'$ are equivalent elements in a ground truth and computed clustering respectively, $L$ is a computed label and $C$ is a ground truth category:
+	
+	\begin{equation}
+	\label{eqn:correctness}
+	    \text{Correctness}(e,e') = 
+	    \begin{cases}
+	        1 & \text{iff $L(e) = L(e') \leftrightarrow C(e) = C(e')$}\\
+	        0 & \text{otherwise}
+	    \end{cases}
+	\end{equation}
+	
+	\autoref{eqn:correctness} can be stated intuitively as returning $1$ if and only if both the ground truth and computed clusterings place the element $e$ into the same cluster, returning $0$ in all other cases.
+	
+	Precision and Recall can then be calculated as follows:
+	
+    \begin{align}
+    \label{eqn:bcubed-precision}
+        \text{Precision} &= Avg_e [Avg_{e' . C(e) = C(e')}[Correctness(e,e')]]\\
+        \label{eqn:bcubed-recall}
+        \text{Recall} &= Avg_e [Avg_{e' . L(e) = L(e')}[Correctness(e,e')]]
+    \end{align}
+
+To obtain the F score, a harmonic mean of Precision and Recall is taken in the same manner as the F1 score for binary classification:
+
+\begin{equation}
+    F_{bc} = 2 \cdot \frac{1}{\frac{1}{Recall_{bc}} + \frac{1}{Precision_{bc}}}
+\end{equation}
 
 \chapter{Research Method}
 \label{Research Method}
@@ -117,19 +402,19 @@ Python is being utilised also due to the availability of relevant software packa
 
 \texttt{changepoint} is a powerful R package that provides a number of different change detection algorithms, along with various approaches to penalty values. \texttt{changepoint} offers change detection in mean, variance and combinations of the two, using the AMOC, PELT, Binary Segmentation and Segment Neighbourhood algorithms\todo{cite these}.
 
-\texttt{Changepoint} was developed by Rebecca Killick and Idris A. Eckley\todo{cite} and is provided free of charge under the GNU general public license \cite{Killick2014}.
+\texttt{Changepoint} was developed by Rebecca Killick and Idris A. Eckley and is provided free of charge under the GNU general public license \cite{Killick2014}.
 
 \subsection{Calculation of Evaluation Measures}
 
 %The \texttt{ROCR} package in \textsf{R} is being utilised for the calculation of Precision, Recall and F1 scores when treating change detection as a classification problem. \texttt{ROCR} provides a number of functions, and is primarily developed for plotting two different performance measures against each other for the purposes of classification evaluation given a cut-off parameter. \texttt{ROCR} was developed by Tobias Sing et. al. and is provided free of charge under a GPL license\todo{cite}
 
-For the calculation of Precision, Recall and F1 Score, the \textsf{R} package \texttt{caret} is being utilised. \texttt{caret} is an acronym for `Classification and Regression Training, and provides a number of tools for data manipulation, model creation and tuning, and performance measurements. Through the use of this package, it is possible to generate a \emph{confusion matrix} based on algorithm output, and generate various performance measures based upon this. \texttt{caret} was written by Max Kuhn, and is provided free of charge under the GPL license. \todo{cite}
+For the calculation of Precision, Recall and F1 Score, the \textsf{R} package \texttt{caret} is being utilised. \texttt{caret} is an acronym for `Classification and Regression Training, and provides a number of tools for data manipulation, model creation and tuning, and performance measurements. Through the use of this package, it is possible to generate a \emph{confusion matrix} based on algorithm output, and generate various performance measures based upon this. \texttt{caret} was written by Max Kuhn, and is provided free of charge under the GPL license \cite{FromJedWing2017}.
 
 For the calculation of the Rand Index and Adjusted Rand Index the \textsf{R} package \texttt{phyclust} is being used. This package was developed by Wei-Chen Chen, for the purposes of providing a phyloclustering implementation. While this approach is not something being examined in this thesis, the package does provide an implementation of the Rand Index and Adjusted Rand Index metrics, which are relevant to this research. This package is also provided free of charge under the GPL license.\todo{cite}
 
-Calculating the BCubed precision, recall and f-score metrics is being carried out in Python, using the \texttt{python-bcubed} project. This is a small utility library for the calculation of BCubed metrics, developed by Hugo Hromic and provided under the MIT license.\todo{cite} In order to interface with this library via \textsf{R}, the package \texttt{rPython} is being used. This package provides functionality for running Python code and retrieving results in \textsf{R}, and was developed by Carlos J. Gil Bellosta. It is provided under a GPL-2 license.\todo{cite}
+Calculating the BCubed precision, recall and f-score metrics is being carried out in Python, using the \texttt{python-bcubed} project. This is a small utility library for the calculation of BCubed metrics, developed by Hugo Hromic and provided under the MIT license \cite{Hromic2016}. In order to interface with this library via \textsf{R}, the package \texttt{rPython} is being used. This package provides functionality for running Python code and retrieving results in \textsf{R}, and was developed by Carlos J. Gil Bellosta. It is provided under a GPL-2 license \cite{Bellosta2015}.
 
-Additionally, the \texttt{ROCR} package was utilised during the research phase of this project to generate Receiver Operating Characteristic (ROC) curves - a method used by some publications to evaluate change point detection methods. While ROC curves are not being utilised to produce the results published in this thesis, it was nonetheless an important part of the research, and provided useful insights into binary classification as a field and as a method of evaluation. \texttt{ROCR} was developed by Tobias Sing et. al. and is provided free of charge under a GPL license. \todo{cite}
+Additionally, the \texttt{ROCR} package was utilised during the research phase of this project to generate Receiver Operating Characteristic (ROC) curves - a method used by some publications to evaluate change point detection methods. While ROC curves are not being utilised to produce the results published in this thesis, it was nonetheless an important part of the research, and provided useful insights into binary classification as a field and as a method of evaluation. \texttt{ROCR} was developed by Tobias Sing et. al. and is provided free of charge under a GPL license \cite{Chen2011}
 
 \section{Measures Meta-Analysis}
 \label{meta analysis explainer}
@@ -320,7 +605,7 @@ Adding both true change points and detected change points from a `pseudo algorit
 
 \section{Comparison of Measures Based Upon Functional Requirements}
 
-As part of the research being carried out, a set of functional requirements are elicited from the host organisation. Based on these functional requirements, a 
+As part of the research being carried out, a set of functional requirements are elicited from the host organisation. Based on these functional requirements the measures are evaluated and compared in such a manner that we can choose the `best' measure for the use case of the host organisation. The previous research section (\autoref{meta analysis explainer}) provides the results necessary to 
 
 \section{Application of Algorithms to Real World Data}
 
@@ -363,193 +648,107 @@ To perform the experiment, an \textsf{R} script is executed that reads the CSV f
 
 Once all of the analysis methods have been executed successfully, the measures are calculated based on a comparison between the computed change points and the manually annotated ground truth. These results are then arranged in a tabular format for analysis and discussion.
 
-\section{Algorithm Configuration}
-
-Change detection is an \emph{unbounded} problem. Left without some system of constraint, the algorithm could theoretically run to infinity. Indeed, one of the algorithms utilised in this research, PELT\todo{citation needed}, when left unbounded, will detect every data point in the time-series as a change point. This result is \textit{technically} correct, but not useful for our purposes. For this reason, the algorithms implement a penalty system, allowing for an optimal number of change points to be detected.
-
-\subsection{Distribution Assumptions}
-
-It is also important to note that many change point detection methods make an assumption about the underlying distribution of the data being analysed. This distribution can be, for example, a normal distribution, poisson 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Background \& Context}
 
-Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally referred to as \emph{control charts}. Since the inception of approaches such as CUSUM that provide the possibility for on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic detection, online reputation management and infrastructure error detection, change detection is hugely useful both as an academic problem and in production systems of myriad application.
 
-\section{Change Detection Algorithms}
 
-\subsection{Pruned Exact Linear Time}
-
-\begin{algorithm}
-\caption{PELT Method for change point detection}
-\KwIn{A set of data of the form, $(y_1, y_2, \ldots,y_n)$ where $y_i \in \mathbb{R}$.}
-\myinput{A measure of fit $C(.)$ dependent on the data.}
-\myinput{A penalty constant $\beta$ which does not depend on the number or location of change points.}
-\myinput{A constant $K$}
-\end{algorithm}
-
-\section{Evaluation Measures}
-
-As briefly discussed in the introduction to this thesis, there are a number of pre-existing approaches for the evaluation of change detection methods. Here, the measures being evaluated are briefly explained:
-
-\begin{description}
-	\item[F1 Score]\unsure{cite this?} This measure is utilised for testing accuracy in problems of binary classification. It considers two different measures, \emph{precision} and \emph{recall}, and takes a harmonic mean of the two measures to compute the final score.
-	
-	To calculate Precision and Recall, a \emph{confusion matrix} is first constructed to provide values for the total number of true positives, false negatives, false positives and true negatives:
-	
-	\begin{center}
-	    \begin{tikzpicture}[box/.style={draw,rectangle,minimum size=2cm,text width=1.5cm,align=center}]
-            \matrix (conmat) [row sep=.1cm,column sep=.1cm] {
-            \node (tpos) [box,
-               label=left:\( \mathbf{p'} \),
-                label=above:\( \mathbf{p} \),
-            ] {True \\ Positive};
-            &
-            \node (fneg) [box,
-                label=above:\textbf{n},
-                label=above right:\textbf{Totals},
-                label=right:\( \mathrm{P}' \)] {False \\ Negative};
-            \\
-            \node (fpos) [box,
-                label=left:\( \mathbf{n'} \),
-                label=below left:\textbf{Totals},
-                label=below:P] {False \\ Positive};
-            &
-            \node (tneg) [box,
-                label=right:\( \mathrm{N}' \),
-                label=below:N] {True \\ Negative};
-            \\
-            };
-    
-            \node [rotate=90,left=.05cm of conmat,anchor=center,text width=1.5cm,align=center] {
-                \textbf{Actual Value}
-            };
-            \node [above=.05cm of conmat] {\textbf{Prediction Outcome}};
-        \end{tikzpicture}
-	\end{center}
-
-	$Recall$ is computed as the number of correct positive results, divided by the number of positive results that should have been detected. $Precision$ is computed as the number of correct positive results divided by the number of all possible positive results:
-	
-	\begin{eqnarray}
-	    Precision = \frac{TP}{TP + FP}\\
-	    Recall = \frac{TP}{TP + FN}
-	\end{eqnarray}
-	
-	The F1 score calculation (the harmonic mean of both recall and precision) can be described in general terms as follows:
-
-	\begin{equation}
-		F_1 = 2 \cdot \frac{1}{\frac{1}{recall} + \frac{1}{precision}} = 2 \cdot \frac{precision \cdot recall}{precision+recall}
-		\label{equ:F1}
-	\end{equation}
-
-	As the F1 score is a binary classification measure, it can only be used to test the precision of an algorithm in a single domain, that is, was the change detected or not. Precision, Recall and F1 Score all provide a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $
-
-	\item[Rand Index] This measure is for computing the similarity between two clusters of data points. It is used for calculating the overall accuracy of a given clustering approach, when compared against a set of ground truth clusters. The Rand Index is defined as:
-
-	\begin{equation}
-		R = \frac{a+b}{a+b+c+d}
-	\end{equation}
-	
-	Given a set of data points $S$, partitioned through two different methods, which we shall refer to as $X$ and $Y$. Based on this knowledge the following can be defined:
-	
-	\begin{itemize}
-		\item $a$ = total number of pairs that were partitioned into the \emph{same} subset by both $X$ and $Y$
-		\item $b$ = total number of pairs that were partitioned into \emph{different} subsets by both $X$ and $Y$
-		\item $c$ = total number of pairs that were partitioned into the \emph{same} subset by $X$ and into a different subset by $Y$
-		\item $d$ = total number of pairs that were partitioned into the \emph{same} subset by $Y$ and into a different subset by $X$
-	\end{itemize}\todo{reword, wikipedia}
-	
-	Intuitively, it can be stated that $a+b$ is the total number of agreements between methods $X$ and $Y$, while $c+d$ is the total number of disagreements. This calculation will return $0$ for completely different clusters and $1$ for identical clusters. The Rand Index provides a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $
-	
-	\item[Adjusted Rand Index]Similar to the Rand Index, but adjusted to take into account the random chance of pairs being assigned to the same cluster by both approaches being compared. While the Rand Index is suited for comparing a segmentation method against a known-good \emph{oracle} method, the adjusted index is more suited to comparing two differing approaches \cite{Matteson2012}. It is defined as:
-	
-	\begin{equation}
-	    R_{adjusted} = \frac{R - R_{expected}}{R_{max} - R_{expected}}
-	\end{equation}
-	
-	where $R_{expected}$ is defined as the expected Rand Index score for two completely random classifications of the given data\todo{cite, https://arxiv.org/pdf/1306.4933.pdf} and $R_{max}$ is defined as the maximum Rand Index value - generally $1$.
-	
-	The Adjusted Rand Index provides a score $s$ such that $ \{s\in\mathbb{R} \mid -1\leq s \leq 1\} $. This is different to the score returned by the `basic' Rand Index, in that it is possible for a negative value to be returned.
-		
-	\item[BCubed] BCubed is similar to the Adjusted Rand Index, in that it is adjusted to be appropriate for all constraints in a clustering problem. It was developed by Bagga and Baldwin\todo{cite} in 1998.
-	
-	BCubed operates in a similar way to the Recall and Precision classification metrics, in that it computes precision and recall values, before calculating a harmonic mean of the two metrics. BCubed also makes use of an additional \emph{correctness} function defined as follows, where $e$ and $e'$ are equivalent elements in a ground truth and computed clustering respectively, $L$ is a computed label and $C$ is a ground truth category:
-	
-	\begin{equation}
-	\label{eqn:correctness}
-	    \text{Correctness}(e,e') = 
-	    \begin{cases}
-	        1 & \text{iff $L(e) = L(e') \leftrightarrow C(e) = C(e')$}\\
-	        0 & \text{otherwise}
-	    \end{cases}
-	\end{equation}
-	
-	\autoref{eqn:correctness} can be stated intuitively as returning $1$ if and only if both the ground truth and computed clusterings place the element $e$ into the same cluster, returning $0$ in all other cases.
-	
-	Precision and Recall can then be calculated as follows:
-	
-    \begin{align}
-    \label{eqn:bcubed-precision}
-        \text{Precision} &= Avg_e [Avg_{e' . C(e) = C(e')}[Correctness(e,e')]]\\
-        \label{eqn:bcubed-recall}
-        \text{Recall} &= Avg_e [Avg_{e' . L(e) = L(e')}[Correctness(e,e')]]
-    \end{align}
-
-To obtain the F score, a harmonic mean of Precision and Recall is taken in the same manner as the F1 score for binary classification:
-
-\begin{equation}
-    F_{bc} = 2 \cdot \frac{1}{\frac{1}{Recall_{bc}} + \frac{1}{Precision_{bc}}}
-\end{equation}
-
-\end{description}
-
-\subsection{Penalty Scores}
-
-Penalty scores operate as a mechanism for optimising an unbounded problem such as the one being addressed here. Haynes et al. define the problem as follows \cite{Haynes2014}: Given time series data points $y_1,\ldots,y_n$, the series will contain $m$ change points such that their locations $\tau_{1:m} = (\tau_1,\ldots,\tau_m)$, where $\{\tau_i \in \mathbb{Z} \mid 1 \leqslant \tau_i \leqslant n-1\}$. $\tau_0$ is assumed to be 0, and $\tau_{m+1}$ is assumed to be $n$. In this way we can state that a given change detection algorithm will split the time series into $m + 1$ segments such that segment $i$ contains the points $y_{(\tau_{i-1}+1):\tau_i} = (y_{\tau_{i-1} + 1},\dots,y_{\tau_i})$. A \emph{cost function} for a segmentation of the data set $y_s$ can be defined as $C = (y_{s+1:t})$. This cost function defines a cost for a given segmentation containing points $y_{s+1:t}$. To illustrate, the cost function $C$, in the context of binary classification, returns a value that increases for an `incorrect' classification and decreases for a `correct' classification.
-
-At this point it can be stated that the \emph{constrained minimisation problem} is as follows:
-
-\begin{equation}
-\label{unbounded}
-    Q_m(y_{1:n}) = \min_{\tau_{1:m}} \Bigg\{ \sum^{m+1}_{i=1}[C(y_{(\tau_{i - 1} + 1):\tau_i})] \Bigg\}
-\end{equation}
-
-\autoref{unbounded} is an equation showing the optimisation problem that change point detection presents. If the equation is taken intuitively, it shows that for a dataset with a \emph{known} number of change points, the segmentation of the data around the change points can be effectively estimated by obtaining the segmentation that returns the minimum cost based on the cost function $C$.
-
-However, the problem being solved by many change detection algorithms involves an unknown number of change points, at unknown locations. In this case we can estimate the following to obtain the number and location of the change points:
-
-\begin{equation}
-\label{eqn:penalty}
-    \min_{m} \big\{ Q_m(y_{1:n}) + f(m) \big\}
-\end{equation}
-
-\autoref{eqn:penalty} includes a \emph{penalty function} $f(m)$ that increases proportionally with the number of change points $m$. Essentially, as the segmentation calculated as $Q_m$ increases in size, so does the result of the penalty function $f(m)$. These two elements are at-odds with each other, presenting a problem that requires optimisation to correctly estimate the number and location of change points in the data set $y_s$. If $f(m)$ increases in a linear fashion with $m$, we can define a \emph{penalised minimisation problem} in the following manner:
-
-\begin{equation}
-\label{bounded}
-    Q_m(y_{1:n}, \beta) = \min_{m,\tau_{1:m}} \Bigg\{ \sum^{m+1}_{i=1}[C(y_{(\tau_{i - 1} + 1):\tau_i}) + \beta] \Bigg\}
-\end{equation}
-
-In this equation, $\beta$ is the penalty function defined previously as $f(m)$.
-
-There are a number of established approaches to calculating penalty values for unbounded problems, chiefly among which are Schwarz Information Criterion (SIC)/Bayesian Information Criterion (BIC), Akaike Information Criterion (AIC) and Hannan-Quinn\todo{cite}. Of these approaches, it is necessary to experiment to find the scheme that produces the `correct' number of change points for a given dataset. The penalty schemes are defined as follows:
-
-\begin{align}
-    \text{SIC} &= \ln(n) k - 2 \ln(\hat{L})\\
-    \text{AIC} &= 2k - 2 \ln(\hat{L})\\
-    \text{HQC} &= -2L_{max} + 2k \ln(\ln(n))
-\end{align}
-
-Where $n$ is the total number of observations, $k$ is the number of \emph{free parameters}\footnote{variables that are unable to be predicted by a given model} and $\hat{L}$ is the maximum value of a likelihood function.\todo{reword, wikipedia}
-
-The penalty function returns a value which is represented by $\beta$ in \autoref{bounded}, which then limits the number of possible segmentations returned by $Q$. In this way, varying the penalty function $\beta$ can alter the results given by a change detection algorithm by increasing or decreasing the number of change points detected.
-
-The \texttt{changepoint} package requires the provision of a penalty function for each algorithm, which has been arbitrarily chosen as `Hannan-Quinn' for this research. This does leave an open research question concerning how well each possible penalty function fits the data being evaluated here, but at the time of writing, this falls outside of the scope of this research.\todo{actually, lets do this}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Research}
+
+\section{Introduction}
+
+This section of the thesis describes the execution, results and conclusions of each individual study carried out. It is divided into three sections:
+
+\begin{itemize}
+    \item Simulation studies - taking simulated data and simulated algorithm results to analyse the impact of various cases on calculated measures.
+    \item Analysis of measures - taking the results of the simulation studies and testing their ability to match the functional requirements of the host organisation.
+    \item Real-World Data - taking a set of real world twitter data and analysing the ability of change detection algorithms to detect changes in the data compared with established ground truth change points.
+\end{itemize}
+
+\section{Simulation Studies}
+
+The simulation studies carried out are intended to compare each of the measures against the set of criteria described in \autoref{meta analysis explainer}. The simulations are carried out according to the experiment descriptions previously explained, and the execution and results are presented here.
+
+\subsection{Dependence on Sample Size}
+\label{sample size dependence}
+
+Two of the experiments carried out in this thesis take particular note of sample size. Both involve increasing the sample size of the data, appending or prepending a number of points both prior to and following the ground truth change point. In each situation, a simulated algorithm detects a change $n$ points after the ground truth, simulating detection that is relevant, though slightly late, to ensure that there that the baseline metric value at $t = 0$ is not equal to $1$.
+
+\todo[inline]{Figures here}
+
+Figures 1 and 2\todo{add figures} show the results of this simulation study. Figure 1 demonstrates the value of metrics as the `head' of the data is increased, while Figure 2 demonstrates the value of metrics as the `tail' of the data is increased.
+
+In this situation, we can see that both studies show a variation in metric score as the length of the data stream increases. For all of the clustering measures there is a clear increase in metric value as points are added. At $t=0$, the clustering metrics appear to correctly penalise for a late detection, though this penalty decreases as $t$ increases.
+
+The Adjusted Rand Index shows a far more extreme temporal penalty for the change point detection, which increases sharply at the beginning of the experiment, before maintaining a rate of increase comparable to the other clustering measures.
+
+The binary classification measures of Precision, Recall and F1 maintain a constant value of $0$ throughout the experiment, classifying the change point detection as a `missed' detection and penalising accordingly.
+
+\subsection{Impact of Data Preceding and Following a Known Change Point}
+
+The experiment run for this criteria is similar to those run in \autoref{sample size dependence}, but differs in one important manner: the size of the time series is maintained at a constant value throughout. As points are added to the `head' of the data set, points are removed from the `tail'. In practice, this serves to move both the true and computed change points through the time series.
+
+\todo[inline]{add figures}
+
+Figure $x$ shows the results of the experiment. As with the previous experiment, the binary classification measures maintain a constant value of $0$, with variation only being shown by the clustering measures. It is interesting to note that the change in all clustering measures aside from Adjusted Rand Index is minimal, with an almost constant value being held throughout the experiment, aside from when the change points are at the extreme ends of the time series.
+
+The Adjusted Rand Index exhibits behaviour unique to itself, with a value approaching 0 as the change points approach either end of time series. From position 150 to 350, the Adjusted Rand Index holds an almost constant value.
+
+From these results it can be inferred that it is only the Adjusted Rand Index that is effected in any meaningful way by the position of the change point in a fixed length data set.
+
+\subsection{Temporal Penalty}
+
+This is experiment makes use of a fixed length data set with a single, static, known change point. A computed change point is moved through the time series, beginning at the known change point, and ending at the end of the time series. Figure $x$ shows a plot of the results of this experiment:
+
+\todo[inline]{add figure}
+
+At the start of the experiment, when the ground truth and the computed change point are equal, all of the measures return a value of $1$ as expected. Once the computed change point is moved through the time series, the binary classification measures immediately return a value of $0$, showing that none of the change points in the series (a single change point, in this case) have been detected.
+
+All of the clustering measure values decrease as the computed change point moves away from the ground truth change point, though exhibit some strange behaviour as the computed change point approaches the end of the time series. In all cases, the clustering measures show an increase in score as the computed point approaches the end of the time series, with the temporal penalty for a late detection reducing.
+
+The Adjusted Rand Index once again exhibits behaviour unique to itself, dropping below $0$ at approximately \todo{get the proper value} $t=275$. This behaviour is expected from the Adjusted Rand Index, being that the adjusted nature of the metric (allowing for cluster classification occurring by chance) results in a metric capable of returning a value $<0$.
+
+\subsection{Penalisation for False Positives}
+
+This experiment utilised a fixed length time series with a single ground truth change point, and a single computed change point that equals the ground truth change point. Successive false positives are added to the time series, moving from left to right across the time series.
+
+Figure $x$ shows the results of the experiment, with the score provided by each metric plotted against the number of false positives present in the data stream.
+
+\todo[inline]{add figure}
+
+The results of this experiment show that almost all of the metrics behave in a similar fashion. The binary classification measure of Recall maintains a value of $1$, while all of the other measures \todo{check this} show a precipitous drop in score as the initial false positives are added. Precision and F1 scores for binary classification drop sharply, while the measures for clustering show a more gentle decrease in score. The Rand Index and BCubed F-Score end the experiment at approximately the same value, while the Adjusted Rand Index, F1 Score and Binary Classification Precision metrics also terminate at approximately the same value.
+
+\subsection{Penalisation for False Negatives}
+
+For this criteria evaluation, the experiment utilised a fixed length time series with multiple ground truth change points. As the experiment progressed, computed change points were added, equal to each of the ground truth change points. Figure $x$ shows the results of the experiment, with the metric scores plotted against the number of false negatives present in the data stream.
+
+\todo[inline]{Add figure}
+
+The vast majority of measures see a consistent decrease in returned score as the number of false negatives increases. Indeed, once all of the ground truth change points have been correctly detected, all of the metrics return a score of $1$. Only the Adjusted Rand Index returns a score of $0$ after $10$ false negatives are found in the data stream. As Expected, BCubed Recall remained at a value of $1$ for the duration of the experiment.
+
+\subsection{Number of Change Points in Fixed Length Data Stream}
+
+This experiment adds change points to a data stream by `lifting' slices of the data stream - adding a value to them to create two change points. This is carried out multiple times, each time adding two ground truth change points, and two computed change points 3 time units after the ground truth change points. Figure $x$ shows the results of this experiment, plotting the score returned by the metric against the number of change points in the stream.
+
+\todo[inline]{add figure}
+
+The results of this experiment show a drop in score provided by the Adjusted Rand Index and BCubed F-Score. The BCubed F-Score shows a linear rate of decline as change points are added to the stream, while the Adjusted Rand Index shows an increase in downward velocity towards the end of the experiment. All of the other metrics maintained a constant value of either $1$ or $0$, as expected.
+
+\subsection{Number of Change Points in Variable Length Data Stream}
+
+This final experiment is similar to the previous one, in that it increases the number of change points in a data stream. However, the difference here is that in this case, data is appended to the data stream, also increasing the length of the stream as each successive change point is added. The results of this experiment are shown in figure $x$ below:
+
+\todo[inline]{add figure}
+
+The results of the experiment show some interesting behaviour in the Rand Index, Adjusted Rand Index and BCubed F-Score metrics. The Rand index and the Adjusted Rand Index increase in value as data points and change points are added to the time series, while the BCubed F-Score decreases in value. The Adjusted Rand Index begins at a slightly lower level than the Rand Index and BCubed F-Score metrics, while the Rand Index and BCubed F-Score metrics diverge almost immediately.
+
+Aside from the large change in score value at the beginning of the experiment, the change in value for the Rand Index, Adjusted Rand Index and BCubed F-Score metrics is small.
+
+\section{Real-World Data Analysis}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
