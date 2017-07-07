@@ -9,7 +9,7 @@ source("utilities.R")
 
 #' main experiment method
 RunExperiment <- function(input, truth = NULL, no.process = FALSE) {
-  penalty.function = "Hannan-Quinn"
+  penalty.function = "SIC"
   min.seglength = 0
   
   if(no.process == FALSE) {

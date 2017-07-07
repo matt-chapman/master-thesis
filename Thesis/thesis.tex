@@ -9,6 +9,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[linesnumbered,ruled]{algorithm2e}
+\usepackage{adjustbox}
 \usetikzlibrary{positioning}
 
 % program listings environment, see uvamscse.cls
@@ -36,7 +37,6 @@
   \hspace*{\mylen}#1\\}
 
 \begin{document}
-\nocite{*}
 \maketitle
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -97,11 +97,11 @@ Change detection first came about as a quality control measure in manufacturing,
 
 Pruned Exact Linear Time (henceforth referred to as \emph{PELT} is a modern change point detection method proposed by R. Killick et. al in `Optimal Detection Changepoints With a Linear Computational Cost', in 2012 \cite{Killick2011a}.
 
-PELT is an \emph{exact} method of computing change points, based on segmentation of data streams, in the same manner as Segment Neighbourhood and Binary Segmentation. PELT is a modification of the \emph{Optimal Partitioning} method proposed by Brad Jackson et. al in 2003, in \todo{cite}.
+PELT is an \emph{exact} method of computing change points, based on segmentation of data streams, in the same manner as Segment Neighbourhood and Binary Segmentation. PELT is a modification of the \emph{Optimal Partitioning} method proposed by Brad Jackson et. al in 2003, in \cite{Jackson2003}.
 
-Jackson's method has a computational cost of $O(n^2)$, while Killick's PELT method improves on this with a computational complexity of $O(n)$\todo{cite}.
+Jackson's method has a computational cost of $O(n^2)$, while Killick's PELT method improves on this with a computational complexity of $O(n)$ \cite{Killick2011a}.
 
-The PELT method works similarly to Segment Neighbourhood and Binary Segmentation approaches, in that it attempts to fit a model of segmentation of a given data set, minimising the cost of the segmentation to achieve an optimal distribution of segments and therefore change points.
+The PELT method works similarly to Segment Neighbourhood \cite{Auger1989} and Binary Segmentation \cite{Jackson2003} \cite{Yao1984} approaches, in that it attempts to fit a model of segmentation of a given data set, minimising the cost of the segmentation to achieve an optimal distribution of segments and therefore change points.
 
 \autoref{alg:pelt} describes a pseudocode implementation of the PELT algorithm, as described in \cite{Eckley2011}\newline
 
@@ -126,7 +126,7 @@ The PELT method works similarly to Segment Neighbourhood and Binary Segmentation
 
 \subsection{Segment Neighbourhoods}
 
-Proposed by Auger and Lawrence in 1989\todo{cite}, Segment Neighbourhood (\emph{SegNeigh}) is another example of an exact segmentation algorithm for the detection of change points in data. SegNeigh utilises dynamic programming to search the segmentation space (defined as the maximum number of change points in a given data stream) and then compute the cost function for every possible segmentation of the data. In this way, the location and number of change points can be computed exactly by taking the segmentation that returns the lowest cost function result.
+Proposed by Auger and Lawrence in 1989 \cite{Auger1989}, Segment Neighbourhood (\emph{SegNeigh}) is another example of an exact segmentation algorithm for the detection of change points in data. SegNeigh utilises dynamic programming to search the segmentation space (defined as the maximum number of change points in a given data stream) and then compute the cost function for every possible segmentation of the data. In this way, the location and number of change points can be computed exactly by taking the segmentation that returns the lowest cost function result.
 
 \autoref{alg:segneigh} describes a pseudocode implementation of the SegNeigh algorithm, as described in \cite{Eckley2011}\newline
 
@@ -159,7 +159,7 @@ Proposed by Auger and Lawrence in 1989\todo{cite}, Segment Neighbourhood (\emph{
 
 \subsection{Binary Segmentation}
 
-Binary Segmentation is a popular method for change point detection, widely utilised and cited in change point related literature such as \todo{cite}. Binary segmentation is a method that recursively applies a single change point detection method. On the first iteration, if a change point is detected, the data is split around that change point (resulting in two data sets) and the change point method is run again on the two resulting data sets. This process is repeated such that many data set segments are created, and runs until no further change points are detected.
+Binary Segmentation \cite{Jackson2003} \cite{Yao1984} is a popular method for change point detection, widely utilised and cited in change point related literature such as \todo{cite}. Binary segmentation is a method that recursively applies a single change point detection method. On the first iteration, if a change point is detected, the data is split around that change point (resulting in two data sets) and the change point method is run again on the two resulting data sets. This process is repeated such that many data set segments are created, and runs until no further change points are detected.
 
 Binary Segmentation is an \emph{approximate} change point detection approach, and returns estimated change point locations - unlike PELT and SegNeigh - which return exact change point locations.
 
@@ -336,13 +336,13 @@ Similar to the Rand Index, but adjusted to take into account the random chance o
 	    R_{adjusted} = \frac{R - R_{expected}}{R_{max} - R_{expected}}
 	\end{equation}
 	
-	where $R_{expected}$ is defined as the expected Rand Index score for two completely random classifications of the given data\todo{cite, https://arxiv.org/pdf/1306.4933.pdf} and $R_{max}$ is defined as the maximum Rand Index value - generally $1$.
+	where $R_{expected}$ is defined as the expected Rand Index score for two completely random classifications of the given data \cite{Matteson2012} and $R_{max}$ is defined as the maximum Rand Index value - generally $1$.
 	
 	The Adjusted Rand Index provides a score $s$ such that $ \{s\in\mathbb{R} \mid -1\leq s \leq 1\} $. This is different to the score returned by the `basic' Rand Index, in that it is possible for a negative value to be returned.
 		
 \subsection{BCubed}
 		
-BCubed is similar to the Adjusted Rand Index, in that it is adjusted to be appropriate for all constraints in a clustering problem. It was developed by Bagga and Baldwin\todo{cite} in 1998.
+BCubed is similar to the Adjusted Rand Index, in that it is adjusted to be appropriate for all constraints in a clustering problem. It was developed by Bagga and Baldwin in 1998 \cite{Bagga1998}.
 	
 	BCubed operates in a similar way to the Recall and Precision classification metrics, in that it computes precision and recall values, before calculating a harmonic mean of the two metrics. BCubed also makes use of an additional \emph{correctness} function defined as follows, where $e$ and $e'$ are equivalent elements in a ground truth and computed clustering respectively, $L$ is a computed label and $C$ is a ground truth category:
 	
@@ -388,7 +388,7 @@ This thesis consists of two distinct parts:
 
 \section{Evaluation Pipeline Construction}
 
-This thesis will analyse three different change detection algorithms: \emph{Pruned Exact Linear Time}\todo{cite}, \emph{Binary Segmentation}\todo{cite} and \emph{Segment Neighbourhoods}\todo{cite}. These will be referred to as \emph{PELT}, \emph{BinSeg} and \emph{SegNeigh} respectively. The algorithms will be briefly discussed in this thesis, along with the chosen critical values such as \emph{minimum segment length}, \emph{penalty scoring} and \emph{assumed underlying distribution}.
+This thesis will analyse three different change detection algorithms: \emph{Pruned Exact Linear Time}\cite{Killick2011a}, \emph{Binary Segmentation} \cite{Jackson2003} and \emph{Segment Neighbourhoods}\cite{Auger1989}. These will be referred to as \emph{PELT}, \emph{BinSeg} and \emph{SegNeigh} respectively. The algorithms will be briefly discussed in this thesis, along with the chosen critical values such as \emph{minimum segment length}, \emph{penalty scoring} and \emph{assumed underlying distribution}.
 
 The algorithms will then be applied to a collection of datasets falling into two categories: real-world conversation volume data taken from Twitter, and simulated data generated according to certain constraints which will also be discussed here.
 
@@ -410,11 +410,11 @@ Python is being utilised also due to the availability of relevant software packa
 
 For the calculation of Precision, Recall and F1 Score, the \textsf{R} package \texttt{caret} is being utilised. \texttt{caret} is an acronym for `Classification and Regression Training, and provides a number of tools for data manipulation, model creation and tuning, and performance measurements. Through the use of this package, it is possible to generate a \emph{confusion matrix} based on algorithm output, and generate various performance measures based upon this. \texttt{caret} was written by Max Kuhn, and is provided free of charge under the GPL license \cite{FromJedWing2017}.
 
-For the calculation of the Rand Index and Adjusted Rand Index the \textsf{R} package \texttt{phyclust} is being used. This package was developed by Wei-Chen Chen, for the purposes of providing a phyloclustering implementation. While this approach is not something being examined in this thesis, the package does provide an implementation of the Rand Index and Adjusted Rand Index metrics, which are relevant to this research. This package is also provided free of charge under the GPL license.\todo{cite}
+For the calculation of the Rand Index and Adjusted Rand Index the \textsf{R} package \texttt{phyclust} is being used. This package was developed by Wei-Chen Chen, for the purposes of providing a phyloclustering implementation. While this approach is not something being examined in this thesis, the package does provide an implementation of the Rand Index and Adjusted Rand Index metrics, which are relevant to this research. This package is also provided free of charge under the GPL license \cite{Chen2011}.
 
 Calculating the BCubed precision, recall and f-score metrics is being carried out in Python, using the \texttt{python-bcubed} project. This is a small utility library for the calculation of BCubed metrics, developed by Hugo Hromic and provided under the MIT license \cite{Hromic2016}. In order to interface with this library via \textsf{R}, the package \texttt{rPython} is being used. This package provides functionality for running Python code and retrieving results in \textsf{R}, and was developed by Carlos J. Gil Bellosta. It is provided under a GPL-2 license \cite{Bellosta2015}.
 
-Additionally, the \texttt{ROCR} package was utilised during the research phase of this project to generate Receiver Operating Characteristic (ROC) curves - a method used by some publications to evaluate change point detection methods. While ROC curves are not being utilised to produce the results published in this thesis, it was nonetheless an important part of the research, and provided useful insights into binary classification as a field and as a method of evaluation. \texttt{ROCR} was developed by Tobias Sing et. al. and is provided free of charge under a GPL license \cite{Chen2011}
+Additionally, the \texttt{ROCR} package was utilised during the research phase of this project to generate Receiver Operating Characteristic (ROC) curves - a method used by some publications to evaluate change point detection methods. While ROC curves are not being utilised to produce the results published in this thesis, it was nonetheless an important part of the research, and provided useful insights into binary classification as a field and as a method of evaluation. \texttt{ROCR} was developed by Tobias Sing et. al. and is provided free of charge under a GPL license \cite{Sing2005}
 
 \section{Measures Meta-Analysis}
 \label{meta analysis explainer}
@@ -608,6 +608,7 @@ Adding both true change points and detected change points from a `pseudo algorit
 As part of the research being carried out, a set of functional requirements are elicited from the host organisation. Based on these functional requirements the measures are evaluated and compared in such a manner that we can choose the `best' measure for the use case of the host organisation. The previous research section (\autoref{meta analysis explainer}) provides the results necessary to 
 
 \section{Application of Algorithms to Real World Data}
+\label{real world explainer}
 
 \subsection{Data Preparation}
 
@@ -750,13 +751,42 @@ Aside from the large change in score value at the beginning of the experiment, t
 
 \section{Real-World Data Analysis}
 
+As described in \autoref{real world explainer}, this experiment executed change detection algorithms against sets of real world data taken from Twitter. The data was gathered and filtered to be relevant to certain brands (again, as listed in \autoref{real world explainer}) and then annotated with ground truth change points by social media analysts from the host organisation.
+
+What follows is the results of that study. For each data set, the scores provided by the evaluation measures are tabulated and provided. The highest score(s) for each measure are highlighted for easy comparison and readability. Further discussion of the results and the extraction of conclusions will can be found in \autoref{results} and \autoref{conclusions}.
+
+\subsection{rabobank}
+
+\begin{table}[H]
+\centering
+\label{tbl:rabo}
+\begin{adjustbox}{width=1\textwidth}
+\begin{tabular}{rcccccccc}
+\hline
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1}     & \textbf{Rand}   & \textbf{adjRand} & \textbf{BCubed Precision} & \textbf{BCubed Recall} & \textbf{BCubed FScore} \\ \hline
+MeanVar BinSeg     & 0.6667             & 0.5000          & 0.5714          & 0.9772          & 0.9520           & 0.9153                    & \textbf{0.9678}        & 0.9408                 \\ \hline
+MeanVar SegNeigh   & \textbf{0.8000}    & \textbf{1.0000} & \textbf{0.8889} & \textbf{0.9889} & \textbf{0.9765}  & \textbf{1.0000}           & \textbf{0.9678}        & \textbf{0.9836}        \\ \hline
+MeanVar PELT       & 0.5000             & \textbf{1.0000} & 0.6667          & 0.8480          & 0.6550           & \textbf{1.0000}           & 0.7043                 & 0.8265                 \\ \hline
+Var BinSeg         & 0.6667             & 0.5000          & 0.5714          & 0.9772          & 0.9520           & 0.9153                    & \textbf{0.9678}        & 0.9408                 \\ \hline
+Var SegNeigh       & 0.6667             & 0.5000          & 0.5714          & 0.9772          & 0.9520           & 0.9153                    & \textbf{0.9678}        & 0.9408                 \\ \hline
+Var PELT           & 0.6667             & 0.5000          & 0.5714          & 0.9772          & 0.9520           & 0.9153                    & \textbf{0.9678}        & 0.9408                 \\ \hline
+Mean BinSeg        & 0.6667             & \textbf{1.0000} & 0.8000          & 0.9784          & 0.9540           & \textbf{1.0000}           & 0.9373                 & 0.9676                 \\ \hline
+Mean SegNeigh      & \textbf{0.8000}    & \textbf{1.0000} & \textbf{0.8889} & \textbf{0.9889} & \textbf{0.9765}  & \textbf{1.0000}           & \textbf{0.9678}        & \textbf{0.9836}        \\ \hline
+Mean PELT          & 0.0690             & \textbf{1.0000} & 0.1290          & 0.6131          & 0.0018           & \textbf{1.0000}           & 0.0858                 & 0.1581                 \\ \hline
+\end{tabular}
+\end{adjustbox}
+\caption{Rabobank Algorithm Scores}
+\end{table}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Results}
+\label{results}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Analysis \& Conclusions}
+\label{conclusions}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
