@@ -11,11 +11,13 @@
 \usepackage[linesnumbered,ruled]{algorithm2e}
 \usepackage{adjustbox}
 \usepackage{booktabs}
+\usepackage{appendix}
 \usepackage[sorting=nty,style=alphabetic,backend=biber]{biblatex}
 \usepackage{pifont}% http://ctan.org/pkg/pifont
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
 \newcommand{\mmark}{\ding{108}}%
+
 \usetikzlibrary{positioning}
 
 % program listings environment, see uvamscse.cls
@@ -33,8 +35,9 @@
 \supervisor{Evangelos Kanoulas, Universiteit van Amsterdam}
 
 \abstract{
-	\todo[inline]{Write abstract}
-}
+	Change point detection is a highly complex field that is hugely important for industries ranging from manufacturing and IT infrastructure fault detection, to online reputation management. There exists in this field a number of metrics or scores that are widely used for proving the veracity of new or novel approaches. However, there is little consensus as to which measure(s) are most effective in this field. This thesis carries out research into the field of change point detection, carrying out a comparative study of the behaviours of various scoring metrics using simulated data, the accuracy of change point detection methods using real world data, and makes a recommendation for the approach to be used for change point detection in the production systems of an online reputation management company. Finally, a short discussion on the ideal properties of a scoring metric from change point detection algorithms is carried out.
+	
+	In this study, it is found that many of the established scoring metrics behave inconsistently when applied to change point detection problems, and exhibit properties that bring their usefulness and accuracy into question. It is also found that despite these discovered issues, they nonetheless consistently agree on the most effective algorithm when used with real-world data as opposed to simulations.}
 
 \newlength\mylen
 \newcommand\myinput[1]{%
@@ -71,7 +74,7 @@ However, for the number of change point detection methods that exist, there is a
 
 Outside of the `normal' applications of change point detection (for example, spotting the onset of `storm seasons' in oceanographic data \cite{Killick2011} or the detection of past changes in the valuation of a currency, such as BitCoin \cite{Buntain2014}, there is also an application for change point detection as an `event detection' mechanism, when applied to data such as that sourced from online social media platforms.
 
-There exists methods of event detection in social media data utilising approaches such as term frequency counting, lexicon-based recognition and context-free-grammar algorithms \todo{cite yordi}. However, these approaches rely on (sometimes computationally expensive) analysis of the content of messages being posted on social media platforms. Being that change point detection (and especially \emph{online} change point detection algorithms can be utilised for the detection of past events, it stands to reason that these algorithms can also be utilised for event detection when applied to pre-computed data such as conversation volume or reach of a particular conversation. There certainly exists a requirement in the field of online reputation management to be able to inform businesses (in a timely manner) that a spike in conversation volume is occurring, and thus they may need to carry out some action to mitigate reputational damage if the conversation sentiment is negative.
+There exists methods of event detection in social media data utilising approaches such as term frequency counting, lexicon-based recognition and context-free-grammar algorithms \todo{cite yordi}. However, these approaches rely on (sometimes computationally expensive) analysis of the content of messages being posted on social media platforms. Being that change point detection (and especially \emph{online} change point detection) algorithms can be utilised for the detection of past events, it stands to reason that these algorithms can also be utilised for event detection when applied to pre-computed data such as conversation volume or reach of a particular conversation. There certainly exists a requirement in the field of online reputation management to be able to inform businesses (in a timely manner) that a spike in conversation volume is occurring, and thus they may need to carry out some action to mitigate reputational damage if the conversation sentiment is negative.
 
 Therefore, this thesis intends to answer the following research questions:
 
@@ -220,13 +223,13 @@ He discusses in some detail the difference between online and offline change det
 
 \section{Change Detection Algorithms}
 
-Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally referred to as \emph{control charts}. Since the inception of approaches such as CUSUM that provide the possibility for on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic detection, online reputation management and infrastructure error detection, change detection is hugely useful both as an academic problem and in production systems of myriad application.
+Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally referred to as \emph{control charts}. Since the inception of approaches such as CUSUM \cite{Page1954} that provide the possibility for on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic detection, online reputation management and infrastructure error detection, change detection is hugely useful both as an academic problem and in production systems of myriad application.
 
 This thesis work utilises three different change point detection methods, discussed forthwith.
 
 \subsection{Pruned Exact Linear Time}
 
-Pruned Exact Linear Time (henceforth referred to as \emph{PELT}) is a modern change point detection method proposed by R. Killick et. al in `Optimal Detection Changepoints With a Linear Computational Cost', in 2012 \cite{Killick2011a}.
+Pruned Exact Linear Time (henceforth referred to as \emph{PELT}) is a modern change point detection method proposed by \citeauthor{Killick2011a} in \citetitle{Killick2011a}, in 2012 \cite{Killick2011a}.
 
 PELT is an \emph{exact} method of computing change points, based on segmentation of data streams, in the same manner as Segment Neighbourhood and Binary Segmentation. PELT is a modification of the \emph{Optimal Partitioning} method proposed by Brad Jackson et. al in 2003, in \cite{Jackson2003}.
 
@@ -234,7 +237,7 @@ Jackson's method has a computational cost of $O(n^2)$, while Killick's PELT meth
 
 The PELT method works similarly to Segment Neighbourhood \cite{Auger1989} and Binary Segmentation \cite{Jackson2003} \cite{Yao1984} approaches, in that it attempts to fit a model of segmentation of a given data set, minimising the cost of the segmentation to achieve an optimal distribution of segments and therefore change points.
 
-\autoref{alg:pelt} describes a pseudocode implementation of the PELT algorithm, as described in \cite{Eckley2011}\newline
+Algorithm \autoref{alg:pelt} describes a pseudocode implementation of the PELT algorithm, as described in \cite{Eckley2011}\newline
 
 \begin{algorithm}[H]
     \label{alg:pelt}
@@ -259,7 +262,9 @@ The PELT method works similarly to Segment Neighbourhood \cite{Auger1989} and Bi
 
 Proposed by Auger and Lawrence in 1989 \cite{Auger1989}, Segment Neighbourhood (\emph{SegNeigh}) is another example of an exact segmentation algorithm for the detection of change points in data. SegNeigh utilises dynamic programming to search the segmentation space (defined as the maximum number of change points in a given data stream) and then compute the cost function for every possible segmentation of the data. In this way, the location and number of change points can be computed exactly by taking the segmentation that returns the lowest cost function result.
 
-\autoref{alg:segneigh} describes a pseudocode implementation of the SegNeigh algorithm, as described in \cite{Eckley2011}\newline
+Segment Neighbourhoods has a computational complexity of $O(n^2)$, significantly higher than that of PELT or Binary Segmentation. However, this additional cost in complexity is offset by improved performance, as shown by \citeauthor{Braun2000} in \citetitle{Braun2000} \cite{Braun2000}.
+
+Algorithm \autoref{alg:segneigh} describes a pseudocode implementation of the SegNeigh algorithm, as described in \cite{Eckley2011}\newline
 
 \begin{algorithm}[H]
 \label{alg:segneigh}
@@ -292,9 +297,9 @@ Proposed by Auger and Lawrence in 1989 \cite{Auger1989}, Segment Neighbourhood (
 
 Binary Segmentation \cite{Jackson2003} \cite{Yao1984} is a popular method for change point detection, widely utilised in the field. Binary segmentation is a method that recursively applies a single change point detection method. On the first iteration, if a change point is detected, the data is split around that change point (resulting in two data sets) and the change point method is run again on the two resulting data sets. This process is repeated such that many data set segments are created, and runs until no further change points are detected.
 
-Binary Segmentation is an \emph{approximate} change point detection approach, and returns estimated change point locations - unlike PELT and SegNeigh - which return exact change point locations.
+Binary Segmentation is an \emph{approximate} change point detection approach, and returns estimated change point locations - unlike PELT and SegNeigh - which return exact change point locations. It has the same computational cost as PELT, $O(n)$.
 
-\autoref{alg:binseg} describes a pseudocode implementation of the BinSeg algorithm, as described in \cite{Eckley2011}\newline
+Algorithm \autoref{alg:binseg} describes a pseudocode implementation of the BinSeg algorithm, as described in \cite{Eckley2011}\newline
 
 \begin{algorithm}[H]
     \label{alg:binseg}
@@ -379,6 +384,18 @@ The \texttt{changepoint} package requires the provision of a penalty function fo
 
 While the selection of an optimal penalty term for a given data set and change point detection algorithm is an open research question in itself. There exists a method, \emph{Changepoints for a Range of Penalties} (CROPS) \cite{Haynes2014}, in which a change detection algorithm (PELT, in this case) is repeatedly executed in such a fashion that allows for the plotting of the number change points detected against the penalty value used. When conducting analysis against a single, static data source (offline analysis), this method can be useful for ensuring optimal penalty term selection.
 
+\begin{figure}[h]
+\centering
+    \includegraphics[width=0.5\textwidth]{figures/CROPS2}
+    \caption{CROPS Algorithm Output}
+    \label{fig:CROPS}
+\end{figure}
+
+\autoref{fig:CROPS} shows an example of the output of the CROPS algorithm, when executed against the `Rabobank' data set used in the real world data analysis. To read this output, the optimal penalty value should be chosen such that the plot at that point has begun to level off, showing a fast increase in the number of change points for penalty values lower than this. This example shows an optimal penalty value of about 6 (backed up by the algorithm output of a penalty value of 6.21 for 2 change points - signified by the dash-dot red line on the plot). The penalty value for the same data set computed with SIC is 8.16 (signified by the dotted red line on the plot), which also results in a total of two change points being detected. Because the PELT algorithm has a computational complexity of $O(n)$, if it is necessary to carry out an analysis such as this for a static data set, it would be easy to do so.
+
+However, the usefulness of such a method for application to streaming (online) data sets is questionable.
+
+
 \subsection{Distribution Assumptions}
 
 It is also important to note that many change point detection methods make an assumption about the underlying distribution of the data being analysed. This distribution can be, for example, a normal distribution, poisson distribution or a gamma distribution. The selection of this distribution can have an effect on the ability of a given algorithm to detect change points.
@@ -391,7 +408,7 @@ As briefly discussed in the introduction to this thesis, there are a number of p
 
 \subsection{F1 Score}
 
-\unsure{cite this?} This measure is utilised for testing accuracy in problems of binary classification. It considers two different measures, \emph{precision} and \emph{recall}, and takes a harmonic mean of the two measures to compute the final score.
+This measure is utilised for testing accuracy in problems of binary classification. It considers two different measures, \emph{precision} and \emph{recall}, and takes a harmonic mean of the two measures to compute the final score. This measure is used in \cite{Qahtan2015}, \cite{Buntain2014}, and \cite{Pelecanos2010} (among others) for the purposes of evaluating change point detection methods.
 	
 	To calculate Precision and Recall, a \emph{confusion matrix} such as that in \autoref{confusionmatrix} is first constructed to provide values for the total number of true positives, false negatives, false positives and true negatives:
 	
@@ -431,27 +448,29 @@ As briefly discussed in the introduction to this thesis, there are a number of p
         \end{center}
 	\end{figure}
 		
-	
-
-	$Recall$ is computed as the number of correct positive results, divided by the number of positive results that should have been detected. $Precision$ is computed as the number of correct positive results divided by the number of all possible positive results:
+	Precision and Recall were proposed by \citeauthor{Kent1955}, in \citetitle{Kent1955}, for the purposes of scoring the effectiveness of information retrieval methods.
+		
+	$Recall$ is computed as the number of correct positive results, divided by the number of positive results that should have been detected \cite{Kent1955}. $Precision$ is computed as the number of correct positive results divided by the number of all possible positive results \cite{Kent1955}:
 	
 	\begin{eqnarray}
 	    Precision = \frac{TP}{TP + FP}\\
 	    Recall = \frac{TP}{TP + FN}
 	\end{eqnarray}
-	
-	The F1 score calculation (the harmonic mean of both recall and precision) can be described in general terms as follows:
+		
+	The F1 score calculation (the harmonic mean of both recall and precision) can be described in general terms as follows \cite{VanRijsbergen1979}:
 
 	\begin{equation}
 		F_1 = 2 \cdot \frac{1}{\frac{1}{recall} + \frac{1}{precision}} = 2 \cdot \frac{precision \cdot recall}{precision+recall}
 		\label{equ:F1}
 	\end{equation}
 
-	As the F1 score is a binary classification measure, it can only be used to test the precision of an algorithm in a single domain, that is, was the change detected or not. Precision, Recall and F1 Score all provide a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $
+    The F1 score was first proposed by \citeauthor{VanRijsbergen1979} in his seminal work, \citetitle{VanRijsbergen1979}.
+
+	As the F1 score is a binary classification measure, it can only be used to test the precision of an algorithm in a single domain, that is, was the change detected or not. Precision, Recall and F1 Score all provide a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $.
 
 \subsection{Rand Index}
 
-This measure is for computing the similarity between two clusters of data points. It is used for calculating the overall accuracy of a given clustering approach, when compared against a set of ground truth clusters. The Rand Index is defined as:
+This measure is for computing the similarity between two clusters of data points. It is used for calculating the overall accuracy of a given clustering approach, when compared against a set of ground truth clusters. It was first proposed by \citeauthor{Rand1971} in \citetitle{Rand1971}. It was used in \cite{Matteson2012} for the purposes of evaluating change point detection approaches. The Rand Index is defined as \cite{Rand1971}:
 
 	\begin{equation}
 		R = \frac{a+b}{a+b+c+d}
@@ -470,7 +489,7 @@ This measure is for computing the similarity between two clusters of data points
 	
 \subsection{Adjusted Rand Index}
 	
-Similar to the Rand Index, but adjusted to take into account the random chance of pairs being assigned to the same cluster by both approaches being compared. While the Rand Index is suited for comparing a segmentation method against a known-good \emph{oracle} method, the adjusted index is more suited to comparing two differing approaches \cite{Matteson2012}. It is defined as:
+Similar to the Rand Index, but adjusted to take into account the random chance of pairs being assigned to the same cluster by both approaches being compared. While the Rand Index is suited for comparing a segmentation method against a known-good \emph{oracle} method, the adjusted index is more suited to comparing two differing approaches \cite{Matteson2012}. It was first proposed by \citeauthor{Hubert1985} in \citetitle{Hubert1985}. It was utilised as a similarity measure for computed clusters created by segmentation of data sets in \cite{Matteson2012}. It is defined as \cite{Hubert1985}:
 	
 	\begin{equation}
 	    R_{adjusted} = \frac{R - R_{expected}}{R_{max} - R_{expected}}
@@ -483,6 +502,8 @@ Similar to the Rand Index, but adjusted to take into account the random chance o
 \subsection{BCubed}
 		
 BCubed is similar to the Adjusted Rand Index, in that it is adjusted to be appropriate for all constraints in a clustering problem. It was developed by Bagga and Baldwin in 1998 \cite{Bagga1998}.
+
+This measure was not found to be in use for the purposes of evaluating change point detection methods, but it was particularly interesting to investigate based on \citeauthor{Matteson2012}'s use of clustering metrics in \cite{Matteson2012}. It was decided that this measure would be included as an additional well-known clustering measure, to investigate whether it would perform any better than the established Rand and Adjusted Rand indices.
 	
 	BCubed operates in a similar way to the Recall and Precision classification metrics, in that it computes precision and recall values, before calculating a harmonic mean of the two metrics. BCubed also makes use of an additional \emph{correctness} function defined as follows, where $e$ and $e'$ are equivalent elements in a ground truth and computed clustering respectively, $L$ is a computed label and $C$ is a ground truth category:
 	
@@ -511,6 +532,8 @@ To obtain the F score, a harmonic mean of Precision and Recall is taken in the s
 \begin{equation}
     F_{bc} = 2 \cdot \frac{1}{\frac{1}{Recall_{bc}} + \frac{1}{Precision_{bc}}}
 \end{equation}
+
+The BCubed F-Score provides a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $, much like the Rand Index and F1 score for binary classification.
 
 \chapter{Research Method}
 \label{Research Method}
@@ -545,8 +568,6 @@ Python is being utilised also due to the availability of relevant software packa
 \texttt{Changepoint} was developed by Rebecca Killick and Idris A. Eckley and is provided free of charge under the GNU general public license \cite{Killick2014}.
 
 \subsection{Calculation of Evaluation Measures}
-
-%The \texttt{ROCR} package in \textsf{R} is being utilised for the calculation of Precision, Recall and F1 scores when treating change detection as a classification problem. \texttt{ROCR} provides a number of functions, and is primarily developed for plotting two different performance measures against each other for the purposes of classification evaluation given a cut-off parameter. \texttt{ROCR} was developed by Tobias Sing et. al. and is provided free of charge under a GPL license\todo{cite}
 
 For the calculation of Precision, Recall and F1 Score, the \textsf{R} package \texttt{caret} is being utilised. \texttt{caret} is an acronym for `Classification and Regression Training, and provides a number of tools for data manipulation, model creation and tuning, and performance measurements. Through the use of this package, it is possible to generate a \emph{confusion matrix} based on algorithm output, and generate various performance measures based upon this. \texttt{caret} was written by Max Kuhn, and is provided free of charge under the GPL license \cite{FromJedWing2017}.
 
@@ -583,170 +604,87 @@ The research questions above are to be answered using a series of experiments ca
 
 \subsection{Experiment Listings}
 
-For each experiment description, the sample size (otherwise known as time series length) is denoted by $n$, the true change point in the time series is denoted as $\tau_n$ and any `detected' change points are denoted by $\tau'_{n}$. For each experiment, the changing variable (the iterator in the \textsf{R} source code) is denoted as $i$.
+For each experiment description, the sample size (otherwise known as time series length) is denoted by $n$, the true change point(s) in the time series is denoted as $\tau_n$ and any `detected' change points are denoted by $\tau'_{n}$. For each experiment, the changing variable (the iterator in the \textsf{R} source code) is denoted as $i$. For experiments where the computed change point(s) $\tau'_n$ are placed with some error, this error is denoted as $\Delta \tau$. $\Delta \tau$ can always be expected to adhere to $\{ \Delta \tau \in \mathbb{R} \mid \Delta \tau \geq 0 \}$, as values $< 0$ can be considered successful, early detections - and thus do not constitute an error.
 
 \subsubsection{Experiment 1}
 
-This experiment involves increasing the `head' (sample size prior to a single known change point) of a time series, prepending to and thus lengthening the time series. The time series contains a single known change point, and a detected change point provided by a pseudo-algorithm is detected 6 points before the true change point.
+This experiment involves increasing the `head' (sample size prior to a single known change point) of a time series, prepending to and thus lengthening the time series. The time series contains a single known change point, and a detected change point provided by a pseudo-algorithm is placed such that it is placed with a $\Delta \tau$ of 5.
 
 For each prepended point, all of the evaluation metrics are calculated and plotted. The experiment evaluates both criteria 1 and 2.
 
-The experiment runs such that $n = 55$ on commencement, and $n = 500$ upon completion, with each iteration adding a single data point such that $i = 445$. For each iteration, $\tau = i + 1$ and $\tau' = n - 4$.
+The experiment runs such that $n = 55$ on commencement, and $n = 500$ upon completion, with each iteration adding a single data point such that $i = 445$ on completion. For each iteration, $\tau = i + 1$ and $\tau' = \tau + 5$.
+
+For this experiment, the null hypothesis $H_0$ is that neither additional points before a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
 
 
 \subsubsection{Experiment 2}
 
-This experiment involves increasing the `tail' (sample size after a single known change point) of a time series, appending to and thus lengthening the time series. The time series contains a single known change point and a detected change point provided by a pseudo-algorithm is detected 4 points before the true change point.
+This experiment involves increasing the `tail' (sample size after a single known change point) of a time series, appending to and thus lengthening the time series. The time series contains a single known change point $\tau$ and a detected change point $\tau'$ provided by a pseudo-algorithm with a $\Delta \tau$ of 5.
 
 For each appended point, all of the evaluation metrics are calculated and plotted. The experiment evaluates both criteria 1 and 3.
 
-The experiment runs such that $n=55$ on commencement, and $n=550$ upon completion, with each iteration adding a single data point such that $i$ runs from 2 to 500. For each iteration, $\tau = 51$ and $\tau' = 45$.
+The experiment runs such that $n=55$ on commencement, and $n=550$ upon completion, with each iteration adding a single data point such that $i$ runs from 2 to 500. For each iteration, $\tau = 51$ and $\tau' = 56$.
 
+For this experiment, the null hypothesis $H_0$ is that neither additional points after a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
 
 \subsubsection{Experiment 3}
 
-This experiment involves moving a known change point and a computed change point through a fixed length time series. The time series contains a single known change point and a detected change point provided by a pseudo-algorithm that is detected 5 data points before the true change point.
+This experiment involves moving a known change point and a computed change point through a fixed length time series. The time series contains a single known change point $\tau$ and a detected change point $\tau'$ with $\Delta \tau = 5$, provided by a pseudo-algorithm.
 
 For each iteration of the experiment, all of the evaluation metrics are calculated and plotted. The experiment evaluates both criteria 1 and 2.
 
-The experiment runs such that $n$ is constant at $n=501$. For each iteration, $\tau = i$ and $\tau' = i - 3$, for values of $i$ from 5 to 500.
+The experiment runs such that $n$ is constant at $n=501$. For each iteration, $\tau = i$ and $\tau' = i + 5$, for values of $i$ from 5 to 500.
+
+For this experiment, the null hypothesis $H_0$ is that neither additional points before a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
 
 
 \subsubsection{Experiment 4}
 
-This experiment involves moving a detected change point provided by a `pseudo-algorithm' through a time series of fixed length, thus evaluating the ability of a measure to provide a temporal penalty for late, early, or exact detections.
+This experiment involves moving a detected change point $\tau'$ provided by a `pseudo-algorithm' through a time series of fixed length, thus evaluating the ability of a measure to provide a temporal penalty for late, early, or exact detections.
 
 For each iteration of the experiment, all of the evaluation metrics are calculated and plotted. The experiment evaluates criterion 4.
 
-The experiment runs such that $n$ is constant at $n=500$. For each iteration $\tau = 51$ and $\tau' = i$, where $i = 51$ at the commencement (such that $\tau = \tau'$) and $i = 500$ at completion.
+The experiment runs such that $n$ is constant at $n=500$. For each iteration $\tau = 51$ and $\tau' = i$, where $i = 51$ at the commencement (such that $\tau = \tau'$) and $i = 500$ at completion. Thus, values of $\Delta \tau$ range from 50 to 500.
 
-
+For this experiment, the null hypothesis $H_0$ is that all of the calculated metrics will correctly issue a penalty for late detections of a change point, in all instances.
 
 \subsubsection{Experiment 5}
 
-This experiment involves adding `false positive' change point detections to a time series of fixed length with a single known change point location.
+This experiment involves adding `false positive' change point detections of various values of $\Delta \tau$ to a time series of fixed length with a single known change point $\tau$.
 
 For each iteration of the experiment, all of the evaluation metrics are calculated and plotted. The Experiment evaluates criterion 4.
 
 The experiment runs such that $n$ is constant at $n=500$. For each iteration $\tau = 51$ and $\tau' = i$, where $i = 51$ at the commencement of the experiment, $i=55$ at the second iteration, and increases in increments of 5 until $i = 500$. This serves to move the detected change point through the time series, starting at the true change point and progressing to the end of the time series, ending at the final point of the time series.
 
-
+For this experiment, the null hypothesis $H_0$ is that all of the metrics will correctly penalise for false positive detections in a time series.
 
 \subsubsection{Experiment 6}
 
 Removing `false negative' results (by way of explanation, adding correct detections) to a fixed length time series, thus increasing the number of correctly detected change points on each iteration.
 
-The experiment begins with a time series of $n=900$ with $\tau$ being situated at intervals of 100. As the experiment progresses, $\tau'$ points are added such that $\tau_n = \tau'_n$ for each iteration. Thus, adding a computed change point detection at the same place as a ground truth detection.
+The experiment begins with a time series of $n=900$ with $\tau$ being situated at intervals of 100. As the experiment progresses, $\tau'$ points are added such that $\tau_n = \tau'_n$ for each iteration. Thus, adding a computed change point detection at the same place as a ground truth detection (a $\Delta \tau$ of 0)
 
 This experiment evaluates criterion 6, by recalculating the scoring metrics upon each iteration.
 
+For this experiment, the null hypothesis $H_0$ is that removing false negative results will result in a linear increase in score from each metric.
+
 \subsubsection{Experiment 7}
 
-Adding both true change points and detected change points from a `pseudo algorithm' that provides detections every 25 points to a time series, by appending to it, and thus increasing it's length. The experiment runs from $n=50$ until $n=1000$ in increments of 50. Each $\tau$ and $tau'$ is placed upon a new iteration such that each $\tau'_n = \tau_n + 2$. This experiment tests both criteria 1 and 7.
+Adding both true change points and detected change points from a `pseudo algorithm' that provides detections every 25 points to a time series, by appending to it, and thus increasing it's length. The experiment runs from $n=50$ until $n=1000$ in increments of 50. Each $\tau$ and $\tau'$ is placed upon a new iteration such that each $\tau'_n = \tau_n + 2$, giving a $\Delta \tau$ value of 2. This experiment tests both criteria 1 and 7.
+
+For this experiment, the null hypothesis $H_0$ is that metrics will be unaffected by change point density in a time series, nor will they be affected for changes in time series length.
 
 \subsubsection{Experiment 8}
 
-Adding both true change points and detected change points from a `pseudo algorithm', to a time series of fixed length. The experiment runs with a static data set size of $n=1050$, and adds two $\tau$ and $\tau'$ on each iteration, effectively `lifting' a spike out of a static data set where all values are 0 at the start of the experiment. Each $\tau'$ is placed such that $\tau'_n = \tau_n + 2$, simulating a slightly late detection. This ensures that the measures do not report perfect detections throughout the experiment, thus making it impossible to spot how change point density in a fixed length data set affects the calculation of metrics.
+Adding both true change points and detected change points from a `pseudo algorithm', to a time series of fixed length. The experiment runs with a static data set size of $n=1050$, and adds two $\tau$ and $\tau'$ on each iteration, effectively `lifting' a spike out of a static data set where all values are 0 at the start of the experiment. Each $\tau'$ is placed such that $\tau'_n = \tau_n + 2$ (a $\Delta \tau$ of 2, simulating a slightly late detection. This ensures that the measures do not report perfect detections throughout the experiment, thus making it impossible to spot how change point density in a fixed length data set affects the calculation of metrics.
 
 This experiment fulfils criteria 7.
 
+For this experiment, the null hypothesis $H_0$ is that metrics will be unaffected by change point density.
+
 \subsection{Illustrative Algorithms for Experiments}
 
-\begin{algorithm}[h]
-\caption{Experiment to plot the effect of increasing `head' length of a dataset on metrics}
-\Begin{
-    \ForEach{iteration}{
-        Add 1 point to head of data, increasing length\\
-        Calculate metrics for current $\tau$, $\tau'$ against time series\\
-        Store results
-    }
-}
-\end{algorithm}
-
-
-\begin{algorithm}[h]
-\caption{Experiment to plot the effect of increasing `tail' length of a dataset on metrics}
-\Begin{
-    \ForEach{iteration}{
-        Add 1 point to tail of data, increasing length\\
-        Calculate metrics for current $\tau$, $\tau'$ against time series\\
-        Store results
-    }
-}
-\end{algorithm}
-
-\begin{algorithm}[h]
-\caption{Experiment to plot the effect of increasing `tail' length of a dataset on metrics}
-\Begin{
-    \ForEach{iteration}{
-        Move $\tau$ and $\tau'$ 1 point further in time series\\
-        Calculate metrics for current $\tau$, $\tau'$ against time series\\
-        Store results
-    }
-}
-\end{algorithm}
-
-\begin{algorithm}[h]
-\caption{Experiment to plot the effect of temporal distance between $\tau$ and $\tau'$ on metrics}
-\Begin{
-    \ForEach{iteration}{
-        Leave $\tau$ unchanged\\
-        $\tau' \leftarrow \tau' + 1$\\
-        Calculate metrics for current $\tau$, $\tau'$ against time series\\
-        Store results
-    }
-}
-\end{algorithm}
-
-\begin{algorithm}[h]
-\caption{Experiment to plot the effect of increasing the number of false positive detections on metrics}
-\Begin{
-    \ForEach{iteration}{
-        Add 1 additional false positive, such that $\tau'_{n+1} = \tau'_{n} + 5$\\
-        Calculate metrics for current $\tau$, $\tau'$ against time series\\
-        Store results
-    }
-}
-\end{algorithm}
-
-\begin{algorithm}[h]
-\caption{Experiment to plot the effect of decreasing the number of false negative detections on metrics}
-\Begin{
-    \ForEach{iteration}{
-        Add one additional $\tau'$ such that $\tau'_n = \tau_n$\\
-        Calculate metrics for current $\tau$, $\tau'$ against time series\\
-        Store results
-    }
-}
-\end{algorithm}
-
-\begin{algorithm}[h]
-\caption{Experiment to plot the effect of the number of change points on metrics, by appending}
-\Begin{
-
-    $new\_point \leftarrow$ time series segment with 1 changepoint
-
-    \ForEach{iteration}{
-        Append $new\_point$ to data, increasing length\\
-        Add additional $\tau$ at $tau_{new\_point}$\\
-        Add additional $\tau'$ at $tau'{new\_point}$\\
-        Calculate metrics for current $\tau$, $\tau'$ against time series\\
-        Store results
-    }
-}
-\end{algorithm}
-
-\begin{algorithm}[H]
-\caption{Experiment to plot the effect of the number of change points on metrics, by adding 1 to slices of the time series \& maintaining constant time series length}
-\Begin{
-    \ForEach{iteration}{
-        Add 1 to next slice of time series\\
-        Add $\tau$ and $\tau'$ such that $\tau' = \tau + 2$\\
-        Calculate metrics for current $\tau$, $\tau'$ against time series\\
-        Store results
-    }
-}
-\end{algorithm}
+Illustrative pseudocode algorithms for each experiment can be found in appendix A of this document.
 
 \section{Comparison of Measures Based Upon Functional Requirements}
 
@@ -1046,5 +984,106 @@ When compared with the behaviour in a fixed length data set, the BCubed measure 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \printbibliography
+
+\appendix
+\addcontentsline{toc}{chapter}{APPENDICES}
+
+\chapter{Pseudocode for Simulation Studies}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of increasing `head' length of a dataset on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Add 1 point to head of data, increasing length\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of increasing `tail' length of a dataset on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Add 1 point to tail of data, increasing length\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of increasing `tail' length of a dataset on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Move $\tau$ and $\tau'$ 1 point further in time series\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of temporal distance between $\tau$ and $\tau'$ on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Leave $\tau$ unchanged\\
+        $\tau' \leftarrow \tau' + 1$\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of increasing the number of false positive detections on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Add 1 additional false positive, such that $\tau'_{n+1} = \tau'_{n} + 5$\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of decreasing the number of false negative detections on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Add one additional $\tau'$ such that $\tau'_n = \tau_n$\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of the number of change points on metrics, by appending}
+\Begin{
+
+    $new\_point \leftarrow$ time series segment with 1 changepoint
+
+    \ForEach{iteration}{
+        Append $new\_point$ to data, increasing length\\
+        Add additional $\tau$ at $tau_{new\_point}$\\
+        Add additional $\tau'$ at $tau'{new\_point}$\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of the number of change points on metrics, by adding 1 to slices of the time series \& maintaining constant time series length}
+\Begin{
+    \ForEach{iteration}{
+        Add 1 to next slice of time series\\
+        Add $\tau$ and $\tau'$ such that $\tau' = \tau + 2$\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
 
 \end{document}
