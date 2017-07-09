@@ -49,9 +49,9 @@ Experiment1 <- function() {
     'BCubed FScore' = numeric(0)
   )
   
-  for (i in 2:500) {
+  for (i in 5:500) {
     data <- c(rep(0, 50), rep(1, i))
-    interim <- CalculateArbitrary(data, 45, 51)
+    interim <- CalculateArbitrary(data, 55, 51)
     interim$Distance <- i
     results <- rbind(interim, results)
   }
@@ -76,8 +76,8 @@ Experiment2 <- function() {
   )
   
   for (i in 5:500) {
-    data <- c(rep(0, i), rep(1, (501 - i)))
-    interim <- CalculateArbitrary(data, (i - 4), (i + 1))
+    data <- c(rep(0, i), rep(1, (505 - i)))
+    interim <- CalculateArbitrary(data, (i+5), (i + 1))
     interim$Distance <- i
     results <- rbind(interim, results)
   }
@@ -103,7 +103,7 @@ Experiment3 <- function() {
   
   data <- c(rep(0, 49), rep(1, 451))
   
-  for (i in 51:500) {
+  for (i in 1:500) {
     interim <- CalculateArbitrary(data, i, 51)
     interim$Distance <- i
     results <- rbind(interim, results)
@@ -129,7 +129,7 @@ Experiment4 <- function() {
   
   for (i in 5:500) {
     data <- c(rep(0, i), rep(1, 50))
-    interim <- CalculateArbitrary(data, i - 4, i + 1)
+    interim <- CalculateArbitrary(data, i +5, i + 1)
     interim$Distance <- i
     results <- rbind(interim, results)
   }
@@ -147,7 +147,6 @@ Experiment5 <- function() {
     'F1' = numeric(0),
     'Rand' = numeric(0),
     'Adj Rand' = numeric(0),
-    'BCubedAlt' = numeric(0),
     'BCubed Precision' = numeric(0),
     'BCubed Recall' = numeric(0),
     'BCubed FScore' = numeric(0)
@@ -162,7 +161,6 @@ Experiment5 <- function() {
     numchangepoints <- numchangepoints + 1
     interim <- CalculateArbitrary(data, changepoints, 51)
     interim$Distance <- numchangepoints
-    interim$BCubedAlt <- AlternativeBCubed(data, changepoints, 51)
     results <- rbind(interim, results)
   }
   
@@ -221,15 +219,17 @@ Experiment7 <- function() {
   changepoints <- 28
   truthpoints <- 26
   interim <- CalculateArbitrary(data, changepoints, truthpoints)
-  interim$Distance <- 1
+  xval <- 1
+  interim$Distance <- xval
   results <- rbind(interim, results)
   
   for(i in seq(50, 1000, 50)) {
+    xval <- xval + 2
     data <- c(data, changes)
     truthpoints <- c(truthpoints, (i+1), (i+26))
     changepoints <- c(changepoints, (i+2), (i+28))
     interim <- CalculateArbitrary(data, changepoints, truthpoints)
-    interim$Distance <- i
+    interim$Distance <- xval
     results <- rbind(interim, results)
   }
 
@@ -267,7 +267,7 @@ Experiment8 <- function() {
     truth2 <- j + 1
     point1 <- truth1 + 2
     point2 <- truth2 + 2
-    x <- x + 1
+    x <- x + 2
     truthpoints <- c(truthpoints, truth1, truth2)
     changepoints <- c(changepoints, point1, point2)
     interim <- CalculateArbitrary(data, changepoints, truthpoints)
@@ -282,37 +282,21 @@ PlotResults <- function(data, xlab) {
   colours <-
     c(
       "#89C5DA",
-      "#DA5724",
+      "#AD6F3B",
       "#74D944",
       "#CE50CA",
       "#3F4921",
       "#C0717C",
-      "#CBD588",
-      "#5F7FC7",
-      "#673770",
       "#D3D93E",
-      "#38333E",
-      "#508578",
-      "#D7C1B1",
-      "#689030",
-      "#AD6F3B",
-      "#CD9BCD",
-      "#D14285",
-      "#6DDE88",
-      "#652926",
-      "#7FDCC0",
-      "#C84248",
-      "#8569D5",
-      "#5E738F",
-      "#D1A33D",
-      "#8A7C64",
-      "#599861"
+      "#673770"
     )
+  
+  altcolours <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7", "#7f9094")
   
   ggplot(data, aes(x = Distance, y = value, colour = variable)) +
     geom_line() +
     ylab(label = "Score") +
     xlab(label = xlab) +
-    scale_color_manual(values = colours) +
+    scale_color_manual(values = altcolours, labels=c('Precision', 'Recall', 'F1', 'Rand Index', 'Adjusted Rand Index', 'BCubed Precision', 'BCubed Recall', 'BCubed F-Score')) +
     labs(color = 'Metric')
 }
