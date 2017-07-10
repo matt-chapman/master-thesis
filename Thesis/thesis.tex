@@ -807,6 +807,8 @@ The Adjusted Rand Index shows a far more extreme temporal penalty for the change
 
 The binary classification measures of Precision, Recall and F1 maintain a constant value of $0$ throughout the experiment, classifying the change point detection as a `missed' detection and penalising accordingly.
 
+For these experiments (1 \& 2) the null hypothesis $H_0$ is rejected, and the alternative hypothesis $H_1$ is accepted.
+
 \subsection{Impact of Data Preceding and Following a Known Change Point}
 
 The experiment run for this criteria is similar to those run in \autoref{sample size dependence}, but differs in one important manner: the size of the time series is maintained at a constant value throughout. As points are added to the `head' of the data set, points are removed from the `tail'. In practice, this serves to move both the true and computed change points through the time series.
@@ -822,6 +824,8 @@ The experiment run for this criteria is similar to those run in \autoref{sample 
 The Adjusted Rand Index exhibits behaviour unique to itself, with a value approaching 0 as the change points approach either end of time series. From position 150 to 350, the Adjusted Rand Index holds an almost constant value.
 
 From these results it can be inferred that it is only the Adjusted Rand Index that is effected in any meaningful way by the position of the change point in a fixed length data set.
+
+For this experiment (3), the null hypothesis $H_0$ fails to be rejected for several measures. The only situation in which the alternative hypothesis $H_1$ holds is with the Adjusted Rand Index, which shows a considerable range in values when the change point is at the extreme ends of the time series.
 
 \subsection{Temporal Penalty}
 
@@ -839,6 +843,8 @@ All of the clustering measure values decrease as the computed change point moves
 
 The Adjusted Rand Index once again exhibits behaviour unique to itself, dropping below $0$ at approximately $t=278$. This behaviour is expected from the Adjusted Rand Index, being that the adjusted nature of the metric (allowing for cluster classification occurring by chance) results in a metric capable of returning a value $<0$.
 
+The results of this experiment (4) cause the null hypothesis $H_0$ to be rejected. All of the measures show some issue with the application of a temporal penalty for late detections, and indeed also show issues with crediting algorithms for early detections. In this case, the alternative hypothesis $H_1$ holds.
+
 \subsection{Penalisation for False Positives}
 
 This experiment utilised a fixed length time series with a single ground truth change point, and a single computed change point that equals the ground truth change point. Successive false positives are added to the time series, moving from left to right across the time series.
@@ -851,7 +857,9 @@ This experiment utilised a fixed length time series with a single ground truth c
     \label{fig:Experiment5}
 \end{figure}
 
-The results of this experiment show that almost all of the metrics behave in a similar fashion. The binary classification measure of Recall maintains a value of $1$, while all of the other measures \todo{check this} show a precipitous drop in score as the initial false positives are added. Precision and F1 scores for binary classification drop sharply, while the measures for clustering show a more gentle decrease in score. The Rand Index and BCubed F-Score end the experiment at approximately the same value, while the Adjusted Rand Index, F1 Score and Binary Classification Precision metrics also terminate at approximately the same value.
+The results of this experiment show that almost all of the metrics behave in a similar fashion. The binary classification measure of Recall maintains a value of $1$, while all of the other measures show a precipitous drop in score as the initial false positives are added. Precision and F1 scores for binary classification drop sharply, while the measures for clustering show a more gentle decrease in score. The Rand Index and BCubed F-Score end the experiment at approximately the same value, while the Adjusted Rand Index, F1 Score and Binary Classification Precision metrics also terminate at approximately the same value.
+
+The results of this experiment cause the null hypothesis $H_0$ to hold, as all metrics behave correctly in this situation.
 
 \subsection{Penalisation for False Negatives}
 
@@ -881,7 +889,7 @@ The results of this experiment show a drop in score provided by the Adjusted Ran
 
 This final experiment is similar to the previous one, in that it increases the number of change points in a data stream. However, the difference here is that in this case, data is appended to the data stream, also increasing the length of the stream as each successive change point is added. The results of this experiment are shown in \autoref{fig:Experiment8}:
 
-\begin{figure}[h]
+\begin{figure}[H]
     \includegraphics[width=\textwidth]{figures/Experiment7}
     \caption{Change Point Density (Variable Length) Results Plot}
     \label{fig:Experiment8}
@@ -895,135 +903,23 @@ Aside from the large change in score value at the beginning of the experiment, t
 
 \section{Real-World Data Analysis}
 
-As described in \autoref{real world explainer}, this experiment executed change detection algorithms against sets of real world data taken from Twitter. The data was gathered and filtered to be relevant to certain brands (again, as listed in \autoref{real world explainer}) and then annotated with ground truth change points by social media analysts from the host organisation.
+As described in \autoref{real world explainer}, this experiment executed change detection algorithms against sets of real world data taken from Twitter. The data was gathered and filtered to be relevant to certain brands (again, as listed in \autoref{real world explainer}) and then annotated with ground truth change points by social media analysts from the host organisation. The ground truth annotations can be found in \autoref{groundtruth}.
 
-What follows is the results of that study. For each data set, the scores provided by the evaluation measures are tabulated and provided. The highest score(s) for each measure are highlighted for easy comparison and readability. Further discussion of the results and the extraction of conclusions will can be found in \autoref{results} and \autoref{conclusions}.
+What follows is the results of that study. For each data set, the scores provided by the evaluation measures are tabulated and provided in \autoref{fullscores}. The highest score(s) for each measure are highlighted for easy comparison and readability. Further discussion of the results and the extraction of conclusions will can be found in \autoref{results} and \autoref{conclusions}.
 
-Only the tabulated scores are included in this section for readability. To view the full plots of the change points detected, please refer to 
+The final plots, including detected change points by each algorithm can also be found in \autoref{changeplots}.
 
-\subsection{Dirk}
-
-
-\begin{table}[]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}rcccccccc@{}}
-\toprule
-Algorithm & Precision & Recall & F1 & Rand & adjRand & BCubed.Precision & BCubed.Recall & BCubed.FScore \\ \midrule
-MeanVar BinSeg & 0 & 0 & NA & 0.916384181 & 0.831326108 & 0.977777778 & 0.808522727 & 0.885131649 \\
-MeanVar SegNeigh & 0 & 0 & NA & 0.774576271 & 0.57039828 & 0.977777778 & 0.662121212 & 0.789569859 \\
-MeanVar PELT & 0 & 0 & NA & 0.750282486 & 0.528564301 & 0.977777778 & 0.572537879 & 0.722194622 \\
-Var BinSeg & 0 & 0 & NA & 0.942937853 & 0.883671294 & 0.983333333 & 0.904356061 & 0.942192569 \\
-Var SegNeigh & 0 & 0 & NA & 0.942937853 & 0.883671294 & 0.983333333 & 0.904356061 & 0.942192569 \\
-Var PELT & 0 & 0 & NA & 0.942937853 & 0.883671294 & 0.983333333 & 0.904356061 & 0.942192569 \\
-Mean BinSeg & 0 & 0 & NA & 0.73559322 & 0.503863154 & 0.983333333 & 0.564015152 & 0.716858425 \\
-Mean SegNeigh & 0.2 & 1 & 0.333333333 & 0.93559322 & 0.8691606 & 1 & 0.875189394 & 0.933441067 \\
-Mean PELT & 0.017241379 & 1 & 0.033898305 & 0.398305085 & 0.000746372 & 1 & 0.034090909 & 0.065934066 \\ \bottomrule
-\end{tabular}%
-}
-\caption{Metric scores for `Dirk' data set}
-\label{tab:dirk}
-\end{table}
-
-\subsection{Ziggo}
-
-\begin{table}[]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}rcccccccc@{}}
-\toprule
-\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{adjRand} & \textbf{BCubed.Precision} & \textbf{BCubed.Recall} & \textbf{BCubed.FScore} \\ \midrule
-MeanVar BinSeg & 0.2 & 0.2 & 0.2 & 0.819774011 & 0.54185782 & 0.656344086 & 0.855897436 & 0.742954366 \\
-MeanVar SegNeigh & 0.2 & 0.2 & 0.2 & 0.785875706 & 0.477814329 & 0.619393939 & 0.842564103 & 0.713945385 \\
-MeanVar PELT & 0.166666667 & 0.2 & 0.181818182 & 0.811864407 & 0.515766487 & 0.656344086 & 0.809230769 & 0.724812967 \\
-Var BinSeg & 0.333333333 & 0.2 & 0.25 & 0.733333333 & 0.418172701 & 0.457575758 & 0.919230769 & 0.611004825 \\
-Var SegNeigh & 0 & 0 & NA & 0.782485876 & 0.477512609 & 0.588624709 & 0.862564103 & 0.699738779 \\
-Var PELT & 0 & 0 & NA & 0.782485876 & 0.477512609 & 0.588624709 & 0.862564103 & 0.699738779 \\
-Mean BinSeg & 0.5 & 0.6 & 0.545454545 & 0.798305085 & 0.510612723 & 0.672727273 & 0.889230769 & 0.765974212 \\
-Mean SegNeigh & 0.4 & 0.4 & 0.4 & 0.784745763 & 0.492259321 & 0.633660131 & 0.910064103 & 0.747117038 \\
-Mean PELT & 0.083333333 & 1 & 0.153846154 & 0.807344633 & 0 & 1 & 0.1 & 0.181818182 \\ \bottomrule
-\end{tabular}%
-}
-\caption{My caption}
-\label{my-label}
-\end{table}
-
-\subsection{Bol.com}
-
-
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}rcccccccc@{}}
-\toprule
-\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{adjRand} & \textbf{BCubed.Precision} & \textbf{BCubed.Recall} & \textbf{BCubed.FScore} \\ \midrule
-MeanVar BinSeg & 0 & 0 & NA & 0.363828662 & -0.033083215 & 0.380760369 & 0.838017984 & 0.523612904 \\
-MeanVar SegNeigh & 0 & 0 & NA & 0.363828662 & -0.033083215 & 0.380760369 & 0.838017984 & 0.523612904 \\
-MeanVar PELT & 0 & 0 & NA & 0.363828662 & -0.033083215 & 0.380760369 & 0.838017984 & 0.523612904 \\
-Var BinSeg & 0 & 0 & NA & 0.332099418 & 0.002293403 & 0.341618191 & 0.969439728 & 0.505207652 \\
-Var SegNeigh & 0 & 0 & NA & 0.332099418 & 0.002293403 & 0.341618191 & 0.969439728 & 0.505207652 \\
-Var PELT & 0 & 0 & NA & 0.332099418 & 0.002293403 & 0.341618191 & 0.969439728 & 0.505207652 \\
-Mean BinSeg & 0 & 0 & NA & 0.584346906 & 0.100269497 & 0.594594595 & 0.584795322 & 0.589654248 \\
-Mean SegNeigh & 0.4 & 0.666666667 & 0.5 & 0.851930196 & 0.685228297 & 0.756503642 & 0.916871031 & 0.829002955 \\
-Mean PELT & 0.048387097 & 1 & 0.092307692 & 0.6811211 & 0 & 1 & 0.064516129 & 0.121212121 \\ \bottomrule
-\end{tabular}%
-}
-\caption{My caption}
-\label{my-label}
-\end{table}
-
-\subsection{Connexxion}
-
-
-\begin{table}[H]
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}rcccccccc@{}}
-\toprule
-\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{adjRand} & \textbf{BCubed.Precision} & \textbf{BCubed.Recall} & \textbf{BCubed.FScore} \\ \midrule
-MeanVar BinSeg & 0.25 & 0.5 & 0.333333333 & 0.924907456 & 0.844343916 & 0.890083632 & 0.888137357 & 0.889109429 \\
-MeanVar SegNeigh & 0.25 & 0.5 & 0.333333333 & 0.924907456 & 0.844343916 & 0.890083632 & 0.888137357 & 0.889109429 \\
-MeanVar PELT & 0.142857143 & 0.5 & 0.222222222 & 0.812268641 & 0.590695386 & 0.890083632 & 0.666493236 & 0.762229907 \\
-Var BinSeg & 0.333333333 & 0.5 & 0.4 & 0.904812269 & 0.805123425 & 0.846496107 & 0.920395421 & 0.881900364 \\
-Var SegNeigh & 0.333333333 & 0.5 & 0.4 & 0.904812269 & 0.805123425 & 0.846496107 & 0.920395421 & 0.881900364 \\
-Var PELT & 0.333333333 & 0.5 & 0.4 & 0.904812269 & 0.805123425 & 0.846496107 & 0.920395421 & 0.881900364 \\
-Mean BinSeg & 0.166666667 & 0.5 & 0.25 & 0.87678477 & 0.727378477 & 0.983870968 & 0.677560738 & 0.802479376 \\
-Mean SegNeigh & 0.4 & 1 & 0.571428571 & 0.958223162 & 0.910909287 & 1 & 0.881650681 & 0.937103459 \\
-Mean PELT & 0.033898305 & 1 & 0.06557377 & 0.607086198 & 0.004865842 & 1 & 0.05450052 & 0.10336746 \\ \bottomrule
-\end{tabular}%
-}
-\caption{My caption}
-\label{my-label}
-\end{table}
-
-\subsection{Dakota Access Pipeline}
-
-
-
-\subsection{Jumbo}
-
-
-
-\subsection{Kamer van Koophandel}
-
-
-
-\subsection{Rabobank}
-
-
-
-\subsection{Tele2}
-
-
-\subsection{UWV}
-
-\subsection{Averages}
+Analysis of the raw data used for \autoref{fig:PrettyPlot} shows that there is not always consensus on the best algorithm. Some metrics provide higher scores for algorithms that perform objectively worse than others, when compared through by-eye analysis of the change point plots. Algorithms using variance as the test statistic tend to perform better than those using mean. Binary classification scores are universally low for all data sets.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/PrettyPlot}
     \caption{Average scores across all real-world data scenarios}
     \label{fig:PrettyPlot}
 \end{figure}
+
+
+
+\autoref{fig:PrettyPlot} shows a plot of average score values across all real world data sets, from each algorithm. The error bars are drawn to show 1 standard-deviation of error.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1101,9 +997,32 @@ When compared with the behaviour in a fixed length data set, the BCubed measure 
 \chapter{Analysis \& Conclusions}
 \label{conclusions}
 
+\section{Conclusions}
+
+There are multiple ways in which the measures evaluated in this thesis are shown to be inappropriate for use for evaluating change point detection approaches.
+
+The clustering measures evaluated (Rand, Adjusted Rand, BCubed) show that they are often affected by the size of the data set, or by the density of change points in the data set, when scoring change points detected with some error.
+
+Clustering measures especially exhibited inconsistent behaviour when penalising for late (or early) detections. In the experiments carried out, the fact that the score \emph{increases} as the detected change point approaches the end of the time series shows that these measures may be unreliable for providing scores for approaches in which detections are extremely late.
+
+Binary Classification metrics performed well in simulation studies, fulfilling all but two of the criteria tested. However, when applied to real world data and change points detected therein, they proved to be ineffective.
+
+These results do call into question some aspects of the validity of the experiments, which will be discussed in \autoref{threats}.
+
+When the algorithms were applied to real world data sets, they behaved inconsistently, to the point where no measure agrees on which approach is `best' for all of the data sets evaluated. When the change point plots are examined by-eye, it is clear that the algorithms underperformed when used in this context. There were cases where the manual ground-truth annotations weer correctly detected by the algorithms, but there were also many situations in which the algorithm output did not closely match the ground truth at all. Despite this, the metrics being used still scored the algorithms highly in many cases (assuming a score > $0.5$ to be successful).
+
+\section{The Ideal Metric}
+\label{ideal metric}
+
+\section{Threats to Validity}
+\label{threats}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Future Work}
+
+The results of this thesis open up numerous avenues for future research in the field. The validity issues discussed in \autoref{threats} suggest that changes to the experimental method could result in more interesting results.
+It would also be interesting to formulate the `ideal metric' discussed in \autoref{ideal metric} mathematically, and prove it's veracity through simulation studies and analysis of real world data, much like that which was carried out in this thesis.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1211,6 +1130,7 @@ When compared with the behaviour in a fixed length data set, the BCubed measure 
 \end{algorithm}
 
 \chapter{Ground Truth Annotations}
+\label{groundtruth}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/GroundTruthAnnotations}
@@ -1219,6 +1139,7 @@ When compared with the behaviour in a fixed length data set, the BCubed measure 
 \end{figure}
 
 \chapter{Real-World Change Point Detection Plots}
+\label{changeplots}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/dirkresults}
@@ -1229,59 +1150,272 @@ When compared with the behaviour in a fixed length data set, the BCubed measure 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/ziggoresults}
     \caption{`Dirk' Change Point Detections}
-    \label{fig:dirk}
+    \label{fig:ziggo}
 \end{figure}
 
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/bolresults}
     \caption{`Dirk' Change Point Detections}
-    \label{fig:dirk}
+    \label{fig:bol}
 \end{figure}
 
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/connexxionresults}
     \caption{`Dirk' Change Point Detections}
-    \label{fig:dirk}
+    \label{fig:connexxion}
 \end{figure}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/dapresults}
     \caption{`Dirk' Change Point Detections}
-    \label{fig:dirk}
+    \label{fig:dap}
 \end{figure}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/jumboresults}
     \caption{`Dirk' Change Point Detections}
-    \label{fig:dirk}
+    \label{fig:jumbo}
 \end{figure}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/kvkresults}
     \caption{`Dirk' Change Point Detections}
-    \label{fig:dirk}
+    \label{fig:kvk}
 \end{figure}
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/rabobankresults}
     \caption{`Dirk' Change Point Detections}
-    \label{fig:dirk}
+    \label{fig:rabobank}
 \end{figure}
 
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/tele2results}
     \caption{`Dirk' Change Point Detections}
-    \label{fig:dirk}
+    \label{fig:tele2}
 \end{figure}
 
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/uwvresults}
     \caption{`Dirk' Change Point Detections}
-    \label{fig:dirk}
+    \label{fig:uwv}
 \end{figure}
+
+\chapter{Full Real World Data Scorings}
+\label{fullscores}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Precision\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Recall\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ FScore\end{tabular}} \\ \midrule
+MeanVar BinSeg & 0 & 0 & NA & 0.916384181 & 0.831326108 & 0.977777778 & 0.808522727 & 0.885131649 \\
+MeanVar SegNeigh & 0 & 0 & NA & 0.774576271 & 0.57039828 & 0.977777778 & 0.662121212 & 0.789569859 \\
+MeanVar PELT & 0 & 0 & NA & 0.750282486 & 0.528564301 & 0.977777778 & 0.572537879 & 0.722194622 \\
+Var BinSeg & 0 & 0 & NA & \textbf{0.942937853} & \textbf{0.883671294} & \textbf{0.983333333} & \textbf{0.904356061} & \textbf{0.942192569} \\
+Var SegNeigh & 0 & 0 & NA & \textbf{0.942937853} & \textbf{0.883671294} & \textbf{0.983333333} & \textbf{0.904356061} & \textbf{0.942192569} \\
+Var PELT & 0 & 0 & NA & \textbf{0.942937853} & \textbf{0.883671294} & \textbf{0.983333333} & \textbf{0.904356061} & \textbf{0.942192569} \\
+Mean BinSeg & 0 & 0 & NA & 0.73559322 & 0.503863154 & \textbf{0.983333333} & 0.564015152 & 0.716858425 \\
+Mean SegNeigh & \textbf{0.2} & \textbf{1} & \textbf{0.333333333} & 0.93559322 & 0.8691606 & 1 & 0.875189394 & 0.933441067 \\
+Mean PELT & 0.017241379 & \textbf{1} & 0.033898305 & 0.398305085 & 0.000746372 & 1 & 0.034090909 & 0.065934066 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Scores for `Dirk' data set}
+\label{tab:dirk}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Precision\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Recall\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ FScore\end{tabular}} \\ \midrule
+MeanVar BinSeg & 0.2 & 0.2 & 0.2 & \textbf{0.819774011} & 0.54185782 & 0.656344086 & 0.855897436 & 0.742954366 \\
+MeanVar SegNeigh & 0.2 & 0.2 & 0.2 & 0.785875706 & 0.477814329 & 0.619393939 & 0.842564103 & 0.713945385 \\
+MeanVar PELT & 0.166666667 & 0.2 & 0.181818182 & 0.811864407 & \textbf{0.515766487} & 0.656344086 & 0.809230769 & 0.724812967 \\
+Var BinSeg & 0.333333333 & 0.2 & 0.25 & 0.733333333 & 0.418172701 & 0.457575758 & \textbf{0.919230769} & 0.611004825 \\
+Var SegNeigh & 0 & 0 & NA & 0.782485876 & 0.477512609 & 0.588624709 & 0.862564103 & 0.699738779 \\
+Var PELT & 0 & 0 & NA & 0.782485876 & 0.477512609 & 0.588624709 & 0.862564103 & 0.699738779 \\
+Mean BinSeg & \textbf{0.5} & \textbf{0.6} & \textbf{0.545454545} & 0.798305085 & 0.510612723 & \textbf{0.672727273} & 0.889230769 & \textbf{0.765974212} \\
+Mean SegNeigh & 0.4 & 0.4 & 0.4 & 0.784745763 & 0.492259321 & 0.633660131 & 0.910064103 & 0.747117038 \\
+Mean PELT & 0.083333333 & 1 & 0.153846154 & 0.807344633 & 0 & 1 & 0.1 & 0.181818182 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Scores for `Ziggo' data set}
+\label{tab:ziggo}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Precision\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Recall\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ FScore\end{tabular}} \\ \midrule
+MeanVar BinSeg & 0 & 0 & NA & 0.363828662 & -0.033083215 & 0.380760369 & 0.838017984 & 0.523612904 \\
+MeanVar SegNeigh & 0 & 0 & NA & 0.363828662 & -0.033083215 & 0.380760369 & 0.838017984 & 0.523612904 \\
+MeanVar PELT & 0 & 0 & NA & 0.363828662 & -0.033083215 & 0.380760369 & 0.838017984 & 0.523612904 \\
+Var BinSeg & 0 & 0 & NA & 0.332099418 & 0.002293403 & 0.341618191 & \textbf{0.969439728} & 0.505207652 \\
+Var SegNeigh & 0 & 0 & NA & 0.332099418 & 0.002293403 & 0.341618191 & \textbf{0.969439728} & 0.505207652 \\
+Var PELT & 0 & 0 & NA & 0.332099418 & 0.002293403 & 0.341618191 & \textbf{0.969439728} & 0.505207652 \\
+Mean BinSeg & 0 & 0 & NA & 0.584346906 & 0.100269497 & 0.594594595 & 0.584795322 & 0.589654248 \\
+Mean SegNeigh & \textbf{0.4} & 0.666666667 & \textbf{0.5} & \textbf{0.851930196} & \textbf{0.685228297} & \textbf{0.756503642} & 0.916871031 & \textbf{0.829002955} \\
+Mean PELT & 0.048387097 & \textbf{1} & 0.092307692 & 0.6811211 & 0 & 1 & 0.064516129 & 0.121212121 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Scores for `Bol.com' data set}
+\label{tab:bol}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Precision\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Recall\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ FScore\end{tabular}} \\ \midrule
+MeanVar BinSeg & 0.25 & 0.5 & 0.333333333 & 0.924907456 & 0.844343916 & 0.890083632 & 0.888137357 & 0.889109429 \\
+MeanVar SegNeigh & 0.25 & 0.5 & 0.333333333 & 0.924907456 & 0.844343916 & 0.890083632 & 0.888137357 & 0.889109429 \\
+MeanVar PELT & 0.142857143 & 0.5 & 0.222222222 & 0.812268641 & 0.590695386 & 0.890083632 & 0.666493236 & 0.762229907 \\
+Var BinSeg & 0.333333333 & 0.5 & 0.4 & 0.904812269 & 0.805123425 & 0.846496107 & \textbf{0.920395421} & 0.881900364 \\
+Var SegNeigh & 0.333333333 & 0.5 & 0.4 & 0.904812269 & 0.805123425 & 0.846496107 & \textbf{0.920395421} & 0.881900364 \\
+Var PELT & 0.333333333 & 0.5 & 0.4 & 0.904812269 & 0.805123425 & 0.846496107 & \textbf{0.920395421} & 0.881900364 \\
+Mean BinSeg & 0.166666667 & 0.5 & 0.25 & 0.87678477 & 0.727378477 & 0.983870968 & 0.677560738 & 0.802479376 \\
+Mean SegNeigh & \textbf{0.4} & \textbf{1} & \textbf{0.571428571} & \textbf{0.958223162} & \textbf{0.910909287} & \textbf{1} & 0.881650681 & \textbf{0.937103459} \\
+Mean PELT & 0.033898305 & \textbf{1} & 0.06557377 & 0.607086198 & 0.004865842 & \textbf{1} & 0.05450052 & 0.10336746 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Scores for `Connexxion' data set}
+\label{tab:connexxion}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Precision\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Recall\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ FScore\end{tabular}} \\ \midrule
+MeanVar BinSeg & 0 & 0 & NA & 0.7106955 & 0.351202345 & 0.667180277 & 0.682527985 & 0.674766871 \\
+MeanVar SegNeigh & 0 & 0 & NA & 0.698421975 & 0.334534305 & 0.655034895 & 0.703714426 & 0.678502647 \\
+MeanVar PELT & \textbf{0.1} & 0.333333333 & \textbf{0.153846154} & 0.779661017 & 0.378254169 & 0.86440678 & 0.476111521 & 0.614022242 \\
+Var BinSeg & 0 & 0 & NA & 0.790765634 & 0.562324673 & 0.667180277 & 0.884443977 & 0.760601126 \\
+Var SegNeigh & 0 & 0 & NA & 0.77849211 & 0.543596211 & 0.655034895 & \textbf{0.905630417} & 0.760213636 \\
+Var PELT & 0 & 0 & NA & 0.77849211 & 0.543596211 & 0.655034895 & \textbf{0.905630417} & 0.760213636 \\
+Mean BinSeg & 0 & 0 & NA & \textbf{0.928696669} & \textbf{0.819906546} & 0.927966102 & 0.770037197 & \textbf{0.841657276} \\
+Mean SegNeigh & 0 & 0 & NA & \textbf{0.920514319} & 0.805466429 & 0.850934376 & 0.818463347 & 0.834383069 \\
+Mean PELT & 0.051724138 & \textbf{1} & 0.098360656 & 0.701344243 & 0.002735198 & \textbf{1} & 0.06927045 & 0.129565817 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Scores for `Dakota Access Pipeline' data set}
+\label{tab:dap}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Precision\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Recall\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ FScore\end{tabular}} \\ \midrule
+MeanVar BinSeg & 0 & 0 & NA & 0.776837652 & 0.464020988 & 0.881048387 & 0.548984468 & 0.676462612 \\
+MeanVar SegNeigh & 0 & 0 & NA & 0.837123215 & 0.627783501 & 0.859582543 & 0.703106332 & 0.773510247 \\
+MeanVar PELT & 0 & 0 & NA & 0.837123215 & 0.627783501 & 0.859582543 & 0.703106332 & 0.773510247 \\
+Var BinSeg & 0.333333333 & 0.5 & \textbf{0.4} & 0.935483871 & 0.85755302 & 0.923963134 & \textbf{0.884259259} & \textbf{0.903675299} \\
+Var SegNeigh & 0.333333333 & 0.5 & \textbf{0.4} & 0.935483871 & 0.85755302 & 0.923963134 & \textbf{0.884259259} & \textbf{0.903675299} \\
+Var PELT & 0.333333333 & 0.5 & \textbf{0.4} & 0.935483871 & 0.85755302 & 0.923963134 & \textbf{0.884259259} & \textbf{0.903675299} \\
+Mean BinSeg & 0 & 0 & NA & 0.905341089 & 0.782728087 & 0.962365591 & 0.744311394 & 0.839408606 \\
+Mean SegNeigh & 0.2 & 0.5 & 0.285714286 & \textbf{0.941300899} & \textbf{0.868296668} & \textbf{0.975806452} & 0.828540784 & 0.896163916 \\
+Mean PELT & 0.032258065 & \textbf{1} & 0.0625 & 0.639344262 & 0 & 1 & 0.048387097 & 0.092307692 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Scores for `Jumbo' data set}
+\label{tab:jumbo}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rllllllll@{}}
+\toprule
+\textbf{Algorithm} & \multicolumn{1}{c}{\textbf{Precision}} & \multicolumn{1}{c}{\textbf{Recall}} & \multicolumn{1}{c}{\textbf{F1}} & \multicolumn{1}{c}{\textbf{Rand}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand\end{tabular}}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Precision\end{tabular}}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Recall\end{tabular}}} & \multicolumn{1}{c}{\textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ FScore\end{tabular}}} \\ \midrule
+MeanVar BinSeg & 0 & 0 & NA & 0.752542373 & 0.525490081 & 0.96969697 & 0.679861111 & 0.799316213 \\
+MeanVar SegNeigh & 0 & 0 & NA & 0.551412429 & 0.241900508 & 0.96969697 & 0.432638889 & 0.598328306 \\
+MeanVar PELT & 0 & 0 & NA & 0.528813559 & 0.214187614 & 0.96969697 & 0.404861111 & 0.571227361 \\
+Var BinSeg & 0 & 0 & NA & 0.710169492 & 0.458374641 & 0.969047619 & 0.629861111 & 0.763477488 \\
+Var SegNeigh & 0 & 0 & NA & \textbf{0.915254237} & \textbf{0.818859861} & 0.977777778 & \textbf{0.874305556} & \textbf{0.923151273} \\
+Var PELT & 0 & 0 & NA & \textbf{0.915254237} & \textbf{0.818859861} & 0.977777778 & \textbf{0.874305556} & \textbf{0.923151273} \\
+Mean BinSeg & 0 & 0 & NA & 0.736158192 & 0.502540289 & 0.977777778 & 0.654166667 & 0.783886525 \\
+Mean SegNeigh & \textbf{0.2} & \textbf{1} & 0.333333333 & 0.746327684 & 0.519210875 & \textbf{1} & 0.665277778 & 0.798999166 \\
+Mean PELT & 0.01754386 & \textbf{1} & \textbf{0.034482759} & 0.327118644 & 0.001636731 & \textbf{1} & 0.035416667 & 0.068410463 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Scores for `Kamer van Koophandel' data set}
+\label{tab:kvk}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Precision\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Recall\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ FScore\end{tabular}} \\ \midrule
+MeanVar BinSeg & \textbf{0.333333333} & 0.333333333 & \textbf{0.333333333} & \textbf{0.849795441} & \textbf{0.667534638} & 0.740705303 & \textbf{0.935439137} & \textbf{0.826760168} \\
+MeanVar SegNeigh & 0.2 & 0.333333333 & 0.25 & 0.845119813 & 0.653321966 & 0.753417168 & 0.867642527 & 0.806505494 \\
+MeanVar PELT & 0.125 & 0.333333333 & 0.181818182 & 0.821157218 & 0.536777118 & \textbf{0.805488297} & 0.650385208 & 0.719674713 \\
+Var BinSeg & \textbf{0.333333333} & 0.333333333 & \textbf{0.333333333} & \textbf{0.849795441} & \textbf{0.667534638} & 0.740705303 & \textbf{0.935439137} & \textbf{0.826760168} \\
+Var SegNeigh & \textbf{0.333333333} & 0.333333333 & \textbf{0.333333333} & \textbf{0.849795441} & \textbf{0.667534638} & 0.740705303 & \textbf{0.935439137} & \textbf{0.826760168} \\
+Var PELT & \textbf{0.333333333} & 0.333333333 & \textbf{0.333333333} & \textbf{0.849795441} & \textbf{0.667534638} & 0.740705303 & \textbf{0.935439137} & \textbf{0.826760168} \\
+Mean BinSeg & 0.166666667 & 0.333333333 & 0.222222222 & 0.834599649 & 0.625980308 & 0.753417168 & 0.837134052 & 0.793072438 \\
+Mean SegNeigh & 0.2 & 0.333333333 & 0.25 & 0.845119813 & 0.653321966 & 0.753417168 & 0.867642527 & 0.806505494 \\
+Mean PELT & 0.051724138 & \textbf{1} & 0.098360656 & 0.715955582 & 0.002935273 & 1 & 0.069337442 & 0.129682997 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Scores for `Rabobank' data set}
+\label{tab:rabobank}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Precision\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Recall\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ FScore\end{tabular}} \\ \midrule
+MeanVar BinSeg & 0 & 0 & NA & 0.799048123 & 0.561286116 & 0.803870968 & 0.753312212 & 0.777770817 \\
+MeanVar SegNeigh & 0 & 0 & NA & 0.86938128 & 0.711729799 & 0.891935484 & \textbf{0.801699309} & 0.844413523 \\
+MeanVar PELT & 0 & 0 & NA & 0.86938128 & 0.711729799 & 0.891935484 & \textbf{0.801699309} & 0.844413523 \\
+Var BinSeg & 0 & 0 & NA & 0.740349022 & 0.459125414 & 0.698231009 & 0.745535714 & 0.721108398 \\
+Var SegNeigh & 0 & 0 & NA & 0.740349022 & 0.459125414 & 0.698231009 & 0.745535714 & 0.721108398 \\
+Var PELT & 0 & 0 & NA & 0.740349022 & 0.459125414 & 0.698231009 & 0.745535714 & 0.721108398 \\
+Mean BinSeg & 0 & 0 & NA & 0.868852459 & 0.699871621 & 0.943548387 & 0.678715438 & 0.789515055 \\
+Mean SegNeigh & 0 & 0 & NA & \textbf{0.925965098} & \textbf{0.835786141} & \textbf{0.954301075} & 0.785570276 & \textbf{0.861754013} \\
+Mean PELT & \textbf{0.032258065} & \textbf{1} & \textbf{0.0625} & 0.626123744 & 0 & 1 & 0.048387097 & 0.092307692 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Scores for `Tele2' data set}
+\label{tab:tele2}
+\end{table}
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Precision\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ Recall\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ FScore\end{tabular}} \\ \midrule
+MeanVar BinSeg & 0 & 0 & NA & 0.779481756 & 0.488322974 & 0.709677419 & 0.779793907 & 0.743085305 \\
+MeanVar SegNeigh & 0.2 & 0.333333333 & 0.25 & \textbf{0.947117927} & \textbf{0.869205369} & 0.925806452 & 0.84192055 & 0.881873135 \\
+MeanVar PELT & 0.2 & 0.333333333 & 0.25 & \textbf{0.947117927} & \textbf{0.869205369} & 0.925806452 & 0.84192055 & 0.881873135 \\
+Var BinSeg & 0.333333333 & 0.333333333 & 0.333333333 & 0.923849815 & 0.822681578 & 0.833870968 & 0.938694743 & 0.883183387 \\
+Var SegNeigh & 0.333333333 & 0.333333333 & 0.333333333 & 0.923849815 & 0.822681578 & 0.833870968 & 0.938694743 & 0.883183387 \\
+Var PELT & 0.333333333 & 0.333333333 & 0.333333333 & 0.923849815 & 0.822681578 & 0.833870968 & 0.938694743 & 0.883183387 \\
+Mean BinSeg & 0.166666667 & 0.333333333 & 0.222222222 & 0.939185616 & 0.845868213 & 0.955645161 & 0.798611111 & \textbf{0.870099604} \\
+Mean SegNeigh & \textbf{0.4} & 0.666666667 & \textbf{0.5} & 0.931782126 & 0.838129718 & 0.862007168 & \textbf{0.909124851} & 0.88493927 \\
+Mean PELT & 0.05 & \textbf{1} & 0.095238095 & 0.705975674 & 0.005045764 & \textbf{1} & 0.068399044 & 0.128040257 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Scores for `UWV' data set}
+\label{tab:uwv}
+\end{table}
 
 \end{document}
