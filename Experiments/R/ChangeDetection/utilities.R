@@ -1,6 +1,61 @@
 library(readr)
 library(changepoint)
 
+PlotTruths <- function() {
+  
+  par(mfrow = c(4, 3))
+  dirk <- ProcessData('dirk')
+  dirk.truth <- GetGroundTruth('dirk')
+  ziggo <- ProcessData('ziggo')
+  ziggo.truth <- GetGroundTruth('ziggo')
+  bol <- ProcessData('bol')
+  bol.truth <- GetGroundTruth('bol')
+  connexxion <- ProcessData('connexxion')
+  connexxion.truth <- GetGroundTruth('connexxion')
+  dap <- ProcessData('dap')
+  dap.truth <- GetGroundTruth('dap')
+  jumbo <- ProcessData('jumbo')
+  jumbo.truth <- GetGroundTruth('jumbo')
+  kvk <- ProcessData('kvk')
+  kvk.truth <- GetGroundTruth('kvk')
+  rabobank <- ProcessData('rabobank')
+  rabobank.truth <- GetGroundTruth('rabobank')
+  tele2 <- ProcessData('tele2')
+  tele2.truth <- GetGroundTruth('tele2')
+  uwv <- ProcessData('uwv')
+  uwv.truth <- GetGroundTruth('uwv')
+  
+  plot(dirk, type='l', main = "Dirk", ylab = "Postings")
+  PlotGroundTruth(dirk.truth)
+  
+  plot(ziggo, type='l', main = "Ziggo", ylab = "Postings")
+  PlotGroundTruth(ziggo.truth)
+  
+  plot(bol, type='l', main = "Bol.com", ylab = "Postings")
+  PlotGroundTruth(bol.truth)
+  
+  plot(connexxion, type='l', main = "Connexxion", ylab = "Postings")
+  PlotGroundTruth(connexxion.truth)
+  
+  plot(dap, type='l', main = "Dakota Access Pipeline", ylab = "Postings")
+  PlotGroundTruth(dap.truth)
+  
+  plot(jumbo, type='l', main = "Jumbo", ylab = "Postings")
+  PlotGroundTruth(jumbo.truth)
+  
+  plot(kvk, type='l', main = "KvK", ylab = "Postings")
+  PlotGroundTruth(kvk.truth)
+  
+  plot(rabobank, type='l', main = "Rabobank", ylab = "Postings")
+  PlotGroundTruth(rabobank.truth)
+  
+  plot(tele2, type='l', main = "Tele2", ylab = "Postings")
+  PlotGroundTruth(tele2.truth)
+  
+  plot(uwv, type='l', main = "UWV", ylab = "Postings")
+  PlotGroundTruth(uwv.truth)
+}
+
 #' Generates gaussian noise & poisson process signal, approx 10 jumps
 #' 
 #' could do multiple jumps or fixed number of jumps, take stat. significance
@@ -30,12 +85,26 @@ AnnotateClusters <- function(data, splitpoints) {
 
 #' Read in csv files and format properly
 ProcessData <- function(query, daily = TRUE) {
-  if (query == "ing") {
-    input <- "~/Repos/master-thesis/Data/ing.csv"
+  if (query == "dirk") {
+    input <- "~/Repos/master-thesis/Data/dirk.csv"
+  } else if (query == "ziggo") {
+    input <- "~/Repos/master-thesis/Data/ziggo.csv"
+  } else if (query == "bol") {
+    input <- "~/Repos/master-thesis/Data/bol.csv"
+  } else if (query == "connexxion") {
+    input <- "~/Repos/master-thesis/Data/connexxion.csv"
+  } else if (query == "dap") {
+    input <- "~/Repos/master-thesis/Data/dap.csv"
+  } else if (query == "jumbo") {
+    input <- "~/Repos/master-thesis/Data/jumbo.csv"
+  } else if (query == "kvk") {
+    input <- "~/Repos/master-thesis/Data/kvk.csv"
   } else if (query == "rabobank") {
     input <- "~/Repos/master-thesis/Data/rabobank.csv"
-  } else if (query == "reddit") {
-    input <- "~/Repos/master-thesis/Data/reddit.csv"
+  } else if (query == "tele2") {
+    input <- "~/Repos/master-thesis/Data/tele2.csv"
+  } else if (query == "uwv") {
+    input <- "~/Repos/master-thesis/Data/uwv.csv"
   }
   
   # Switch depending on export type
@@ -67,12 +136,26 @@ ProcessData <- function(query, daily = TRUE) {
 
 #' read in CSV file containing ground truth points
 GetGroundTruth <- function(query) {
-  if (query == "ing") {
-    input <- "~/Repos/master-thesis/Data/ing_points.csv"
+  if (query == "dirk") {
+    input <- "~/Repos/master-thesis/Data/dirk_points.csv"
+  } else if (query == "ziggo") {
+    input <- "~/Repos/master-thesis/Data/ziggo_points.csv"
+  } else if (query == "bol") {
+    input <- "~/Repos/master-thesis/Data/bol_points.csv"
+  } else if (query == "connexxion") {
+    input <- "~/Repos/master-thesis/Data/connexxion_points.csv"
+  } else if (query == "dap") {
+    input <- "~/Repos/master-thesis/Data/dap_points.csv"
+  } else if (query == "jumbo") {
+    input <- "~/Repos/master-thesis/Data/jumbo_points.csv"
+  } else if (query == "kvk") {
+    input <- "~/Repos/master-thesis/Data/kvk_points.csv"
   } else if (query == "rabobank") {
     input <- "~/Repos/master-thesis/Data/rabobank_points.csv"
-  } else if (query == "reddit") {
-    input <- "~/Repos/master-thesis/Data/reddit_points.csv"
+  } else if (query == "tele2") {
+    input <- "~/Repos/master-thesis/Data/tele2_points.csv"
+  } else if (query == "uwv") {
+    input <- "~/Repos/master-thesis/Data/uwv_points.csv"
   }
   
   groundtruth <-
@@ -137,4 +220,13 @@ GetPenalties <- function(input, daily = TRUE) {
   plot(mean.pelt.crops, diagnostic = TRUE, main = "Mean PELT")
   plot(var.pelt.crops, diagnostic = TRUE, main = "Variance PELT")
   plot(meanvar.pelt.crops, diagnostic = TRUE, main = "Mean & Variance PELT")
+}
+
+PrettyResultsPlot <- function(df1) {
+  
+  ggplot(df1, aes(x = as.factor(Algorithm), y = mean, fill=Metric)) +
+    geom_bar(position=position_dodge(), stat="identity", colour='black') +
+    geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.2,position=position_dodge(.9)) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
 }

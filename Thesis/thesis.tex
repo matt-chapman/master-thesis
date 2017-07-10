@@ -20,16 +20,6 @@
 
 \usetikzlibrary{positioning}
 
-\usepackage{titlesec}
-\newcommand*{\justifyheading}{\raggedleft}
-\titleformat{\chapter}[display]
-  {\normalfont\huge\bfseries\justifyheading}{\chaptertitlename\ \thechapter}
-  {20pt}{\Huge}
-%\titleformat{\section}
-%  {\normalfont\Large\bfseries\justifyheading}{\thesection}{1em}{}
-%\titleformat{\subsection}
-%  {\normalfont\large\bfseries\justifyheading}{\thesubsection}{1em}{}
-
 % program listings environment, see uvamscse.cls
 \input{program-listings}
 \newcommand{\cmd}[1]{\texttt{$\backslash$#1}}
@@ -630,6 +620,8 @@ The experiment runs such that $n = 55$ on commencement, and $n = 500$ upon compl
 
 For this experiment, the null hypothesis $H_0$ is that neither additional points before a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
 
+The alternative hypothesis $H_1$ is that the measures will be affected in some way by additional points before the change point. It is also hypothesised that data set length will have an affect on the metric value.
+
 
 \subsubsection{Experiment 2}
 
@@ -641,6 +633,8 @@ The experiment runs such that $n=55$ on commencement, and $n=550$ upon completio
 
 For this experiment, the null hypothesis $H_0$ is that neither additional points after a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
 
+The alternative hypothesis $H_1$ is that the measures will be affected in some way by additional points after the change point. It is also hypothesised that data set length will have an affect on the metric value.
+
 \subsubsection{Experiment 3}
 
 This experiment involves moving a known change point and a computed change point through a fixed length time series. The time series contains a single known change point $\tau$ and a detected change point $\tau'$ with $\Delta \tau = 5$, provided by a pseudo-algorithm.
@@ -649,8 +643,9 @@ For each iteration of the experiment, all of the evaluation metrics are calculat
 
 The experiment runs such that $n$ is constant at $n=501$. For each iteration, $\tau = i$ and $\tau' = i + 5$, for values of $i$ from 5 to 500.
 
-For this experiment, the null hypothesis $H_0$ is that neither additional points before a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
+For this experiment, the null hypothesis $H_0$ is that neither additional points before or after a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
 
+The alternative hypothesis $H_1$ is that the measures will be affected in some way by additional points before or after the change point. It is also hypothesised that data set length will have an affect on the metric value.
 
 \subsubsection{Experiment 4}
 
@@ -662,6 +657,8 @@ The experiment runs such that $n$ is constant at $n=500$. For each iteration $\t
 
 For this experiment, the null hypothesis $H_0$ is that all of the calculated metrics will correctly issue a penalty for late detections of a change point, in all instances.
 
+The alternative hypothesis $H_1$ is that one or more measures will incorrectly issue scores for a detected change point occurring various distances from the true change point.
+
 \subsubsection{Experiment 5}
 
 This experiment involves adding `false positive' change point detections of various values of $\Delta \tau$ to a time series of fixed length with a single known change point $\tau$.
@@ -671,6 +668,8 @@ For each iteration of the experiment, all of the evaluation metrics are calculat
 The experiment runs such that $n$ is constant at $n=500$. For each iteration $\tau = 51$ and $\tau' = i$, where $i = 51$ at the commencement of the experiment, $i=55$ at the second iteration, and increases in increments of 5 until $i = 500$. This serves to move the detected change point through the time series, starting at the true change point and progressing to the end of the time series, ending at the final point of the time series.
 
 For this experiment, the null hypothesis $H_0$ is that all of the metrics will correctly penalise for false positive detections in a time series.
+
+The alternative hypothesis $H_1$ is that the measures will not correctly issue penalties for false positive detections.
 
 \subsubsection{Experiment 6}
 
@@ -682,11 +681,15 @@ This experiment evaluates criterion 6, by recalculating the scoring metrics upon
 
 For this experiment, the null hypothesis $H_0$ is that removing false negative results will result in a linear increase in score from each metric.
 
+The alternative hypothesis $H_1$ is that the measures will not appear to correctly increase in value as false negatives are removed from the data set - showing instead inconsistent behaviour.
+
 \subsubsection{Experiment 7}
 
 Adding both true change points and detected change points from a `pseudo algorithm' that provides detections every 25 points to a time series, by appending to it, and thus increasing it's length. The experiment runs from $n=50$ until $n=1000$ in increments of 50. Each $\tau$ and $\tau'$ is placed upon a new iteration such that each $\tau'_n = \tau_n + 2$, giving a $\Delta \tau$ value of 2. This experiment tests both criteria 1 and 7.
 
 For this experiment, the null hypothesis $H_0$ is that metrics will be unaffected by change point density in a time series, nor will they be affected for changes in time series length.
+
+The alternative hypothesis $H_1$ is that the measures will be affected in some way by change point density and data set length, showing an increase or decrease in score value as density and length increases.
 
 \subsubsection{Experiment 8}
 
@@ -694,7 +697,9 @@ Adding both true change points and detected change points from a `pseudo algorit
 
 This experiment fulfils criteria 7.
 
-For this experiment, the null hypothesis $H_0$ is that metrics will be unaffected by change point density.
+For this experiment, the null hypothesis $H_0$ is that metrics will be unaffected by change point density, maintaining a constant value.
+
+The alternative hypothesis $H_1$ is that the measures will be affected in some way by changes in change point density. The hypothesis is that the value of the measures will increase or decrease as change point density increases.
 
 \section{Comparison of Measures Based Upon Functional Requirements}
 
@@ -894,34 +899,132 @@ As described in \autoref{real world explainer}, this experiment executed change 
 
 What follows is the results of that study. For each data set, the scores provided by the evaluation measures are tabulated and provided. The highest score(s) for each measure are highlighted for easy comparison and readability. Further discussion of the results and the extraction of conclusions will can be found in \autoref{results} and \autoref{conclusions}.
 
-\subsection{rabobank}
+Only the tabulated scores are included in this section for readability. To view the full plots of the change points detected, please refer to 
 
-\begin{table}[H]
+\subsection{Dirk}
+
+
+\begin{table}[]
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}rcccccccc@{}}
 \toprule
-\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{adjRand} & \textbf{BCubed Precision} & \textbf{BCubed Recall} & \textbf{BCubed FScore} \\ \midrule
-\textbf{MeanVar BinSeg} & 0.6667 & 0.5000 & 0.5714 & 0.9772 & 0.9520 & 0.9153 & \textbf{0.9678} & 0.9408 \\
-\textbf{MeanVar SegNeigh} & \textbf{0.8000} & \textbf{1.0000} & \textbf{0.8889} & \textbf{0.9889} & \textbf{0.9765} & \textbf{1.0000} & \textbf{0.9678} & \textbf{0.9836} \\
-\textbf{MeanVar PELT} & 0.5000 & \textbf{1.0000} & 0.6667 & 0.8480 & 0.6550 & \textbf{1.0000} & 0.7043 & 0.8265 \\
-\textbf{Var BinSeg} & 0.6667 & 0.5000 & 0.5714 & 0.9772 & 0.9520 & 0.9153 & \textbf{0.9678} & 0.9408 \\
-\textbf{Var SegNeigh} & 0.6667 & 0.5000 & 0.5714 & 0.9772 & 0.9520 & 0.9153 & \textbf{0.9678} & 0.9408 \\
-\textbf{Var PELT} & 0.6667 & 0.5000 & 0.5714 & 0.9772 & 0.9520 & 0.9153 & \textbf{0.9678} & 0.9408 \\
-\textbf{Mean BinSeg} & 0.6667 & \textbf{1.0000} & 0.8000 & 0.9784 & 0.9540 & \textbf{1.0000} & 0.9373 & 0.9676 \\
-\textbf{Mean SegNeigh} & \textbf{0.8000} & \textbf{1.0000} & \textbf{0.8889} & \textbf{0.9889} & \textbf{0.9765} & \textbf{1.0000} & \textbf{0.9678} & \textbf{0.9836} \\
-\textbf{Mean PELT} & 0.0690 & \textbf{1.0000} & 0.1290 & 0.6131 & 0.0018 & \textbf{1.0000} & 0.0858 & 0.1581 \\ \bottomrule
+Algorithm & Precision & Recall & F1 & Rand & adjRand & BCubed.Precision & BCubed.Recall & BCubed.FScore \\ \midrule
+MeanVar BinSeg & 0 & 0 & NA & 0.916384181 & 0.831326108 & 0.977777778 & 0.808522727 & 0.885131649 \\
+MeanVar SegNeigh & 0 & 0 & NA & 0.774576271 & 0.57039828 & 0.977777778 & 0.662121212 & 0.789569859 \\
+MeanVar PELT & 0 & 0 & NA & 0.750282486 & 0.528564301 & 0.977777778 & 0.572537879 & 0.722194622 \\
+Var BinSeg & 0 & 0 & NA & 0.942937853 & 0.883671294 & 0.983333333 & 0.904356061 & 0.942192569 \\
+Var SegNeigh & 0 & 0 & NA & 0.942937853 & 0.883671294 & 0.983333333 & 0.904356061 & 0.942192569 \\
+Var PELT & 0 & 0 & NA & 0.942937853 & 0.883671294 & 0.983333333 & 0.904356061 & 0.942192569 \\
+Mean BinSeg & 0 & 0 & NA & 0.73559322 & 0.503863154 & 0.983333333 & 0.564015152 & 0.716858425 \\
+Mean SegNeigh & 0.2 & 1 & 0.333333333 & 0.93559322 & 0.8691606 & 1 & 0.875189394 & 0.933441067 \\
+Mean PELT & 0.017241379 & 1 & 0.033898305 & 0.398305085 & 0.000746372 & 1 & 0.034090909 & 0.065934066 \\ \bottomrule
+\end{tabular}%
+}
+\caption{Metric scores for `Dirk' data set}
+\label{tab:dirk}
+\end{table}
+
+\subsection{Ziggo}
+
+\begin{table}[]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{adjRand} & \textbf{BCubed.Precision} & \textbf{BCubed.Recall} & \textbf{BCubed.FScore} \\ \midrule
+MeanVar BinSeg & 0.2 & 0.2 & 0.2 & 0.819774011 & 0.54185782 & 0.656344086 & 0.855897436 & 0.742954366 \\
+MeanVar SegNeigh & 0.2 & 0.2 & 0.2 & 0.785875706 & 0.477814329 & 0.619393939 & 0.842564103 & 0.713945385 \\
+MeanVar PELT & 0.166666667 & 0.2 & 0.181818182 & 0.811864407 & 0.515766487 & 0.656344086 & 0.809230769 & 0.724812967 \\
+Var BinSeg & 0.333333333 & 0.2 & 0.25 & 0.733333333 & 0.418172701 & 0.457575758 & 0.919230769 & 0.611004825 \\
+Var SegNeigh & 0 & 0 & NA & 0.782485876 & 0.477512609 & 0.588624709 & 0.862564103 & 0.699738779 \\
+Var PELT & 0 & 0 & NA & 0.782485876 & 0.477512609 & 0.588624709 & 0.862564103 & 0.699738779 \\
+Mean BinSeg & 0.5 & 0.6 & 0.545454545 & 0.798305085 & 0.510612723 & 0.672727273 & 0.889230769 & 0.765974212 \\
+Mean SegNeigh & 0.4 & 0.4 & 0.4 & 0.784745763 & 0.492259321 & 0.633660131 & 0.910064103 & 0.747117038 \\
+Mean PELT & 0.083333333 & 1 & 0.153846154 & 0.807344633 & 0 & 1 & 0.1 & 0.181818182 \\ \bottomrule
 \end{tabular}%
 }
 \caption{My caption}
 \label{my-label}
 \end{table}
 
+\subsection{Bol.com}
+
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{adjRand} & \textbf{BCubed.Precision} & \textbf{BCubed.Recall} & \textbf{BCubed.FScore} \\ \midrule
+MeanVar BinSeg & 0 & 0 & NA & 0.363828662 & -0.033083215 & 0.380760369 & 0.838017984 & 0.523612904 \\
+MeanVar SegNeigh & 0 & 0 & NA & 0.363828662 & -0.033083215 & 0.380760369 & 0.838017984 & 0.523612904 \\
+MeanVar PELT & 0 & 0 & NA & 0.363828662 & -0.033083215 & 0.380760369 & 0.838017984 & 0.523612904 \\
+Var BinSeg & 0 & 0 & NA & 0.332099418 & 0.002293403 & 0.341618191 & 0.969439728 & 0.505207652 \\
+Var SegNeigh & 0 & 0 & NA & 0.332099418 & 0.002293403 & 0.341618191 & 0.969439728 & 0.505207652 \\
+Var PELT & 0 & 0 & NA & 0.332099418 & 0.002293403 & 0.341618191 & 0.969439728 & 0.505207652 \\
+Mean BinSeg & 0 & 0 & NA & 0.584346906 & 0.100269497 & 0.594594595 & 0.584795322 & 0.589654248 \\
+Mean SegNeigh & 0.4 & 0.666666667 & 0.5 & 0.851930196 & 0.685228297 & 0.756503642 & 0.916871031 & 0.829002955 \\
+Mean PELT & 0.048387097 & 1 & 0.092307692 & 0.6811211 & 0 & 1 & 0.064516129 & 0.121212121 \\ \bottomrule
+\end{tabular}%
+}
+\caption{My caption}
+\label{my-label}
+\end{table}
+
+\subsection{Connexxion}
+
+
+\begin{table}[H]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccccccc@{}}
+\toprule
+\textbf{Algorithm} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Rand} & \textbf{adjRand} & \textbf{BCubed.Precision} & \textbf{BCubed.Recall} & \textbf{BCubed.FScore} \\ \midrule
+MeanVar BinSeg & 0.25 & 0.5 & 0.333333333 & 0.924907456 & 0.844343916 & 0.890083632 & 0.888137357 & 0.889109429 \\
+MeanVar SegNeigh & 0.25 & 0.5 & 0.333333333 & 0.924907456 & 0.844343916 & 0.890083632 & 0.888137357 & 0.889109429 \\
+MeanVar PELT & 0.142857143 & 0.5 & 0.222222222 & 0.812268641 & 0.590695386 & 0.890083632 & 0.666493236 & 0.762229907 \\
+Var BinSeg & 0.333333333 & 0.5 & 0.4 & 0.904812269 & 0.805123425 & 0.846496107 & 0.920395421 & 0.881900364 \\
+Var SegNeigh & 0.333333333 & 0.5 & 0.4 & 0.904812269 & 0.805123425 & 0.846496107 & 0.920395421 & 0.881900364 \\
+Var PELT & 0.333333333 & 0.5 & 0.4 & 0.904812269 & 0.805123425 & 0.846496107 & 0.920395421 & 0.881900364 \\
+Mean BinSeg & 0.166666667 & 0.5 & 0.25 & 0.87678477 & 0.727378477 & 0.983870968 & 0.677560738 & 0.802479376 \\
+Mean SegNeigh & 0.4 & 1 & 0.571428571 & 0.958223162 & 0.910909287 & 1 & 0.881650681 & 0.937103459 \\
+Mean PELT & 0.033898305 & 1 & 0.06557377 & 0.607086198 & 0.004865842 & 1 & 0.05450052 & 0.10336746 \\ \bottomrule
+\end{tabular}%
+}
+\caption{My caption}
+\label{my-label}
+\end{table}
+
+\subsection{Dakota Access Pipeline}
+
+
+
+\subsection{Jumbo}
+
+
+
+\subsection{Kamer van Koophandel}
+
+
+
+\subsection{Rabobank}
+
+
+
+\subsection{Tele2}
+
+
+\subsection{UWV}
+
+\subsection{Averages}
+
 \begin{figure}[h]
-    \includegraphics[width=\textwidth]{figures/Rabobank}
-    \caption{`Rabobank' Change Point Detections}
-    \label{fig:rabobank}
+    \includegraphics[width=\textwidth]{figures/PrettyPlot}
+    \caption{Average scores across all real-world data scenarios}
+    \label{fig:PrettyPlot}
 \end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -936,13 +1039,14 @@ This chapter is intended to provide a factual explanation of the results of each
 \centering
 \begin{tabular}{@{}rcccc@{}}
 \toprule
-\multicolumn{1}{l}{} & \textbf{F1 Score} & \textbf{Rand Index} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted\\ Rand Index\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed\\ F-Score\end{tabular}} \\ \midrule
-\textbf{Credits correct detections} & \cmark & \cmark & \cmark & \cmark \\
-\textbf{Penalises false negatives} & \cmark & \cmark & \cmark & \cmark \\
-\textbf{Penalises false positives} & \xmark & \cmark & \cmark & \cmark \\
-\textbf{Temporal penalty for late detections} & \xmark & \mmark & \mmark & \cmark \\
-\textbf{Unaffected by sample size} & \cmark & \xmark & \xmark & \xmark \\
-\textbf{Unaffected by change point density} & \cmark & \cmark & \mmark & \mmark \\ \bottomrule
+\textbf{Behaviour} & \multicolumn{1}{l}{\textbf{F1 Score}} & \multicolumn{1}{l}{\textbf{Rand Index}} & \multicolumn{1}{l}{\textbf{\begin{tabular}[c]{@{}l@{}}Adjusted\\ Rand Index\end{tabular}}} & \multicolumn{1}{l}{\textbf{\begin{tabular}[c]{@{}l@{}}BCubed\\ F-Score\end{tabular}}} \\ \midrule
+Credits correct detections & \cmark & \cmark & \cmark & \cmark \\
+Penalises false negatives & \cmark & \cmark & \cmark & \cmark \\
+Penalises false positives & \xmark & \cmark & \cmark & \cmark \\
+Temporal penalty for late detections & \xmark & \mmark & \mmark & \cmark \\
+Unaffected by sample size & \cmark & \xmark & \xmark & \xmark \\
+Unaffected by change point density & \cmark & \cmark & \mmark & \mmark \\
+Unaffected by data before/after change point & \cmark & \mmark & \xmark & \mmark \\ \bottomrule
 \end{tabular}
 \caption{Metric Behaviour Summary}
 \label{tab:metric}
@@ -1105,5 +1209,79 @@ When compared with the behaviour in a fixed length data set, the BCubed measure 
     }
 }
 \end{algorithm}
+
+\chapter{Ground Truth Annotations}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/GroundTruthAnnotations}
+    \caption{Unadjusted Ground Truth Plots}
+    \label{fig:truth1}
+\end{figure}
+
+\chapter{Real-World Change Point Detection Plots}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/dirkresults}
+    \caption{`Dirk' Change Point Detections}
+    \label{fig:dirk}
+\end{figure}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/ziggoresults}
+    \caption{`Dirk' Change Point Detections}
+    \label{fig:dirk}
+\end{figure}
+
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/bolresults}
+    \caption{`Dirk' Change Point Detections}
+    \label{fig:dirk}
+\end{figure}
+
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/connexxionresults}
+    \caption{`Dirk' Change Point Detections}
+    \label{fig:dirk}
+\end{figure}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/dapresults}
+    \caption{`Dirk' Change Point Detections}
+    \label{fig:dirk}
+\end{figure}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/jumboresults}
+    \caption{`Dirk' Change Point Detections}
+    \label{fig:dirk}
+\end{figure}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/kvkresults}
+    \caption{`Dirk' Change Point Detections}
+    \label{fig:dirk}
+\end{figure}
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/rabobankresults}
+    \caption{`Dirk' Change Point Detections}
+    \label{fig:dirk}
+\end{figure}
+
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/tele2results}
+    \caption{`Dirk' Change Point Detections}
+    \label{fig:dirk}
+\end{figure}
+
+
+\begin{figure}[h]
+    \includegraphics[width=\textwidth]{figures/uwvresults}
+    \caption{`Dirk' Change Point Detections}
+    \label{fig:dirk}
+\end{figure}
 
 \end{document}

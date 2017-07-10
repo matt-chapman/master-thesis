@@ -3,7 +3,7 @@ library(caret)
 library(phyclust)
 library(rPython)
 options(warn = -1)
-options(digits=12)
+options(digits=8)
 
 source("utilities.R")
 
