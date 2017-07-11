@@ -17,7 +17,6 @@
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
 \newcommand{\mmark}{\ding{108}}%
-
 \usetikzlibrary{positioning}
 
 % program listings environment, see uvamscse.cls
@@ -26,7 +25,7 @@
 
 \title{Detecting Online Conversations Going Viral}
 \coverpic[250pt]{figures/Buzzcapture_thunder.png}
-\subtitle{Evaluation of change point detection methods for time-series data}
+\subtitle{Evaluation of change point detection methods for time-series data from social media}
 \date{Spring 2017}
 
 \author{Matt Chapman}
@@ -37,7 +36,9 @@
 \abstract{
 	Change point detection is a highly complex field that is hugely important for industries ranging from manufacturing and IT infrastructure fault detection, to online reputation management. There exists in this field a number of metrics or scores that are widely used for proving the veracity of new or novel approaches. However, there is little consensus as to which measure(s) are most effective in this field. This thesis carries out research into the field of change point detection, carrying out a comparative study of the behaviours of various scoring metrics using simulated data, the accuracy of change point detection methods using real world data, and makes a recommendation for the approach to be used for change point detection in the production systems of an online reputation management company. Finally, a short discussion on the ideal properties of a scoring metric from change point detection algorithms is carried out.
 	
-	In this study, it is found that many of the established scoring metrics behave inconsistently when applied to change point detection problems, and exhibit properties that bring their usefulness and accuracy into question. It is also found that despite these discovered issues, they nonetheless consistently agree on the most effective algorithm when used with real-world data as opposed to simulations.}
+	In this study, it is found that many of the established scoring metrics behave inconsistently when applied to change point detection problems, and exhibit properties that bring their usefulness and accuracy into question. It is also found that between certain metrics, there is no correlation or agreement in how algorithms are ranked according to score value.
+	
+	Concluding, the study also shows that existing change point detection methods are perhaps not the most well suited methods for the use-case and requirements of the host organisation.}
 
 \newlength\mylen
 \newcommand\myinput[1]{%
@@ -59,6 +60,14 @@
 \chapter*{Acknowledgements}
 \addcontentsline{toc}{chapter}{Acknowledgments}
 
+This thesis was only possible due to the contributions and assistance of a number of people. First thanks goes to Evangelos Kanoulas, the academic supervisor for this work. He always kept me on track, and was full of suggestions and insights into the data and experiments I was running. Without him, I have no doubt that at the time I am writing this, this thesis would still be in the planning stages.
+
+Special thanks also go to Wouter Koot \& Carina Dusseldorp at Buzzcapture. Wouter acted as my industry supervisor, and like Evangelos, was always on hand for support and suggestions. I very much look forward to continuing to work with and for him at Buzzcapture, following my graduation. Carina, as Head of Research at Buzzcapture, provided the data annotations that were invaluable for the smooth running of the experiments carried out on real world data. Without her insight into the data sets that I collated, the experiments on real world data would not have been possible.
+
+I would also like to credit my friends Arend and Jetse, who have been excellent colleagues and friends throughout the duration of this course. Special thanks also goes to the erstwhile members of the `Beerability' WhatsApp group, set up as the informal place for our course to whinge and moan about our work. It was the one place that I could go and not feel bad about my progress.
+
+Finally, the most important thanks go to my girlfriend, Elisabeth. She is the one that put up with the sleepless nights, the whining about workload and the days I shut myself away to finish this work. Without her, I'm not sure I would have ever had the confidence to apply to do a Masters degree in the first place.
+
 \chapter{Problem Statement \& Motivation}
 
 \section{Problem Statement}
@@ -76,21 +85,25 @@ Outside of the `normal' applications of change point detection (for example, spo
 
 There exists methods of event detection in social media data utilising approaches such as term frequency counting, lexicon-based recognition and context-free-grammar algorithms \todo{cite yordi}. However, these approaches rely on (sometimes computationally expensive) analysis of the content of messages being posted on social media platforms. Being that change point detection (and especially \emph{online} change point detection) algorithms can be utilised for the detection of past events, it stands to reason that these algorithms can also be utilised for event detection when applied to pre-computed data such as conversation volume or reach of a particular conversation. There certainly exists a requirement in the field of online reputation management to be able to inform businesses (in a timely manner) that a spike in conversation volume is occurring, and thus they may need to carry out some action to mitigate reputational damage if the conversation sentiment is negative.
 
-Therefore, this thesis intends to answer the following research questions:
+Therefore, this thesis intends to answer the following research question:
 
 \begin{description}
-	\item[RQ1] Are existing change point detection algorithms effective at detecting changes/events in social media data in a timely fashion?
-	\item[RQ2] Are measures not specifically defined for the purpose of change detection evaluation effective in this domain?
-	\item[RQ3] Do the aforementioned measures agree with by-eye analysis of results from change detection methods?
-	\item[RQ4] If existing measures are deficient in some way, what would an `ideal' measure look like?\todo{reword}
+    \item[RQ] How can changes be detected in conversation volume data from social media?
 \end{description}
 
-From these research questions, the following sub-questions have been formulated:
+From this research question, the following sub-questions have been formulated:
 
 \begin{description}
-    \item[SQ1.1] Which algorithm, out of those being analysed, performs the `best' when applied against real world data?
-    \item[SQ2.1] In what way do established measures fail to behave correctly?
+	\item[SQ1] Are existing change point detection algorithms effective at detecting changes/events in social media data in a timely fashion?
+	\begin{description}
+	\item[SQ1.1] Which algorithm, out of those being analysed, performs the `best' when applied against real world data?
+	\end{description}
+	\item[SQ2] Are measures not specifically defined for the purpose of change detection evaluation effective in this domain?
+	\begin{description}
+	\item[SQ2.1] In what way do established measures fail to behave correctly?
     \item[SQ2.2] Which evaluation measure provides the best evaluation, given the functional requirements set forth by the host organisation?
+    \end{description}
+	\item[SQ3] If existing measures are deficient in some way, what would an `ideal' measure look like?\todo{reword}
 \end{description}
 
 \improvement[inline]{this needs expansion, I think}
@@ -378,7 +391,7 @@ There are a number of established approaches to calculating penalty values for u
     \text{HQC} &= -2L_{max} + 2k \ln(\ln(n))
 \end{align}
 
-Where $n$ is the total number of observations, $k$ is the number of \emph{free parameters}\footnote{variables that are unable to be predicted by a given model} and $\hat{L}$ is the maximum value of a likelihood function.\todo{reword, wikipedia}
+Where $n$ is the total number of observations, $k$ is the number of \emph{free parameters}\footnote{variables that are unable to be predicted by a given model} and $\hat{L}$ is the maximum value of a likelihood function.\todo{reword, sounds too much like source}
 
 The penalty function returns a value which is represented by $\beta$ in \autoref{bounded}, which then limits the number of possible segmentations returned by $Q$. In this way, varying the penalty function $\beta$ can alter the results given by a change detection algorithm by increasing or decreasing the number of change points detected.
 
@@ -485,7 +498,7 @@ This measure is for computing the similarity between two clusters of data points
 		\item $b$ = total number of pairs that were partitioned into \emph{different} subsets by both $X$ and $Y$
 		\item $c$ = total number of pairs that were partitioned into the \emph{same} subset by $X$ and into a different subset by $Y$
 		\item $d$ = total number of pairs that were partitioned into the \emph{same} subset by $Y$ and into a different subset by $X$
-	\end{itemize}\todo{reword, wikipedia}
+	\end{itemize}\todo{reword, reads too much like source}
 	
 	Intuitively, it can be stated that $a+b$ is the total number of agreements between methods $X$ and $Y$, while $c+d$ is the total number of disagreements. This calculation will return $0$ for completely different clusters and $1$ for identical clusters. The Rand Index provides a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $
 	
@@ -557,7 +570,7 @@ This thesis will analyse three different change detection algorithms: \emph{Prun
 
 The algorithms will then be applied to a collection of datasets falling into two categories: real-world conversation volume data taken from Twitter, and simulated data generated according to certain constraints which will also be discussed here.
 
-The results provided by each technique will then be evaluated according to the following measures: Precision, Recall, F1 score, Rand Index, Adjusted Rand Index, Bcubed Precision, Bcubed Recall and Bcubed F-Score. A meta-analysis will take place to evaluate the effectiveness of these methods when compared with each other and by-eye analysis from social media domain experts.\todo{maybe not}
+The results provided by each technique will then be evaluated according to the following measures: Precision, Recall, F1 score, Rand Index, Adjusted Rand Index, Bcubed Precision, Bcubed Recall and Bcubed F-Score. A meta-analysis will take place to evaluate the effectiveness of these methods when compared with each other and by-eye analysis from social media domain experts.
 
 The method of evaluating the approaches will be developed using a combination of Python and \textsf{R}. \textsf{R} is a combined language and environment created for the purpose of statistical computing \cite{RCoreTeam2017}.
 
@@ -706,6 +719,17 @@ The alternative hypothesis $H_1$ is that the measures will be affected in some w
 As part of the research being carried out, a set of functional requirements are elicited from the host organisation. Based on these functional requirements the measures are evaluated and compared in such a manner that we can choose the `best' measure for the use case of the host organisation. The previous research section (\autoref{meta analysis explainer}) provides the results necessary to compare the behaviour of certain metrics in certain situations, against the priorities of the host organisation.
 
 For example, if the host organisation expresses that they require an approach with an absolute minimum of false positives, it is important to judge the application of these algorithms against real world data, utilising measures that correctly penalise for false positive detections in a data stream.
+
+A summary of the functional requirements follows:
+
+\begin{description}
+    \item[R1] The approach should not rely on arbitrary threshold values. It instead should adapt to the data that it is analysing.
+    \item[R2] False positives should not be considered wholly harmful. The consequence of a false positive in production is only that a notification is sent. That said, false positives should be kept to a reasonable level.
+    \item[R3] Late detections should be considered failure cases. Late detections are not useful to clients using the production system, as prompt detections are needed for effective damage control in situations where increased conversation volume is caused by a PR crisis.
+    \item[R4] Similarly, false negatives should also be considered failure cases. False negatives are defined as when the algorithm fails to flag a change point that would have been flagged by manual, by-eye analysis. False negatives prevent clients from acting upon changes in conversation volume in a timely manner.
+    \item[R5] The approach in it's first iteration should operate on conversation volume metrics provided by Brandmonitor, but should be extensible such that it can also be applied to other metrics.
+\end{description}
+
 
 \section{Application of Algorithms to Real World Data}
 \label{real world explainer}
@@ -909,7 +933,7 @@ What follows is the results of that study. For each data set, the scores provide
 
 The final plots, including detected change points by each algorithm can also be found in \autoref{changeplots}.
 
-Analysis of the raw data used for \autoref{fig:PrettyPlot} shows that there is not always consensus on the best algorithm. Some metrics provide higher scores for algorithms that perform objectively worse than others, when compared through by-eye analysis of the change point plots. Algorithms using variance as the test statistic tend to perform better than those using mean. Binary classification scores are universally low for all data sets.
+Analysis of the raw data used for \autoref{fig:PrettyPlot} shows that while there is a consensus on the best algorithm, some metrics provide higher scores for algorithms that perform objectively worse than others, when compared through by-eye analysis of the change point plots. Binary classification scores are universally low for all data sets.
 
 \begin{figure}[h]
     \includegraphics[width=\textwidth]{figures/PrettyPlot}
@@ -917,9 +941,66 @@ Analysis of the raw data used for \autoref{fig:PrettyPlot} shows that there is n
     \label{fig:PrettyPlot}
 \end{figure}
 
+\autoref{fig:PrettyPlot} shows a plot of average score values across all real world data sets, from each algorithm. The error bars are drawn to show 1 standard deviation of error.
 
+Taking the mean metric score for each algorithm across all of the experiments, we can rank the algorithms as follows, using the four main metrics that this research was focussing on:
 
-\autoref{fig:PrettyPlot} shows a plot of average score values across all real world data sets, from each algorithm. The error bars are drawn to show 1 standard-deviation of error.
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}rcccc@{}}
+\toprule
+\textbf{Rank} & \textbf{F1 Score} & \textbf{Rand Index} & \textbf{Adjusted Rand Index} & \textbf{BCubed F-Score} \\ \midrule
+1 & Mean Segneigh & Mean SegNeigh & Mean SegNeigh & Mean SegNeigh \\
+2 & Var BinSeg & Mean BinSeg & Mean BinSeg & Var PELT \\
+3 & Var PELT & Var PELT & Var PELT & Var SegNeigh \\
+4 & Var SegNeigh & Var SegNeigh & Var SegNeigh & Var BinSeg \\
+5 & Mean BinSeg & Var BinSeg & Var BinSeg & Mean BinSeg \\
+6 & MeanVar SegNeigh & MeanVar BinSeg & MeanVar BinSeg & MeanVar BinSeg \\
+7 & Meanvar PELT & MeanVar SegNeigh & MeanVar SegNeigh & MeanVar SegNeigh \\
+8 & MeanVar BinSeg & MeanVar PELT & MeanVar PELT & MeanVar PELT \\
+9 & Mean PELT & Mean PELT & Mean PELT & Mean PELT \\ \bottomrule
+\end{tabular}
+\caption{Algorithm Rankings}
+\label{tab:rankings}
+\end{table}
+
+Here it is clear that while there appears to be a consensus on the `best' algorithm in this limited trial, the remaining rankings vary somewhat. In order to analyse this, the \emph{Kendall's Tau} coefficient of ranking correlation is utilised \cite{KENDALL1938}. This measure produces values of 1 for identical rankings, and -1 for fully different rankings. The results of this calculation follow:
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccc@{}}
+\toprule
+\multicolumn{1}{l}{} & \textbf{F1 Ranks} & \textbf{\begin{tabular}[c]{@{}c@{}}Rand Index\\ Ranks\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted Rand\\ Index Ranks\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed F-Score\\ Ranks\end{tabular}} \\ \midrule
+\textbf{F1 Ranks} &  & 0.278 & 0.278 & 0.778 \\
+\textbf{Rand Index Ranks} & 0.278 &  & 1 & 0.278 \\
+\textbf{Adjusted Rand Index Ranks} & 0.278 & 1 &  & 0.278 \\
+\textbf{BCubed F-Score Ranks} & 0.778 & 0.278 & 0.278 &  \\ \bottomrule
+\end{tabular}%
+}
+\caption{Calculated Kendall's Tau values between pairs of rankings}
+\label{tab:tau}
+\end{table}
+
+With these values in \autoref{tab:tau}, for each pair we can test the null hypothesis $H_0$ that $\tau = 0$ and there is no correlation between the rankings by computing the $p-value$ for each $\tau$. This gives results as follows:
+
+\begin{table}[h]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}rcccc@{}}
+\toprule
+\multicolumn{1}{l}{} & \textbf{F1 Ranks} & \textbf{\begin{tabular}[c]{@{}c@{}}Rand Index\\ Ranks\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted Rand\\ Index Ranks\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed F-Score\\ Ranks\end{tabular}} \\ \midrule
+\textbf{F1 Ranks} &  & 0.3585 & 0.3585 & 0.002425 \\
+\textbf{Rand Index Ranks} & 0.3585 &  & $5.51\times 10^{-6}$ & 0.3585 \\
+\textbf{Adjusted Rand Index Ranks} & 0.3585 & $5.51\times 10^{-6}$ &  & 0.3585 \\
+\textbf{BCubed F-Score Ranks} & 0.002425 & 0.3585 & 0.3585 &  \\ \bottomrule
+\end{tabular}%
+}
+\caption{Calculated $p$ values for Kendall's Tau tests}
+\label{tab:pval}
+\end{table}
+
+The values shown in \autoref{tab:pval} demonstrate that for the comparison of the rankings provided for F1 and BCubed F-Score, we can reject the null hypothesis $H_0$ that they are uncorrelated, with a 95\% confidence interval, as $p < 0.05$. Similarly, we can reject the null hypothesis for the ranks provided by the Rand Index and Adjusted Rand Index, with a confidence interval of 95\%, as $p < 0.05$. This is not unexpected, as the Adjusted Rand Index is derived from the classic Rand Index, and in the case of these experiments we would not expect to see any deviation in rankings provided. The other pairs of rankings show a $p$ value of $> 0.05$ and as such, the null hypothesis $H_0$ that these ranks are not correlated holds, with a 95\% confidence interval.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -930,6 +1011,7 @@ Analysis of the raw data used for \autoref{fig:PrettyPlot} shows that there is n
 This chapter is intended to provide a factual explanation of the results of each experiment carried out as a part of this research. It does not provide any discussion or conclusions based upon these results. The discussion and conclusions gleaned from these experiments can be found in \autoref{conclusions}.
 
 \section{Metric Behaviour}
+\label{behaviour}
 
 \begin{table}[h]
 \centering
@@ -939,7 +1021,7 @@ This chapter is intended to provide a factual explanation of the results of each
 Credits correct detections & \cmark & \cmark & \cmark & \cmark \\
 Penalises false negatives & \cmark & \cmark & \cmark & \cmark \\
 Penalises false positives & \xmark & \cmark & \cmark & \cmark \\
-Temporal penalty for late detections & \xmark & \mmark & \mmark & \cmark \\
+Temporal penalty for late detections & \xmark & \mmark & \mmark & \mmark \\
 Unaffected by sample size & \cmark & \xmark & \xmark & \xmark \\
 Unaffected by change point density & \cmark & \cmark & \mmark & \mmark \\
 Unaffected by data before/after change point & \cmark & \mmark & \xmark & \mmark \\ \bottomrule
@@ -992,14 +1074,47 @@ The BCubed score also reacts differently to the Rand Index when change point den
 
 When compared with the behaviour in a fixed length data set, the BCubed measure behaves in the opposite fashion to the Adjusted Rand Index. The scores start diverged, but quickly converge to the same value and remain almost constant towards the end of the experiment. BCubed also behaves in the opposite fashion to the `standard' Rand Index, with the scores diverging from the beginning of the experiment.
 
+\section{Fulfilment of Functional Requirements}
+
+It is clear from the behavioural analysis of the measures, that there is not a single measure that best fits the functional requirement criteria for the purposes of scoring the algorithms being evaluated here.
+
+\section{Real-World Data Analysis}
+
+Intuitively, the results show that all of the measures agree that Segment Neighbourhoods utilising a mean test statistic, performed the `best' in this limited study of real-world data sources.
+
+However, it is important to note that the fact that there is no correlation between rankings (with the exception of Rand $\leftrightarrow$ Adjusted Rand and F1 Score $\leftrightarrow$ BCubed F-SCore) suggests that this cannot be taken on face value alone, and the lack of correlation may imply that even though the 1st ranked algorithm is consistent across all rankings, it is simply not possible to state that all of the measures used agree that one measure was better than all of the others in these tests.
+
+Further studies would need to be carried out, with a much greater sample size in terms of data sources, in order to gain a more accurate ranking of approaches.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Analysis \& Conclusions}
 \label{conclusions}
 
+This section constitutes the conclusions gleaned from the experiments that were carried out as a part of this thesis. Here, the research questions set out in \autoref{Problem Statement} are answered, based upon the results of the experiments. For ease of understanding, the research questions are repeated:
+
+\begin{description}
+	\item[SQ1] Are existing change point detection algorithms effective at detecting changes/events in social media data in a timely fashion?
+	\begin{description}
+	\item[SQ1.1] Which algorithm, out of those being analysed, performs the `best' when applied against real world data?
+	\end{description}
+	\item[SQ2] Are measures not specifically defined for the purpose of change detection evaluation effective in this domain?
+	\begin{description}
+	\item[SQ2.1] In what way do established measures fail to behave correctly?
+    \item[SQ2.2] Which evaluation measure provides the best evaluation, given the functional requirements set forth by the host organisation?
+    \end{description}
+	\item[SQ3] If existing measures are deficient in some way, what would an `ideal' measure look like?\todo{reword}
+\end{description}
+
 \section{Conclusions}
 
-There are multiple ways in which the measures evaluated in this thesis are shown to be inappropriate for use for evaluating change point detection approaches.
+The answer to \emph{SQ1} has proven inconclusive. There are situations in which the algorithms performed well, detecting change points close to those that constituted the ground truth - but there were also many situations in which the algorithms did not perform in the manner expected. Late, early and missed detections were common, with algorithms occasionally showing many false positive detections throughout the data set. This poses two more questions: Were the algorithms incorrectly configured in some way? Or perhaps the selection of penalty function was not appropriate for this particular type of data? Taken at face value, the answer to the question is `no' - though taking a closer look at the data provides a more nuanced answer. In order to answer this question fully, further work would certainly need to be carried out.
+
+To answer \emph{SQ1.1}, the rankings calculated after running the algorithms against a curated set of 10 different data sets, and the correlation coefficients calculated thereafter show that there is little agreement between the measures as to which method is the best for this particular application. The variation shown when plotting 1 standard deviation error bars also suggest that further studies would be necessary (with a much larger corpus of test data) to obtain useful data. As discussed in \autoref{results}, the lack of correlation between rankings of algorithms show that it is not possible to state (regardless of how the rankings appear) that the algorithm ranked highest by all of the measures is the `best' for this particular application.
+
+When the algorithms were applied to real world data sets, they behaved inconsistently, to the point where no measure agrees on which approach is `best' for all of the data sets evaluated. When the change point plots are examined by-eye, it is clear that the algorithms underperformed when used in this context. There were cases where the manual ground-truth annotations were correctly detected by the algorithms, but there were also many situations in which the algorithm output did not closely match the ground truth at all. Despite this, the metrics being used still scored the algorithms highly in many cases (assuming a score $> 0.5$ to be a `successful' run).
+
+In answer to \emph{SQ2} and \emph{SQ2.1},  There are multiple ways in which the measures evaluated in this thesis are shown to be inappropriate for use for evaluating change point detection approaches.
 
 The clustering measures evaluated (Rand, Adjusted Rand, BCubed) show that they are often affected by the size of the data set, or by the density of change points in the data set, when scoring change points detected with some error.
 
@@ -1009,13 +1124,33 @@ Binary Classification metrics performed well in simulation studies, fulfilling a
 
 These results do call into question some aspects of the validity of the experiments, which will be discussed in \autoref{threats}.
 
-When the algorithms were applied to real world data sets, they behaved inconsistently, to the point where no measure agrees on which approach is `best' for all of the data sets evaluated. When the change point plots are examined by-eye, it is clear that the algorithms underperformed when used in this context. There were cases where the manual ground-truth annotations weer correctly detected by the algorithms, but there were also many situations in which the algorithm output did not closely match the ground truth at all. Despite this, the metrics being used still scored the algorithms highly in many cases (assuming a score > $0.5$ to be successful).
-
 \section{The Ideal Metric}
 \label{ideal metric}
 
+If the behaviours in \autoref{behaviour} are considered to be the ideal criteria for a measure to fulfil, then it is clear how we would expect an `ideal' measure to be have. This section intends to answer \emph{SQ3}, based on experiences and evidence collected during this project.
+
+An ideal measure should provide proper credit to correct detections, as well as correctly penalising for false positives and false negatives accordingly. It would be sufficient for scoring if there was a mechanism for defining the `relevance' of a given change, perhaps by incorporating computation of the area under the curve for the signal around the change when devising the ground truth. This would then provide higher relevance scores for large changes, and lower relevance scores for small changes. In this way, an algorithm could be penalised in a lesser fashion for missing a detection of a less relevant change, and penalised more heavily for missing a detection of a very relevant change.
+
+An ideal measure would be unaffected by the number of data points either side of the change. This could be achieved by taking a `slice' of the signal around the ground truth change point, and computing a metric based on the location of the true change point and the detected change point within that slice. This would have the additional benefit of causing a metric to be unaffected by the data points either side of a detected or ground truth change point.
+
+This would mean, however, that a method would have to be devised to calculate a final score that was unaffected by change point density. In situations where the ground truth is known, a process such as computing a harmonic mean of detection scores for each change point would be effective, but data with a single `badly' detected change point would still receive a higher score than data with multiple change points with a small distance between the detection and true change point.
+
+Ideally, there would be a linear relationship between the score, and the relative distance that a computed change point was discovered from the true change point. This was a property that was definitely not exhibited by the measures being evaluated in this study, and it is the believe of the author that this is one of the most vital properties for an `ideal' measure for change point detection problems.
+
+This is an area that would certainly benefit from further research - the other results of the studies carried out show that there is a need for a change point problem specific measure.
+
 \section{Threats to Validity}
 \label{threats}
+
+It is not uncommon for an experiment or set of experiments to have some threats to validity. It is the intention of this section to detail the threats that have been identified at the time of writing.
+
+Firstly, the corpus of data sets used for the real-world analysis was too small to be able to state with certainty that the results that were obtained are valid in all situations. It would be better in a future study if a curated data set containing several thousand signals could be analysed, but time constraints caused this kind of study (especially on real world data) to not be feasible in this situation.
+
+This could be compensated for by pivoting away from real world data, and instead generating programatically, a number of data sets (perhaps $n = 10,000$) that have the same properties as the real world data sets, but with a random distribution of change points and change magnitudes. As part of this thesis, such a method was created and tested, but time constraints resulted in it not being included in this thesis as an experiment.
+
+The author is also aware that there maybe problems with the way in which some of the metrics were calculated. As discussed in \autoref{real world explainer}, a number of assumptions were made when calculating these metrics. The first is that for the binary classification measure (F1 score), anything other than exact detection when compared with the ground truth was considered a failure. This should perhaps have been altered to allow for detections a certain number of points before the true change point to be considered a successful detection.
+
+The clustering measures were calculated by segmenting the data around the detected change points and the true change points, and forming those segmentations into clusters. This method was chosen due to the segmentation approaches of the algorithms being evaluated, but it may well be that there is a more effective method of creating this clusterings for comparation - perhaps taking into account the magnitude as well as the time index of each point.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
