@@ -1,0 +1,51 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{Problem Statement}
+\label{Problem Statement}
+
+When asserting the veracity of an approach to a particular problem in software engineering, this is almost always achieved by utilising some sort of metric or measure. To give an example, when evaluating the quality of some new piece of software, this could be done through calculating measures such as McCabe Complexity \cite{ThomasJ.McCabe1976} or unit test coverage.
+
+The problem of detecting change points in a data stream is no different. There exists within this field a number of metrics that may be used to prove the accuracy and effectiveness of a given approach, and these often fall into one of three categories: binary classification (e.g. F1 score), clustering (e.g. BCubed, or the Rand Index), or information retrieval (utilising scoring systems such as those utilised in the TREC 2016 Real Time Summarisation Track: \cite{trec2016}).
+
+Being that there are myriad ways to detect change points in a data stream, it is necessary to implement the application of some evaluation measure to back up an assertion that, for example, approach \emph{A} is better than approach \emph{B} for some data set $y_s$. The application of these measures can, in some cases, result in more questions than answers, especially in situations where two different measures may disagree with the results of the aforementioned approaches \emph{A} and \emph{B}.
+
+However, for the number of change point detection methods that exist, there is an almost equal number of ways to evaluate the results of the methods. There is little agreement between researchers on the `correct' method to use, and as this research will show, there are problems that exist when utilising measures that have generally been widely accepted for this purpose.
+
+Outside of the `normal' applications of change point detection (for example, spotting the onset of `storm seasons' in oceanographic data \cite{Killick2011} or the detection of past changes in the valuation of a currency, such as BitCoin \cite{Buntain2014}, there is also an application for change point detection as an `event detection' mechanism, when applied to data such as that sourced from online social media platforms.
+
+There exists methods of event detection in social media data utilising approaches such as term frequency counting, lexicon-based recognition and context-free-grammar algorithms \todo{cite yordi}. However, these approaches rely on (sometimes computationally expensive) analysis of the content of messages being posted on social media platforms. Being that change point detection (and especially \emph{online} change point detection) algorithms can be utilised for the detection of past events, it stands to reason that these algorithms can also be utilised for event detection when applied to pre-computed data such as conversation volume or reach of a particular conversation. There certainly exists a requirement in the field of online reputation management to be able to inform businesses (in a timely manner) that a spike in conversation volume is occurring, and thus they may need to carry out some action to mitigate reputational damage if the conversation sentiment is negative.
+
+Therefore, this thesis intends to answer the following research question:
+
+\begin{description}
+    \item[RQ] How can changes be detected in conversation volume data from social media?
+\end{description}
+
+From this research question, the following sub-questions have been formulated:
+
+\begin{description}
+	\item[SQ1] Are existing change point detection algorithms effective at detecting changes/events in social media data in a timely fashion?
+	\begin{description}
+	\item[SQ1.1] Which algorithm, out of those being analysed, performs the `best' when applied against real world data?
+	\end{description}
+	\item[SQ2] Are measures not specifically defined for the purpose of change detection evaluation effective in this domain?
+	\begin{description}
+	\item[SQ2.1] In what way do established measures fail to behave correctly?
+    \item[SQ2.2] Which evaluation measure provides the best evaluation, given the functional requirements set forth by the host organisation?
+    \end{description}
+	\item[SQ3] If existing measures are deficient in some way, what would an `ideal' measure look like?\todo{reword}
+\end{description}
+
+\improvement[inline]{this needs expansion, I think}
+
+\section{Motivation}
+
+This particular research is motivated specifically by the online reputation management sector. The business hosting this research project (Buzzcapture b.v.\footnote{\url{http://www.buzzcapture.com}}) is a Dutch consultancy that provides online reputation management services to other businesses throughout Europe. Chief among these services is the BrandMonitor application, which, among other features, provides a rudimentary notification system for clients that is triggered once there is an absolute increase in conversation volume (conversation volume being defined as the number of tweets relevant to the client over a given time period).
+
+Buzzcapture made a project available to students of the Universiteit van Amsterdam, wherein they would provide a method for more effectively providing these notifications, based on more than just an arbitrary threshold on conversation volume or some other computed metric. Upon accepting this project, research was carried out into the field of change detection algorithms, during which it was found that there was not a \emph{single} accepted approach for evaluating measures. Indeed, for every publication that described some novel change point detection algorithm, there was a slightly different approach for evaluating it, and proving the veracity of algorithm in a certain situation. Most publications made use of some sort of binary classification measure (for example, \cite{Qahtan2015}, \cite{Buntain2014}, \cite{Pelecanos2010}), while others had small variations on that theme, providing additional takes on the binary classification approach using methods such as \emph{Receiver Operating Characteristic} curves (for example \cite{Fawcett1999} \& \cite{Desobry2005}). Additionally, there were publications that made use of clustering measures, calculated using a segmentation of the time series based on computed change points, such as \cite{Matteson2012}.
+
+It is the intention of this thesis to not only answer the research questions set out in \autoref{Problem Statement}, but also to provide a robust recommendation and working prototype of a change detection methodology which could then eventually be implemented into the Brand Monitor tool to supply timely and relevant notifications to clients when a conversation concerning their brand exhibits a change in behaviour or otherwise `goes viral'.
+
+\end{document}

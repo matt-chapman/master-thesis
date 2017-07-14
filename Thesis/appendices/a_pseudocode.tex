@@ -1,0 +1,101 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of increasing `head' length of a dataset on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Add 1 point to head of data, increasing length\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of increasing `tail' length of a dataset on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Add 1 point to tail of data, increasing length\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of increasing `tail' length of a dataset on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Move $\tau$ and $\tau'$ 1 point further in time series\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of temporal distance between $\tau$ and $\tau'$ on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Leave $\tau$ unchanged\\
+        $\tau' \leftarrow \tau' + 1$\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of increasing the number of false positive detections on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Add 1 additional false positive, such that $\tau'_{n+1} = \tau'_{n} + 5$\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of decreasing the number of false negative detections on metrics}
+\Begin{
+    \ForEach{iteration}{
+        Add one additional $\tau'$ such that $\tau'_n = \tau_n$\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of the number of change points on metrics, by appending}
+\Begin{
+
+    $new\_point \leftarrow$ time series segment with 1 changepoint
+
+    \ForEach{iteration}{
+        Append $new\_point$ to data, increasing length\\
+        Add additional $\tau$ at $tau_{new\_point}$\\
+        Add additional $\tau'$ at $tau'{new\_point}$\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\begin{algorithm}[h]
+\caption{Experiment to plot the effect of the number of change points on metrics, by adding 1 to slices of the time series \& maintaining constant time series length}
+\Begin{
+    \ForEach{iteration}{
+        Add 1 to next slice of time series\\
+        Add $\tau$ and $\tau'$ such that $\tau' = \tau + 2$\\
+        Calculate metrics for current $\tau$, $\tau'$ against time series\\
+        Store results
+    }
+}
+\end{algorithm}
+
+\end{document}

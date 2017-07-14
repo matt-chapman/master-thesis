@@ -257,7 +257,7 @@ PrettyResultsPlot <- function(df1) {
   )) +
     geom_bar(position = position_dodge(),
              stat = "identity",
-             colour = 'black') +
+             colour = NA) +
     geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd),
                   width = .2,
                   position = position_dodge(.9)) +

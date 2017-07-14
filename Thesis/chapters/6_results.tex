@@ -1,0 +1,102 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+This chapter is intended to provide a factual explanation of the results of each experiment carried out as a part of this research. It does not provide any discussion or conclusions based upon these results. The discussion and conclusions gleaned from these experiments can be found in \autoref{conclusions}.
+
+\section{Metric Behaviour}
+\label{behaviour}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}rcccc@{}}
+\toprule
+\textbf{Behaviour} & \multicolumn{1}{l}{\textbf{F1 Score}} & \multicolumn{1}{l}{\textbf{Rand Index}} & \multicolumn{1}{l}{\textbf{\begin{tabular}[c]{@{}l@{}}Adjusted\\ Rand Index\end{tabular}}} & \multicolumn{1}{l}{\textbf{\begin{tabular}[c]{@{}l@{}}BCubed\\ F-Score\end{tabular}}} \\ \midrule
+Credits correct detections & \cmark & \cmark & \cmark & \cmark \\
+Penalises false negatives & \cmark & \cmark & \cmark & \cmark \\
+Penalises false positives & \xmark & \cmark & \cmark & \cmark \\
+Temporal penalty for late detections & \xmark & \mmark & \mmark & \mmark \\
+Unaffected by sample size & \cmark & \xmark & \xmark & \xmark \\
+Unaffected by change point density & \cmark & \cmark & \mmark & \mmark \\
+Unaffected by data before/after change point & \cmark & \mmark & \xmark & \mmark \\ \bottomrule
+\end{tabular}
+\caption{Metric Behaviour Summary}
+\label{tab:metric}
+\end{table}
+
+\todo[inline]{Missing `data before and after' affect}
+
+\autoref{tab:metric} shows a summary of how the metrics being tested in this study behaved when the experiments were run. Behaviours exhibited by a given metric are denoted by \cmark, behaviours not exhibited as \xmark, and behaviours that are exhibited with some caveats are denoted by \mmark.
+
+\subsection{F1 Score}
+
+The F1 score is a `traditional' binary classification score, widely used for the evaluation of change point detection methods. Based upon the results of the experiments carried out, it is clear that this measure has some limitations in this domain.
+
+Firstly, F1 score does not include any method for penalising a method based on late detections. Detections of a change point some number of points after the true change point may still be considered successful detections, depending on the functional requirements of the system that the method is implemented in. F1 Score returns a score of 0 for anything other than exact detections. However, the measure does properly penalise for false negatives. In a data set with two known change points, if one of these change points is successfully detected and the other not, the metric will return an F1 score of 0.5, which could be considered correct.
+
+Secondly, F1 score does not appear to correctly penalise for false positives. In situations where a change point is detected some number of points after the true change point (so, as above, possibly a successful detection, albeit late), the metric continues to return a value of 0, even when false positives occur.
+
+The F1 measure is, however, unaffected by changes in sample sizes in the experiments, and also exhibits no variation when the change point density in a given data set is increased or decreased.
+
+\subsection{Rand Index}
+
+The Rand Index is a clustering measure, calculated in these experiments by segmenting the data set around detected change points and treating all data points in each of these segmentations as a single cluster.
+
+The Rand Index improves upon the F1 score, in that it successfully penalises for late detections, with some caveats. The Rand Index computed for a data set with a single late detection better reflects the true `accuracy' of a method, but it behaves inconsistently when this detected change point is near to the beginning or end of a time series. In the experiment testing temporal penalty, the Rand Index successfully provides a decreasing value as the detected change point moves away from the true change point, but starts to increase as it approaches the end of the data set.
+
+Taken intuitively, this means that if a method detects a change point late, the Rand Index only penalises up to a certain point. If the detection occurs towards the end of the data set, the Rand Index may return a score that is actually \emph{higher} than that is returned if a method detects a change point late, but closer to the true change point. This is a clear limitation of the measure, and means it cannot be considered to completely fulfil this behaviour.
+
+It is also clear, based on the results of these experiments, that the Rand Index is affected by the size of the data set, with a late detection being penalised higher in a small data set, than in a large. However, this difference is reasonably small - and it is safe to assume that in most situations, change detection methods will be compared in a like-for-like fashion, including ensuring that the test data sets are all of the same length.
+
+\subsection{Adjusted Rand Index}
+
+The Adjusted Rand Index is an additional clustering measure, calculated in a similar fashion to the `standard' Rand Index, but takes into account the possibility that some items in a cluster may be accidentally, or randomly classified into that cluster.
+
+The Adjusted Rand Index behaved in much the same fashion as the Rand Index in most situations, though exhibited different behaviour in more than one scenario. The Adjusted Rand Index is more affected by dataset size, which is especially apparent in the experiment where change point density is increased while also increasing the data set size.
+
+This measure also reacted inconsistently when both the true change point and computed change point are moved through the time series - showing a large, steep drop in returned score at both the beginning and end of the data set.
+
+Temporal Penalties were more effectively scored by the Adjusted Rand Index, however - as even though the score returned by the measure increased as the detected change point moved towards the end of the time series, the value returned by the Adjusted Rand Index did not become higher than 0 at any one point.
+
+\subsection{BCubed F-Score}
+
+As a clustering measure, it was expected that BCubed would behave in much the same way as the Rand and Adjusted Rand Indices. However, it does exhibit some minor differences.
+
+The BCubed metric is less heavily affected by the parabolic curve behaviour exhibited by clustering metrics when plotting temporal penalty - though it is affected. The results returned by BCubed show less variation as the computed change point moves towards the end of the time series, but it shows the same curve with approximately the same velocity as the Rand Indices.
+
+The BCubed score also reacts differently to the Rand Index when change point density is increased with time series length, showing an almost linear drop, converging with the Adjusted Rand index at the end of the experiment, unlike the Rand Index, which remains constant.
+
+When compared with the behaviour in a fixed length data set, the BCubed measure behaves in the opposite fashion to the Adjusted Rand Index. The scores start diverged, but quickly converge to the same value and remain almost constant towards the end of the experiment. BCubed also behaves in the opposite fashion to the `standard' Rand Index, with the scores diverging from the beginning of the experiment.
+
+\section{Fulfilment of Functional Requirements}
+\label{requirements fulfilment}
+
+A summary of the functional requirements follows:
+
+\begin{description}
+    \item[R1] The approach should not rely on arbitrary threshold values. It instead should adapt to the data that it is analysing.
+    \item[R2] False positives should not be considered wholly harmful. The consequence of a false positive in production is only that a notification is sent. That said, false positives should be kept to a reasonable level.
+    \item[R3] Late detections should be considered failure cases. Late detections are not useful to clients using the production system, as prompt detections are needed for effective damage control in situations where increased conversation volume is caused by a PR crisis.
+    \item[R4] Similarly, false negatives should also be considered failure cases. False negatives are defined as when the algorithm fails to flag a change point that would have been flagged by manual, by-eye analysis. False negatives prevent clients from acting upon changes in conversation volume in a timely manner.
+    \item[R5] The approach in it's first iteration should operate on conversation volume metrics provided by Brandmonitor, but should be extensible such that it can also be applied to other metrics.
+\end{description}
+
+It is clear from the behavioural analysis of the measures, that there is not a single measure that best fits all of the functional requirement criteria for the purposes of scoring the algorithms being evaluated here. Taking each requirement in turn, the following is found:
+
+\begin{description}
+    \item[R1] None of the algorithms evaluated rely upon arbitrary threshold values. It is not possible in the context of this study, to choose a metric that evaluates on this criteria.
+    \item[R2] False positives were penalised harshly by almost all measures. If the measures are taken in their default forms, false positives are punished heavily when there are few of them, with the effect diminishing as their numbers increase.
+    \item[R3] This criteria is fulfilled, but with a caveat. All of the measures tested penalised for late detections, but also penalised for early detections - which intuitively should be considered a good thing in this use case.
+    \item[R4] This requirement is fulfilled by all of the major measures being evaluated. Each measure shows an \emph{almost} linear relationship between score and the number of false negatives in a time series.
+    \item[R5] This requirement is incidental and was elicited as part of the requirements process, but does not have a bearing on how the methods were evaluated. As it stands, all of the methods can be applied to any arbitrary time-series data, where the values $y_s$ are such that $\{y \in \mathbb{R} \}$.
+    \end{description}
+
+\section{Real-World Data Analysis}
+
+Intuitively, the results show that all of the measures agree that Segment Neighbourhoods utilising a mean test statistic, performed the `best' in this limited study of real-world data sources.
+
+However, it is important to note that the fact that there is no correlation between rankings (with the exception of Rand $\leftrightarrow$ Adjusted Rand and F1 Score $\leftrightarrow$ BCubed F-SCore) suggests that this cannot be taken on face value alone, and the lack of correlation may imply that even though the 1st ranked algorithm is consistent across all rankings, it is simply not possible to state that all of the measures used agree that one measure was better than all of the others in these tests.
+
+Further studies would need to be carried out, with a much greater sample size in terms of data sources, in order to gain a more accurate ranking of approaches.
+
+\end{document}
