@@ -15,6 +15,12 @@
 \usepackage[sorting=nty,style=numeric,backend=biber]{biblatex}
 \usepackage{subfiles}
 
+% helper for bib annotations
+\usepackage{calc}
+\newcommand{\acite}[2]{
+\noindent\cite{#1}~\parbox[t]{\linewidth-17.8pt}{\vspace{-.65em}\textbf{\fullcite{#1}}}\begin{quote}#2\end{quote}
+}
+
 % behaviour table ligatures
 \usepackage{pifont}% http://ctan.org/pkg/pifont
 \newcommand{\cmark}{\ding{51}}%
@@ -53,10 +59,6 @@
   \setlength\hangindent{\mylen}%
   \hspace*{\mylen}#1\\}
   
-\newcommand{\acite}[2]{
-\noindent\cite{#1}~\parbox[t]{\linewidth-17.8pt}{\vspace{-.65em}\textbf{\fullcite{#1}}}\begin{quote}#2\end{quote}
-}
-  
 \bibliography{../Bib/library.bib}
 
 \begin{document}
@@ -79,7 +81,7 @@
 
 \chapter{Related Works}
 
-\subfile{chapters/2_related}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -154,5 +156,8 @@
 \subfile{appendices/d_scores}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Bibliography Annotations}
+\subfile{chapters/2_related}
 
 \end{document}
