@@ -118,7 +118,7 @@ Algorithm \autoref{alg:binseg} describes a pseudocode implementation of the BinS
 
 \section{Algorithm Configuration}
 
-Change detection is an \emph{unbounded} problem. Left without some system of constraint, the algorithm could theoretically run to infinity. Indeed, one of the algorithms utilised in this research, PELT\todo{citation needed}, when left unbounded, will detect every data point in the time-series as a change point. This result is \textit{technically} correct, but not useful for our purposes. For this reason, the algorithms implement a penalty system, allowing for an optimal number of change points to be detected.
+Change detection is an \emph{unbounded} problem. Left without some system of constraint, the algorithm could theoretically run to infinity. Indeed, one of the algorithms utilised in this research, PELT, when left unbounded, will detect every data point in the time-series as a change point. This result is \textit{technically} correct, but not useful for our purposes. For this reason, the algorithms implement a penalty system, allowing for an optimal number of change points to be detected.
 
 \subsection{Penalty Scores}
 
@@ -157,7 +157,7 @@ There are a number of established approaches to calculating penalty values for u
     \text{HQC} &= -2L_{max} + 2k \ln(\ln(n))
 \end{align}
 
-Where $n$ is the total number of observations, $k$ is the number of \emph{free parameters}\footnote{variables that are unable to be predicted by a given model} and $\hat{L}$ is the maximum value of a likelihood function.\todo{reword, sounds too much like source}
+Where $n$ is the total number of observations, $k$ is the number of \emph{free parameters}\footnote{variables that are unable to be predicted by a given model} and $\hat{L}$ is the maximum value of a likelihood function.
 
 The penalty function returns a value which is represented by $\beta$ in \autoref{bounded}, which then limits the number of possible segmentations returned by $Q$. In this way, varying the penalty function $\beta$ can alter the results given by a change detection algorithm by increasing or decreasing the number of change points detected.
 
@@ -264,7 +264,7 @@ This measure is for computing the similarity between two clusters of data points
 		\item $b$ = total number of pairs that were partitioned into \emph{different} subsets by both $X$ and $Y$
 		\item $c$ = total number of pairs that were partitioned into the \emph{same} subset by $X$ and into a different subset by $Y$
 		\item $d$ = total number of pairs that were partitioned into the \emph{same} subset by $Y$ and into a different subset by $X$
-	\end{itemize}\todo{reword, reads too much like source}
+	\end{itemize}
 	
 	Intuitively, it can be stated that $a+b$ is the total number of agreements between methods $X$ and $Y$, while $c+d$ is the total number of disagreements. This calculation will return $0$ for completely different clusters and $1$ for identical clusters. The Rand Index provides a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $
 	
