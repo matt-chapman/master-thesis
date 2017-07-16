@@ -59,12 +59,10 @@ This is an area that would certainly benefit from further research - the other r
 
 It is not uncommon for an experiment or set of experiments to have some threats to validity. It is the intention of this section to detail the threats that have been identified at the time of writing.
 
-Firstly, the corpus of data sets used for the real-world analysis was too small to be able to state with certainty that the results that were obtained are valid in all situations. It would be better in a future study if a curated data set containing several thousand signals could be analysed, but time constraints caused this kind of study (especially on real world data) to not be feasible in this situation.
+\subsection{Internal Validity}
 
-This could be compensated for by pivoting away from real world data, and instead generating programatically, a number of data sets (perhaps $n = 10,000$) that have the same properties as the real world data sets, but with a random distribution of change points and change magnitudes. As part of this thesis, such a method was created and tested, but time constraints resulted in it not being included in this thesis as an experiment.
+\subsection{External Validity}
 
-The author is also aware that there maybe problems with the way in which some of the metrics were calculated. As discussed in \autoref{real world explainer}, a number of assumptions were made when calculating these metrics. The first is that for the binary classification measure (F1 score), anything other than exact detection when compared with the ground truth was considered a failure. This should perhaps have been altered to allow for detections a certain number of points before the true change point to be considered a successful detection.
-
-The clustering measures were calculated by segmenting the data around the detected change points and the true change points, and forming those segmentations into clusters. This method was chosen due to the segmentation approaches of the algorithms being evaluated, but it may well be that there is a more effective method of creating this clusterings for comparation - perhaps taking into account the magnitude as well as the time index of each point.
+\subsection{Construct Validity}
 
 \end{document}

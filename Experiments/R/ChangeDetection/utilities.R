@@ -250,32 +250,24 @@ GetPenalties <- function(input, daily = TRUE) {
 }
 
 PrettyResultsPlot <- function(df1) {
+  
+  df1 <- transform(df1, Algorithm = reorder(Algorithm, mean))
+  
   ggplot(df1, aes(
-    x = as.factor(Algorithm),
+    x = factor(Metric,levels(factor(Metric))[c(7,1,2,3,4,5,6,8)]),
     y = mean,
-    fill = Metric
+    fill = Algorithm
   )) +
     geom_bar(position = position_dodge(),
              stat = "identity",
-             colour = NA) +
-    geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd),
+             colour = 'black') +
+    geom_errorbar(aes(ymin = mean-sd, ymax = mean + sd),
                   width = .2,
                   position = position_dodge(.9)) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1),
           plot.title = element_text(hjust = 0.5)) +
-    labs(title = 'Mean Metric Scores', x = 'Algorithm', y = 'Metric Score') +
-    scale_color_manual(
-      labels = c(
-        "Adjusted Rand",
-        "BCubed F-Score",
-        "BCubed Precision",
-        "BCubed Recall",
-        "F1",
-        "Precision",
-        "Rand Index",
-        "Recall"
-      )
-    )
+    labs(title = 'Mean Metric Values', x = 'Evaluation Metric', y = 'Metric Value') +
+    scale_colour_brewer(palette = "Greens")
 }
 
 CalculateRankings <- function() {
