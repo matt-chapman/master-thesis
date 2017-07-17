@@ -1,0 +1,36 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+Change point detection is a large and complex field. This section is to provide a brief explanation of scientific literature that has been useful in the creation of this thesis.
+
+\section{Change Point Detection Algorithms \& Their Applications}
+
+Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally referred to as \emph{control charts}. Since the inception of approaches such as CUSUM \cite{Page1954} that provide the possibility for on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic detection, online reputation management and infrastructure error detection, change detection is hugely useful both as an academic problem and in production systems of myriad application.
+
+Over the years, many new approaches to change point detection have been proposed. Among these proposals are submissions from \citeauthor{Desobry2005} \cite{Desobry2005}, \citeauthor{Kawahara2009} \cite{Kawahara2009}, and \citeauthor{Downey2008} \cite{Downey2008}, all of whom proposed novel methods of change point detection.
+
+To give some examples of the application of change point detection algorithms, \citeauthor{Tartakovsky2005} carried out research into their use in intrusion detection for IT systems \cite{Tartakovsky2005}, and \citeauthor{Killick2011} carried out a study in using change point detection algorithms as a method for identifying the onset of `storm seasons' in oceanographic time series data \cite{Killick2011}.
+
+The three main algorithms being utilised in the studies in this thesis were proposed by \citeauthor{Killick2011a} (Pruned Exact Linear Time \cite{Killick2011a}), \citeauthor{Auger1989} (Segment Neighbourhoods \cite{Auger1989}) and \citeauthor{Jackson2003} (Binary Segmentation \cite{Jackson2003}). All of these algorithms are described in more detail in \autoref{background}.
+
+\section{Algorithm Accuracy Evaluation}
+
+In terms of evaluating change point detection algorithms, there have been a number of approaches. Papers such as those written by \citeauthor{Buntain2014} \cite{Buntain2014} and \citeauthor{Qahtan2015} \cite{Qahtan2015} concentrate primarily on binary classification measures, while other authors such as \citeauthor{Desobry2005}, \citeauthor{Fawcett1999}, and \citeauthor{Kawahara2009} utilise variations on this theme, preferring to concentrate on \emph{Receiver Operating Characteristic} (ROC) curves to plot various confusion matrix outputs for different approaches in order to compare and contrast.
+
+\citeauthor{Downey2008} published a paper utilising some interesting metrics, including mean delay before detection between algorithms, and also the probability of a false alarm occurring \cite{Downey2008}.
+
+Work has also been carried out by \citeauthor{Matteson2012} utilising clustering measures (\citetitle{Matteson2012} \cite{Matteson2012}) - which is one of the reasons that clustering measures were chosen for this thesis as a focus.
+
+For background information on the measures being utilised in this study, the following papers are the source material for the approaches detailed in \autoref{background}:
+
+\begin{description}
+    \item[Rand Index] \citetitle{Rand1971} by \citeauthor{Rand1971} \cite{Rand1971}
+    \item[Adjusted Rand Index] \citetitle{Hubert1985} by \citeauthor{Hubert1985} \cite{Hubert1985}
+    \item[F1 Score] \citetitle{Kent1955} by \citeauthor{Kent1955} \cite{Kent1955}
+    \item[BCubed] \citetitle{Bagga1998} by \citeauthor{Bagga1998} \cite{Bagga1998} 
+\end{description}
+
+This is not an exhaustive list. There have been other approaches such as those published by \citeauthor{Madrid2004} \cite{Madrid2004}, who compare and contrast two different change point detection by calculating the frequency and therefore likelihood of change point detection across several thousand different generated data sets. Additionally, for an example of case studies utilising the above algorithms, work has been published by \citeauthor{Killick2014} in \citetitle{Killick2014}, showing the application of the algorithms against real world data \cite{Killick2014}.
+    
+\end{document}

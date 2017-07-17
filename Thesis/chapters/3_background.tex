@@ -18,7 +18,7 @@ Jackson's method has a computational cost of $O(n^2)$, while Killick's PELT meth
 
 The PELT method works similarly to Segment Neighbourhood \cite{Auger1989} and Binary Segmentation \cite{Jackson2003} \cite{Yao1984} approaches, in that it attempts to fit a model of segmentation of a given data set, minimising the cost of the segmentation to achieve an optimal distribution of segments and therefore change points.
 
-Algorithm \autoref{alg:pelt} describes a pseudocode implementation of the PELT algorithm, as described in \cite{Eckley2011}\newline
+Algorithm \autoref{alg:pelt} describes a pseudocode implementation of the PELT algorithm, as described by \citeauthor{Eckley2011} in \citetitle{Eckley2011} \cite{Eckley2011}\newline
 
 \begin{algorithm}[H]
     \label{alg:pelt}
@@ -34,8 +34,8 @@ Algorithm \autoref{alg:pelt} describes a pseudocode implementation of the PELT a
         Calculate $F(\tau*) = min_{\tau \in R_{\tau*}} \lbrack F(\tau) + C(y_{\tau+1:\tau*}) + \beta \rbrack$\;
         Let $\tau^1 = arg \Big\{ min_{\tau \in R_{\tau*}} \lbrack F(\tau) + C(y_{(\tau+1):\tau*}) + \beta \rbrack \Big\}$\;
         Set $cp(\tau*) = \lbrack cp(\tau^1), \tau^1 \rbrack$\;
-        Set $R_{\tau^* + 1} = \{\tau \in R_{\tau^*} \cup \{\tau^*\} : F(\tau) + C(y_{\tau+1:\tau^*}) + K \leq F(\tau^*)\}$
-    }
+        Set $R_{\tau^* + 1} = \{\tau \in R_{\tau^*} \cup \{\tau^*\} : F(\tau) + C(y_{\tau+1:\tau^*}) + K \leq F(\tau^*)\}$\;
+    }\bigskip
     \KwOut{the change points recorded in $cp(n)$}
 \end{algorithm}
 
@@ -69,7 +69,7 @@ Algorithm \autoref{alg:segneigh} describes a pseudocode implementation of the Se
             Let $\tau_{m,i}$ to be the $v$ that minimises $(q^{m-i-1}_{1,v} + q^1_{v + 1, cp_{m,i-1}})$\;
         }
         
-    }
+    }\bigskip
         
     \KwOut{For $m = 1, \ldots , M$: the total measure of fit, $q^m_{1,n}$ for $m-1$ change points and the location of the change points for that fit, $\tau_{m,1:m}$.}
 \end{algorithm}
@@ -112,7 +112,7 @@ Algorithm \autoref{alg:binseg} describes a pseudocode implementation of the BinS
                 add $\lbrack r + 1, t \rbrack$ to $S$\;
             }
         }
-    }
+    }\bigskip
     \KwOut{the set of change points recorded in $C$}
 \end{algorithm}
 

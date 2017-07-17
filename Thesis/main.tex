@@ -46,10 +46,10 @@
 \supervisor{Evangelos Kanoulas, Universiteit van Amsterdam}
 
 \abstract{
-	Change point detection is a highly complex field that is hugely important for industries ranging from manufacturing and IT infrastructure fault detection, to online reputation management. There exists in this field a number of metrics or scores that are widely used for proving the veracity of new or novel approaches. However, there is little consensus as to which measure(s) are most effective in this field. This thesis carries out research into the field of change point detection, carrying out a comparative study of the behaviours of various scoring metrics using simulated data, the accuracy of change point detection methods using real world data, and makes a recommendation for the approach to be used for change point detection in the production systems of an online reputation management company. Finally, a short discussion on the ideal properties of a scoring metric from change point detection algorithms is carried out.
-	
-	In this study, it is found that many of the established scoring metrics behave inconsistently when applied to change point detection problems, and exhibit properties that bring their usefulness and accuracy into question. It is also found that between certain metrics, there is no correlation or agreement in how algorithms are ranked according to score value.
-	
+	Change point detection is a highly complex field that is hugely important for industries ranging from manufacturing and IT infrastructure fault detection, to online reputation management. There exists in this field a number of metrics that are widely used for proving the veracity of new or novel approaches. However, there is little consensus as to which metric(s) are most effective in this field. This thesis carries out research into the field of change point detection, carrying out a comparative study of the behaviours of various metrics using simulated data. An analysis using real-world data is also carried out, to investigate whether the aforementioned metrics disagree when used to rank change point detection approaches in order of accuracy.
+		
+	In this study, it is found that many of the established metrics behave inconsistently when applied to change point detection problems, and exhibit properties that bring their usefulness and accuracy into question. It is also found that between certain metrics, there is no correlation or agreement in how algorithms are ranked according to accuracy.
+
 	Concluding, the study also shows that existing change point detection methods are perhaps not the most well suited methods for the use-case and requirements of the host organisation.}
 
 \newlength\mylen
@@ -72,7 +72,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Problem Statement \& Motivation}
+\chapter{Introduction}
 
 \subfile{chapters/1_introduction}
 
@@ -80,11 +80,12 @@
 
 \chapter{Related Works}
 
-TODO: coherent related works story
+\subfile{chapters/9_relatedworks}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Background \& Context}
+\label{background}
 
 \subfile{chapters/3_background}
 
