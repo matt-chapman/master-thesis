@@ -12,7 +12,7 @@ This thesis work utilises three different change point detection methods, discus
 
 Pruned Exact Linear Time (henceforth referred to as \emph{PELT}) is a modern change point detection method proposed by \citeauthor{Killick2011a} in \citetitle{Killick2011a}, in 2012 \cite{Killick2011a}.
 
-PELT is an \emph{exact} method of computing change points, based on segmentation of data streams, in the same manner as Segment Neighbourhood and Binary Segmentation. PELT is a modification of the \emph{Optimal Partitioning} method proposed by Brad Jackson et. al in 2003, in \cite{Jackson2003}.
+PELT is an \emph{exact} method of computing change points, based on segmentation of data streams, in the same manner as Segment Neighbourhood and Binary Segmentation. PELT is a modification of the \emph{Optimal Partitioning} method proposed by Brad Jackson et. al in 2003 \cite{Jackson2003}.
 
 Jackson's method has a computational cost of $O(n^2)$, while Killick's PELT method improves on this with a computational complexity of $O(n)$ \cite{Killick2011a}.
 
@@ -45,7 +45,7 @@ Proposed by Auger and Lawrence in 1989 \cite{Auger1989}, Segment Neighbourhood (
 
 Segment Neighbourhoods has a computational complexity of $O(n^2)$, significantly higher than that of PELT or Binary Segmentation. However, this additional cost in complexity is offset by improved performance, as shown by \citeauthor{Braun2000} in \citetitle{Braun2000} \cite{Braun2000}.
 
-Algorithm \autoref{alg:segneigh} describes a pseudocode implementation of the SegNeigh algorithm, as described in \cite{Eckley2011}\newline
+Algorithm \autoref{alg:segneigh} describes a pseudocode implementation of the SegNeigh algorithm, as described by \citeauthor{Eckley2011} in \citetitle{Eckley2011} \cite{Eckley2011}\newline
 
 \begin{algorithm}[H]
 \label{alg:segneigh}
@@ -76,11 +76,11 @@ Algorithm \autoref{alg:segneigh} describes a pseudocode implementation of the Se
 
 \subsection{Binary Segmentation}
 
-Binary Segmentation \cite{Jackson2003} \cite{Yao1984} is a popular method for change point detection, widely utilised in the field. Binary segmentation is a method that recursively applies a single change point detection method. On the first iteration, if a change point is detected, the data is split around that change point (resulting in two data sets) and the change point method is run again on the two resulting data sets. This process is repeated such that many data set segments are created, and runs until no further change points are detected.
+Binary Segmentation \cite{Jackson2003, Yao1984} is a popular method for change point detection, widely utilised in the field. Binary segmentation is a method that recursively applies a single change point detection method. On the first iteration, if a change point is detected, the data is split around that change point (resulting in two data sets) and the change point method is run again on the two resulting data sets. This process is repeated such that many data set segments are created, and runs until no further change points are detected.
 
 Binary Segmentation is an \emph{approximate} change point detection approach, and returns estimated change point locations - unlike PELT and SegNeigh - which return exact change point locations. It has the same computational cost as PELT, $O(n)$.
 
-Algorithm \autoref{alg:binseg} describes a pseudocode implementation of the BinSeg algorithm, as described in \cite{Eckley2011}\newline
+Algorithm \autoref{alg:binseg} describes a pseudocode implementation of the BinSeg algorithm, as described by \citeauthor{Eckley2011} in \citetitle{Eckley2011} \cite{Eckley2011}\newline
 
 \begin{algorithm}[H]
     \label{alg:binseg}
@@ -122,7 +122,7 @@ Change detection is an \emph{unbounded} problem. Left without some system of con
 
 \subsection{Penalty Scores}
 
-Penalty scores operate as a mechanism for optimising an unbounded problem such as the one being addressed here. Haynes et al. define the problem as follows \cite{Haynes2014}: Given time series data points $y_1,\ldots,y_n$, the series will contain $m$ change points such that their locations $\tau_{1:m} = (\tau_1,\ldots,\tau_m)$, where $\{\tau_i \in \mathbb{Z} \mid 1 \leqslant \tau_i \leqslant n-1\}$. $\tau_0$ is assumed to be 0, and $\tau_{m+1}$ is assumed to be $n$. In this way we can state that a given change detection algorithm will split the time series into $m + 1$ segments such that segment $i$ contains the points $y_{(\tau_{i-1}+1):\tau_i} = (y_{\tau_{i-1} + 1},\dots,y_{\tau_i})$. A \emph{cost function} for a segmentation of the data set $y_s$ can be defined as $C = (y_{s+1:t})$. This cost function defines a cost for a given segmentation containing points $y_{s+1:t}$. To illustrate, the cost function $C$, in the context of binary classification, returns a value that increases for an `incorrect' classification and decreases for a `correct' classification.
+Penalty scores operate as a mechanism for optimising an unbounded problem such as the one being addressed here. Publications on the subject (such as \citetitle{Haynes2014} by \citeauthor{Haynes2014} \cite{Haynes2014}) define the problem as follows: Given time series data points $y_1,\ldots,y_n$, the series will contain $m$ change points such that their locations $\tau_{1:m} = (\tau_1,\ldots,\tau_m)$, where $\{\tau_i \in \mathbb{Z} \mid 1 \leqslant \tau_i \leqslant n-1\}$. $\tau_0$ is assumed to be 0, and $\tau_{m+1}$ is assumed to be $n$. In this way we can state that a given change detection algorithm will split the time series into $m + 1$ segments such that segment $i$ contains the points $y_{(\tau_{i-1}+1):\tau_i} = (y_{\tau_{i-1} + 1},\dots,y_{\tau_i})$. A \emph{cost function} for a segmentation of the data set $y_s$ can be defined as $C = (y_{s+1:t})$. This cost function defines a cost for a given segmentation containing points $y_{s+1:t}$. To illustrate, the cost function $C$, in the context of binary classification, returns a value that increases for an `incorrect' classification and decreases for a `correct' classification.
 
 At this point it can be stated that the \emph{constrained minimisation problem} is as follows:
 
