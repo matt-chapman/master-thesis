@@ -82,7 +82,7 @@ A summary of the functional requirements follows:
 It is clear from the behavioural analysis of the measures, that there is not a single measure that best fits all of the functional requirement criteria for the purposes of scoring the algorithms being evaluated here. Taking each requirement in turn, the following is found:
 
 \begin{description}
-    \item[R1] None of the algorithms evaluated rely upon arbitrary threshold values. It is not possible in the context of this study, to choose a metric that evaluates on this criteria.
+    \item[R1] None of the algorithms evaluated rely upon arbitrary threshold values. It is not possible in the context of this study, to choose a metric that evaluates on this criteria. That said, all of the algorithms tested fulfil this requirement regardless.
     \item[R2] False positives were penalised harshly by almost all measures. If the measures are taken in their default forms, false positives are punished heavily when there are few of them, with the effect diminishing as their numbers increase.
     \item[R3] This criteria is fulfilled, but with a caveat. All of the measures tested penalised for late detections, but also penalised for early detections - which intuitively should be considered a good thing in this use case.
     \item[R4] This requirement is fulfilled by all of the major measures being evaluated. Each measure shows an \emph{almost} linear relationship between score and the number of false negatives in a time series.

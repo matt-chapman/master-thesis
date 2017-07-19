@@ -4,47 +4,46 @@
 
 \label{conclusions}
 
-This section constitutes the conclusions gleaned from the experiments that were carried out as a part of this thesis. Here, the research questions set out in \autoref{Problem Statement} are answered, based upon the results of the experiments. For ease of understanding, the research questions are repeated:
-
-\begin{description}
-	\item[SQ1] Are existing change point detection algorithms effective at detecting changes/events in social media data in a timely fashion?
-	\begin{description}
-	\item[SQ1.1] Which algorithm, out of those being analysed, performs the `best' when applied against real world data?
-	\end{description}
-	\item[SQ2] Are measures not specifically defined for the purpose of change detection evaluation effective in this domain?
-	\begin{description}
-	\item[SQ2.1] In what way do established measures fail to behave correctly?
-    \item[SQ2.2] Which evaluation measure provides the best evaluation, given the functional requirements set forth by the host organisation?
-    \end{description}
-	\item[SQ3] If existing measures are deficient in some way, what would an `ideal' measure look like?
-\end{description}
+This section constitutes the conclusions gleaned from the experiments that were carried out as a part of this thesis. Here, the research questions set out in \autoref{Problem Statement} are answered, based upon the results of the experiments.
 
 \section{Conclusions}
 
-The answer to \emph{SQ1} has proven inconclusive. There are situations in which the algorithms performed well, detecting change points close to those that constituted the ground truth - but there were also many situations in which the algorithms did not perform in the manner expected. Late, early and missed detections were common, with algorithms occasionally showing many false positive detections throughout the data set. This poses two more questions: Were the algorithms incorrectly configured in some way? Or perhaps the selection of penalty function was not appropriate for this particular type of data? Taken at face value, the answer to the question is `no' - though taking a closer look at the data provides a more nuanced answer. In order to answer this question fully, further work would certainly need to be carried out.
-
-To answer \emph{SQ1.1}, the rankings calculated after running the algorithms against a curated set of 10 different data sets, and the correlation coefficients calculated thereafter show that there is little agreement between the measures as to which method is the best for this particular application. The variation shown when plotting 1 standard deviation error bars also suggest that further studies would be necessary (with a much larger corpus of test data) to obtain useful data. As discussed in \autoref{results}, the lack of correlation between rankings of algorithms show that it is not possible to state (regardless of how the rankings appear) that the algorithm ranked highest by all of the measures is the `best' for this particular application.
-
-When the algorithms were applied to real world data sets, they behaved inconsistently, to the point where no measure agrees on which approach is `best' for all of the data sets evaluated. When the change point plots are examined by-eye, it is clear that the algorithms underperformed when used in this context. There were cases where the manual ground-truth annotations were correctly detected by the algorithms, but there were also many situations in which the algorithm output did not closely match the ground truth at all. Despite this, the metrics being used still scored the algorithms highly in many cases (assuming a score $> 0.5$ to be a `successful' run).
-
-In answer to \emph{SQ2} and \emph{SQ2.1},  There are multiple ways in which the measures evaluated in this thesis are shown to be inappropriate for use for evaluating change point detection approaches.
+\rqanswer{SQ1: In what way are existing metrics deficient when applied to change point detection problems?}{
+There are multiple ways in which the measures evaluated in this thesis are shown to be inappropriate for use for evaluating change point detection approaches.
 
 The clustering measures evaluated (Rand, Adjusted Rand, BCubed) show that they are often affected by the size of the data set, or by the density of change points in the data set, when scoring change points detected with some error.
 
 Clustering measures especially exhibited inconsistent behaviour when penalising for late (or early) detections. In the experiments carried out, the fact that the score \emph{increases} as the detected change point approaches the end of the time series shows that these measures may be unreliable for providing scores for approaches in which detections are extremely late.
 
-Binary Classification metrics performed well in simulation studies, fulfilling all but two of the criteria tested. However, when applied to real world data and change points detected therein, they proved to be ineffective.
+Binary Classification metrics performed well in simulation studies, fulfilling all but two of the criteria tested. However, when applied to real-world data and change points detected therein, they proved to be ineffective.
+}
 
-Answering the question of comparing the requirements against measure behaviour, it can be said that the answer to \emph{SQ2.2} was also inconclusive. There was no single measure that fulfilled all of the functional requirement criteria for the selection of change point detection method for this domain. Indeed, it can also be stated that there is also not a single algorithm among those evaluated that fulfilled all of the functional requirements set forth by the host organisation. Concluding, the author asserts that the results of these experiments show that change point detection is perhaps not the optimal method for producing `smart' notifications of changes in conversation volume, and a different approach not evaluated in this work may be more suited for this specific use-case.
+\rqanswer{SQ2: Do existing metrics agree on the `best' approach when used to evaluate change point detection algorithms when applied to real-world data?}{
 
-These results do call into question some aspects of the validity of the experiments, which will be discussed in \autoref{threats}.
+\noindent The rankings calculated after running the algorithms against a curated set of 10 different data sets, and the correlation coefficients calculated thereafter show that there is little agreement between the measures as to which method is the best for this particular application. The variation shown when plotting 1 standard deviation error bars also suggest that further studies would be necessary (with a much larger corpus of test data) to obtain useful data. As discussed in \autoref{results}, the lack of correlation between rankings of algorithms show that it is not possible to state (regardless of how the rankings appear) that the algorithm ranked highest by all of the measures is the `best' for this particular application.
+
+When the algorithms were applied to real-world data sets, they behaved inconsistently, to the point where no measure agrees on which approach is `best' for all of the data sets evaluated. When the change point plots are examined by-eye, it is clear that the algorithms underperformed when used in this context. There were cases where the manual ground-truth annotations were \emph{almost} correctly detected by the algorithms, but there were also many situations in which the algorithm output did not closely match the ground truth at all. Despite this, the metrics being used still scored the algorithms highly in many cases (assuming a score $> 0.5$ to be a `successful' run).
+}
+
+\rqanswer{SQ3: Is there a metric more suited than the others, for the purpose of evaluating change point detections, according to the functional requirements set forth by the host company?}{
+
+\noindent When comparing the requirements against measure behaviour, it can be said that the answer to this question was inconclusive. There was no single measure that fulfilled all of the functional requirement criteria for the selection of change point detection method for this domain. Indeed, it can also be stated that there is also not a single algorithm among those evaluated that fulfilled all of the functional requirements set forth by the host organisation. Concluding, the author asserts that the results of these experiments show that change point detection is perhaps not the optimal method for producing `smart' notifications of changes in conversation volume, and a different approach not evaluated in this work may be more suited for this specific use-case.
+
+}
+
+\rqanswer{SQ5: Do metrics show that change point detection is a reasonable and effective approach for the use-case of the host organisation?}{
+
+\noindent The answer to this question has proven inconclusive. There are situations in which the algorithms performed well, detecting change points close to those that constituted the ground truth - but there were also many situations in which the algorithms did not perform in the manner expected. Late, early, and missed detections were common, with algorithms occasionally showing many false positive detections throughout the data set. This poses two more questions: Were the algorithms incorrectly configured in some way? Or perhaps the selection of penalty function was not appropriate for this particular type of data? Taken at face value, the answer to the question is `no' - though taking a closer look at the data provides a more nuanced answer. In order to answer this question fully, further work would certainly need to be carried out.
+}
 
 \section{The Ideal Metric}
 \label{ideal metric}
 
-If the behaviours in \autoref{behaviour} are considered to be the ideal criteria for a measure to fulfil, then it is clear how we would expect an `ideal' measure to be have. This section intends to answer \emph{SQ3}, based on experiences and evidence collected during this project.
+If the behaviours in \autoref{behaviour} are considered to be the ideal criteria for a measure to fulfil, then it is clear how we would expect an `ideal' measure to be have. This section intends to answer \emph{SQ4}, based on experiences and evidence collected during this project.\bigskip
 
-An ideal measure should provide proper credit to correct detections, as well as correctly penalising for false positives and false negatives accordingly. It would be sufficient for scoring if there was a mechanism for defining the `relevance' of a given change, perhaps by incorporating computation of the area under the curve for the signal around the change when devising the ground truth. This would then provide higher relevance scores for large changes, and lower relevance scores for small changes. In this way, an algorithm could be penalised in a lesser fashion for missing a detection of a less relevant change, and penalised more heavily for missing a detection of a very relevant change.
+\rqanswer{SQ4: What would an ideal metric for evaluating change point detection approaches look like?}{
+
+\noindent An ideal measure should provide proper credit to correct detections, as well as correctly penalising for false positives and false negatives accordingly. It would be sufficient for scoring if there was a mechanism for defining the `relevance' of a given change, perhaps by incorporating computation of the area under the curve for the signal around the change when devising the ground truth. This would then provide higher relevance scores for large changes, and lower relevance scores for small changes. In this way, an algorithm could be penalised in a lesser fashion for missing a detection of a less relevant change, and penalised more heavily for missing a detection of a very relevant change.
 
 An ideal measure would be unaffected by the number of data points either side of the change. This could be achieved by taking a `slice' of the signal around the ground truth change point, and computing a metric based on the location of the true change point and the detected change point within that slice. This would have the additional benefit of causing a metric to be unaffected by the data points either side of a detected or ground truth change point.
 
@@ -53,6 +52,9 @@ This would mean, however, that a method would have to be devised to calculate a 
 Ideally, there would be a linear relationship between the score, and the relative distance that a computed change point was discovered from the true change point. This was a property that was definitely not exhibited by the measures being evaluated in this study, and it is the believe of the author that this is one of the most vital properties for an `ideal' measure for change point detection problems.
 
 This is an area that would certainly benefit from further research - the other results of the studies carried out show that there is a need for a change point problem specific measure.
+}
+
+
 
 \section{Threats to Validity}
 \label{threats}
@@ -61,8 +63,22 @@ It is not uncommon for an experiment or set of experiments to have some threats 
 
 \subsection{Internal Validity}
 
+Internal validity is defined as the extent to which bias is avoided and `confounding variables' are controlled to ensure the validity of the results.
+
+The internal validity was well ensured during the experiments carried out in this thesis. Real-world data analysis was carried out by obtaining ground-truth annotations from an independent third-party with domain knowledge of social media data, and variables in the experiments were controlled to ensure the validity of the results. Variations of the experiments were carried out such that data-set length did not confound the tests. For example, when investigating the effect of change point density on metric values, the experiment was carried out twice. Once increasing the change point density by appending data to the data set, and once increasing the change point density by `lifting' change points out of a static data set where all initial values were $0$. Thus, the author does not believe that there are any internal threats to validity in the experiments carried out in this work.
+
 \subsection{External Validity}
 
+External validity is defined as the extent to which the results of an experiment can be generalised or applied to other situations outside of the experimental setup.
+
+In the studies carried out in this thesis, one external threat to validity is low sample size for the real-world data analysis. As 10 curated data sets were utilised for this part of the study, it can be said that there was not a large enough sample to be able to generalise the conclusions to situations outside of the scope of this thesis. This can be resolved in future work by carrying out experiments that make use of much larger and more varied data sets, in order to show that the conclusions of this thesis (with regards to the real-world data analysis and rankings therein) are also applicable outside of this work.
+
 \subsection{Construct Validity}
+
+Construct validity is defined as the extent to which an experiment fully tests the situation which it purports to be measuring.
+
+In the experiments carried out in this thesis, experiments were carried out to evaluate the behaviour of certain metrics used to evaluate change point detection approaches. The conclusions of these experiments are valid, but could be improved by removing certain threats to construct validity.
+
+If the various experiments carried out were plotted in terms of the feature space in which the problem resides, it can be stated that the methods by which behaviours were evaluated could be considered corner cases. That is, cases which demonstrate that the measures were deficient in some situations, but cases that nonetheless may not occur with a large amount of regularity in real life. This can be resolved by carrying out further experimentation with many more generated data sets with known distributions and properties that are closer to real-life examples of data, and evaluating behaviours that are more common within the feature space of change point detection algorithms and their evaluation.
 
 \end{document}

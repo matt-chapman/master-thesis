@@ -6,18 +6,18 @@
 
 The purpose of this thesis is twofold: firstly, to conduct a meta analysis of evaluation measures, and how they perform in the domain of change point detection problems. Being that these measures are metrics designed for other problems that are not necessarily change point detection, it stands to reason that there are perhaps situations where families of metrics will disagree with each-other, or disagree with by-eye evaluation by domain experts. The second purpose is to evaluate the veracity of a number of existing change point detection algorithms when they are applied to data from social media.
 
-This thesis consists of two distinct parts:
+This thesis consists of two distinct pieces of research:
 
 \begin{itemize}
-  \item Meta-analysis of evaluation measures, fulfilling RQ2 and associated sub-questions.
-  \item Application of change detection approaches to real world data and evaluation based on requirements elicitation and evaluation measures.
+  \item Meta-analysis of evaluation measures.
+  \item Application of change detection approaches to real-world data and evaluation based on requirements elicitation and evaluation measures.
 \end{itemize}
 
 \section{Evaluation Pipeline Construction}
 
-This thesis will analyse three different change detection algorithms: \emph{Pruned Exact Linear Time}\cite{Killick2011a}, \emph{Binary Segmentation} \cite{Jackson2003} and \emph{Segment Neighbourhoods}\cite{Auger1989}. These will be referred to as \emph{PELT}, \emph{BinSeg} and \emph{SegNeigh} respectively. The algorithms will be briefly discussed in this thesis, along with the chosen critical values such as \emph{minimum segment length}, \emph{penalty scoring} and \emph{assumed underlying distribution}.
+This thesis will analyse three different change detection algorithms: \emph{Pruned Exact Linear Time} \cite{Killick2011a}, \emph{Binary Segmentation} \cite{Jackson2003} and \emph{Segment Neighbourhoods} \cite{Auger1989}. These will be referred to as \emph{PELT}, \emph{BinSeg} and \emph{SegNeigh} respectively. The algorithms have been briefly discussed in a previous chapter (\autoref{background}), along with the chosen critical values such as \emph{penalty scoring} and \emph{assumed underlying distribution}.
 
-The algorithms will then be applied to a collection of datasets falling into two categories: real-world conversation volume data taken from Twitter, and simulated data generated according to certain constraints which will also be discussed here.
+The algorithms will then be applied to a collection of datasets falling into two categories: real-world conversation volume data taken from online social media as well as print media, TV and radio sources, and simulated data generated according to certain constraints which will also be discussed here.
 
 The results provided by each technique will then be evaluated according to the following measures: Precision, Recall, F1 score, Rand Index, Adjusted Rand Index, Bcubed Precision, Bcubed Recall and Bcubed F-Score. A meta-analysis will take place to evaluate the effectiveness of these methods when compared with each other and by-eye analysis from social media domain experts.
 
@@ -35,7 +35,7 @@ Python is being utilised also due to the availability of relevant software packa
 
 For the calculation of Precision, Recall and F1 Score, the \textsf{R} package \texttt{caret} is being utilised. \texttt{caret} is an acronym for `Classification and Regression Training, and provides a number of tools for data manipulation, model creation and tuning, and performance measurements. Through the use of this package, it is possible to generate a \emph{confusion matrix} based on algorithm output, and generate various performance measures based upon this. \texttt{caret} was written by Max Kuhn, and is provided free of charge under the GPL license \cite{FromJedWing2017}.
 
-For the calculation of the Rand Index and Adjusted Rand Index the \textsf{R} package \texttt{phyclust} is being used. This package was developed by Wei-Chen Chen, for the purposes of providing a phyloclustering implementation. While this approach is not something being examined in this thesis, the package does provide an implementation of the Rand Index and Adjusted Rand Index metrics, which are relevant to this research. This package is also provided free of charge under the GPL license \cite{Chen2011}.
+For the calculation of the Rand Index and Adjusted Rand Index, the \textsf{R} package \texttt{phyclust} is being used. This package was developed by Wei-Chen Chen, for the purposes of providing a phyloclustering implementation. While this approach is not something being examined in this thesis, the package does provide an implementation of the Rand Index and Adjusted Rand Index metrics, which are relevant to this research. This package is also provided free of charge under the GPL license \cite{Chen2011}.
 
 Calculating the BCubed precision, recall and f-score metrics is being carried out in Python, using the \texttt{python-bcubed} project. This is a small utility library for the calculation of BCubed metrics, developed by Hugo Hromic and provided under the MIT license \cite{Hromic2016}. In order to interface with this library via \textsf{R}, the package \texttt{rPython} is being used. This package provides functionality for running Python code and retrieving results in \textsf{R}, and was developed by Carlos J. Gil Bellosta. It is provided under a GPL-2 license \cite{Bellosta2015}.
 
@@ -44,20 +44,25 @@ Additionally, the \texttt{ROCR} package was utilised during the research phase o
 \section{Measures Meta-Analysis}
 \label{meta analysis explainer}
 
-The experiments hereunder were developed to fulfil the requirement to answer research question 2, and it's associated sub-questions:
+The experiments hereunder were developed to fulfil the requirement to answer the main research question, and a sub-question repeated here for readability:
 
-\begin{itemize}
-    \item Are measures not specifically defined for the purpose of change detection evaluation effective in this domain?
-    \begin{itemize}
-        \item In what way do established measures fail to behave correctly?
-        \item Which evaluation measure provides the best evaluation, given the functional requirements set forth by the host organisation?
-    \end{itemize}
-\end{itemize}
+\begin{description}
+    \item[RQ] Are existing metrics in the field of change point detection effective and accurate?
+    \begin{description}
+    \item[SQ1] In what way are existing metrics deficient when applied to change point detection problems?
+\end{description}
+\end{description}
 
-The research questions above are to be answered using a series of experiments carried out using simulated data and algorithms. The experiments intend to test the following criteria:
+The findings of this research will also then be used to answer an additional sub-question:
+
+\begin{description}
+    \item[SQ4] What would an ideal metric for evaluating change point detection approaches look like?
+\end{description}
+
+The research questions are to be answered using a series of experiments carried out using simulated data and algorithms. The experiments are designed to test the following criteria:
 
 \begin{enumerate}
-    \item Dependence on sample size (otherwise referred to here as time series length)
+    \item Dependence on sample size (otherwise referred to as time series length)
     \item Impact of data preceding a known change point and its detection
     \item Impact of data following a known change point and its detection
     \item Ability to provide a temporal penalty for late, early or exact detections
@@ -66,13 +71,13 @@ The research questions above are to be answered using a series of experiments ca
     \item Impact of change point density in an analysed time series
 \end{enumerate}
 
-What follows is a listing of the experiments carried out. Illustrative pseudocode algorithms for each experiment can be found in appendix A of this document.
-
 \subsection{Experiment Listings}
 
-For each experiment description, the sample size (otherwise known as time series length) is denoted by $n$, the true change point(s) in the time series is denoted as $\tau_n$ and any `detected' change points are denoted by $\tau'_{n}$. For each experiment, the changing variable (the iterator in the \textsf{R} source code) is denoted as $i$. For experiments where the computed change point(s) $\tau'_n$ are placed with some error, this error is denoted as $\Delta \tau$. $\Delta \tau$ can always be expected to adhere to $\{ \Delta \tau \in \mathbb{R} \mid \Delta \tau \geq 0 \}$, as values $< 0$ can be considered successful, early detections - and thus do not constitute an error.
+For each experiment description, the sample size (otherwise known as time series length) is denoted by $n$, the true change point(s) in the time series is denoted as $\tau_n$ and any `detected' change points are denoted by $\tau'_{n}$. For each experiment, the changing variable (the iterator in the \textsf{R} source code) is denoted as $i$. For experiments where the computed change point(s) $\tau'_n$ are placed with some error, this error is denoted as $\Delta \tau$. $\Delta \tau$ can always be expected to adhere to $\{ \Delta \tau \in \mathbb{R} \mid \Delta \tau \geq 0 \}$ with the exception of Experiment 4.
 
-\subsubsection{Experiment 1}
+For each experiment, a null hypothesis $H_0$ is defined, along with an alternative hypothesis, $H_n$.
+
+\subsubsection{Experiment 1: Increasing the `head', variable length}
 
 This experiment involves increasing the `head' (sample size prior to a single known change point) of a time series, prepending to and thus lengthening the time series. The time series contains a single known change point, and a detected change point provided by a pseudo-algorithm is placed such that it is placed with a $\Delta \tau$ of 5.
 
@@ -80,12 +85,15 @@ For each prepended point, all of the evaluation metrics are calculated and plott
 
 The experiment runs such that $n = 55$ on commencement, and $n = 500$ upon completion, with each iteration adding a single data point such that $i = 445$ on completion. For each iteration, $\tau = i + 1$ and $\tau' = \tau + 5$.
 
-For this experiment, the null hypothesis $H_0$ is that neither additional points before a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
+\begin{hypothesis}
+    The measures will be affected in some way by additional points before the change point. It is also hypothesised that data set length will have an affect on the metric value.
+\end{hypothesis}
 
-The alternative hypothesis $H_1$ is that the measures will be affected in some way by additional points before the change point. It is also hypothesised that data set length will have an affect on the metric value.
+\begin{nullhypothesis}
+    Neither additional points before a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
+\end{nullhypothesis}
 
-
-\subsubsection{Experiment 2}
+\subsubsection{Experiment 2: Increasing the `tail', variable length}
 
 This experiment involves increasing the `tail' (sample size after a single known change point) of a time series, appending to and thus lengthening the time series. The time series contains a single known change point $\tau$ and a detected change point $\tau'$ provided by a pseudo-algorithm with a $\Delta \tau$ of 5.
 
@@ -93,35 +101,47 @@ For each appended point, all of the evaluation metrics are calculated and plotte
 
 The experiment runs such that $n=55$ on commencement, and $n=550$ upon completion, with each iteration adding a single data point such that $i$ runs from 2 to 500. For each iteration, $\tau = 51$ and $\tau' = 56$.
 
-For this experiment, the null hypothesis $H_0$ is that neither additional points after a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
+\begin{hypothesis}
+    The measures will be affected in some way by additional points after the change point. It is also hypothesised that data set length will have an affect on the metric value.
+\end{hypothesis}
 
-The alternative hypothesis $H_1$ is that the measures will be affected in some way by additional points after the change point. It is also hypothesised that data set length will have an affect on the metric value.
+\begin{nullhypothesis}
+    Neither additional points after a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
+\end{nullhypothesis}
 
-\subsubsection{Experiment 3}
+\subsubsection{Experiment 3: Moving the true \& detected change point}
 
 This experiment involves moving a known change point and a computed change point through a fixed length time series. The time series contains a single known change point $\tau$ and a detected change point $\tau'$ with $\Delta \tau = 5$, provided by a pseudo-algorithm.
 
 For each iteration of the experiment, all of the evaluation metrics are calculated and plotted. The experiment evaluates both criteria 1 and 2.
 
-The experiment runs such that $n$ is constant at $n=501$. For each iteration, $\tau = i$ and $\tau' = i + 5$, for values of $i$ from 5 to 500.
+The experiment runs such that $n$ is constant at $n=505$. For each iteration, $\tau = i$ and $\tau' = i + 5$, for values of $i$ from 5 to 500.
 
-For this experiment, the null hypothesis $H_0$ is that neither additional points before or after a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
+\begin{hypothesis}
+    The measures will be affected in some way by additional points before or after the change point. It is also hypothesised that data set length will have an affect on the metric value.
+\end{hypothesis}
 
-The alternative hypothesis $H_1$ is that the measures will be affected in some way by additional points before or after the change point. It is also hypothesised that data set length will have an affect on the metric value.
+\begin{nullhypothesis}
+    Neither additional points before or after a change point, nor data set length, will have an affect on the scores provided by evaluation metrics.
+\end{nullhypothesis}
 
-\subsubsection{Experiment 4}
+\subsubsection{Experiment 4: Temporal Penalty Calculation}
 
 This experiment involves moving a detected change point $\tau'$ provided by a `pseudo-algorithm' through a time series of fixed length, thus evaluating the ability of a measure to provide a temporal penalty for late, early, or exact detections.
 
 For each iteration of the experiment, all of the evaluation metrics are calculated and plotted. The experiment evaluates criterion 4.
 
-The experiment runs such that $n$ is constant at $n=500$. For each iteration $\tau = 51$ and $\tau' = i$, where $i = 51$ at the commencement (such that $\tau = \tau'$) and $i = 500$ at completion. Thus, values of $\Delta \tau$ range from 50 to 500.
+The experiment runs such that $n$ is constant at $n=500$. For each iteration $\tau = 51$ and $\tau' = i$, where $i = 1$ at the commencement and $i = 500$ at completion, with $\tau'$ passing through $\tau$ such that $\tau = \tau'$. Thus, values of $\Delta \tau$ range from 50 to 500.
 
-For this experiment, the null hypothesis $H_0$ is that all of the calculated metrics will correctly issue a penalty for late detections of a change point, in all instances.
+\begin{hypothesis}
+    One or more measures will incorrectly issue scores for a detected change point occurring various distances from the true change point.
+\end{hypothesis}
 
-The alternative hypothesis $H_1$ is that one or more measures will incorrectly issue scores for a detected change point occurring various distances from the true change point.
+\begin{nullhypothesis}
+    All of the calculated metrics will correctly issue a penalty for late detections of a change point, in all instances.
+\end{nullhypothesis}
 
-\subsubsection{Experiment 5}
+\subsubsection{Experiment 5: Adding `false positive' results}
 
 This experiment involves adding `false positive' change point detections of various values of $\Delta \tau$ to a time series of fixed length with a single known change point $\tau$.
 
@@ -129,11 +149,15 @@ For each iteration of the experiment, all of the evaluation metrics are calculat
 
 The experiment runs such that $n$ is constant at $n=500$. For each iteration $\tau = 51$ and $\tau' = i$, where $i = 51$ at the commencement of the experiment, $i=55$ at the second iteration, and increases in increments of 5 until $i = 500$. This serves to move the detected change point through the time series, starting at the true change point and progressing to the end of the time series, ending at the final point of the time series.
 
-For this experiment, the null hypothesis $H_0$ is that all of the metrics will correctly penalise for false positive detections in a time series.
+\begin{hypothesis}
+    The measures will not correctly issue penalties for false positive detections.
+\end{hypothesis}
 
-The alternative hypothesis $H_1$ is that the measures will not correctly issue penalties for false positive detections.
+\begin{nullhypothesis}
+    All of the metrics will correctly penalise for false positive detections in a time series.
+\end{nullhypothesis}
 
-\subsubsection{Experiment 6}
+\subsubsection{Experiment 6: Removing `false negative' results}
 
 Removing `false negative' results (by way of explanation, adding correct detections) to a fixed length time series, thus increasing the number of correctly detected change points on each iteration.
 
@@ -141,72 +165,105 @@ The experiment begins with a time series of $n=900$ with $\tau$ being situated a
 
 This experiment evaluates criterion 6, by recalculating the scoring metrics upon each iteration.
 
-For this experiment, the null hypothesis $H_0$ is that removing false negative results will result in a linear increase in score from each metric.
+\begin{hypothesis}
+    The measures will not appear to correctly increase in value as false negatives are removed from the data set - showing instead inconsistent behaviour.
+\end{hypothesis}
 
-The alternative hypothesis $H_1$ is that the measures will not appear to correctly increase in value as false negatives are removed from the data set - showing instead inconsistent behaviour.
+\begin{nullhypothesis}
+    Removing false negative results will result in a linear increase in score from each metric.
+\end{nullhypothesis}
 
-\subsubsection{Experiment 7}
+\subsubsection{Experiment 7: Adding both true and calculated change points, variable length}
 
 Adding both true change points and detected change points from a `pseudo algorithm' that provides detections every 25 points to a time series, by appending to it, and thus increasing it's length. The experiment runs from $n=50$ until $n=1000$ in increments of 50. Each $\tau$ and $\tau'$ is placed upon a new iteration such that each $\tau'_n = \tau_n + 2$, giving a $\Delta \tau$ value of 2. This experiment tests both criteria 1 and 7.
 
-For this experiment, the null hypothesis $H_0$ is that metrics will be unaffected by change point density in a time series, nor will they be affected for changes in time series length.
+\begin{hypothesis}
+    The measures will be affected in some way by change point density and data set length, showing an increase or decrease in score value as density and length increases.
+\end{hypothesis}
 
-The alternative hypothesis $H_1$ is that the measures will be affected in some way by change point density and data set length, showing an increase or decrease in score value as density and length increases.
+\begin{nullhypothesis}
+    Metrics will be unaffected by change point density in a time series, nor will they be affected for changes in time series length.
+\end{nullhypothesis}
 
-\subsubsection{Experiment 8}
+\subsubsection{Experiment 8: Adding both true and calculated change points, fixed length}
 
 Adding both true change points and detected change points from a `pseudo algorithm', to a time series of fixed length. The experiment runs with a static data set size of $n=1050$, and adds two $\tau$ and $\tau'$ on each iteration, effectively `lifting' a spike out of a static data set where all values are 0 at the start of the experiment. Each $\tau'$ is placed such that $\tau'_n = \tau_n + 2$ (a $\Delta \tau$ of 2, simulating a slightly late detection. This ensures that the measures do not report perfect detections throughout the experiment, thus making it impossible to spot how change point density in a fixed length data set affects the calculation of metrics.
 
 This experiment fulfils criteria 7.
 
-For this experiment, the null hypothesis $H_0$ is that metrics will be unaffected by change point density, maintaining a constant value.
+\begin{hypothesis}
+    The measures will be affected in some way by changes in change point density. The hypothesis is that the value of the measures will increase or decrease as change point density increases.
+\end{hypothesis}
 
-The alternative hypothesis $H_1$ is that the measures will be affected in some way by changes in change point density. The hypothesis is that the value of the measures will increase or decrease as change point density increases.
+\begin{nullhypothesis}
+    Metrics will be unaffected by change point density, maintaining a constant value.
+\end{nullhypothesis}
 
 \section{Comparison of Measures Based Upon Functional Requirements}
 
 As part of the research being carried out, a set of functional requirements are elicited from the host organisation. Based on these functional requirements the measures are evaluated and compared in such a manner that we can choose the `best' measure for the use case of the host organisation. The previous research section (\autoref{meta analysis explainer}) provides the results necessary to compare the behaviour of certain metrics in certain situations, against the priorities of the host organisation.
 
-For example, if the host organisation expresses that they require an approach with an absolute minimum of false positives, it is important to judge the application of these algorithms against real world data, utilising measures that correctly penalise for false positive detections in a data stream.
+For example, if the host organisation expresses that they require an approach with an absolute minimum of false positives, it is important to judge the application of these algorithms against real-world data, utilising measures that correctly penalise for false positive detections in a data stream.
+
+This research is to answer the following research question:
+
+\begin{description}
+    \item[SQ3] Is there a metric more suited than the others, for the purpose of evaluating change point detections according to functional requirements set forth by the host company?
+\end{description}
+
 
 A summary of the functional requirements gained as a part of this research can be found in \autoref{results}
 
 
-\section{Application of Algorithms to Real World Data}
+\section{Application of Algorithms to Real-World Data}
 \label{real world explainer}
 
 \subsection{Data Preparation}
 
-The experiment is being carried out using conversation volume data taken from Buzzcapture's Brand Monitor application. Brand Monitor harvests tweets via the Twitter API and makes them searchable through a bespoke interface as well as providing a number of useful metrics for reputation management. In order to gain data for this experiment, Social Media Analysts from Buzzcapture were requested to provide query strings for the Brand Monitor application, showing a situation where they feel a client should have been informed of a distinct change in conversation volume. The analysts were then asked to manually annotate the data with the points at which they believe a change point detection algorithm should detect a change. In this way, bias is avoided when establishing the ground truth for the data - the author was not involved in this annotation process other than providing instructions. The result of this exercise is then a set of time series' showing the twitter conversation volume over time for a given brand. This is accompanied by a separate data set containing indices at which changes \emph{should} be detected - thus serving as the ground truth for this part of the experiment.
+The experiment is being carried out using conversation volume data taken from Buzzcapture's Brandmonitor application. In this context, conversation volume is defined as the number of postings pertaining to a particular topic or brand, over a given time period.
+
+Brandmonitor harvests postings from various social media APIs (in addition to connections with print, TV and radio media) and makes them searchable through a bespoke interface as well as providing a number of useful metrics for reputation management.
+
+In order to gain data for this experiment, Social Media Analysts from Buzzcapture were requested to provide query strings for the Brandmonitor application, showing a situation where they feel a client should have been informed of a distinct change in conversation volume. The data was then manually annotated by Buzzcapture's Head of Research, with the points at which they believe a notification should be sent to a client due to a change in conversation volume. In this way, bias is avoided when establishing the ground truth for the data - the author of this work was not involved in this annotation process other than providing instructions for carrying out the annotation. The result of this exercise is then a set of time series' showing the conversation volume over time for a given brand. This is accompanied by a separate data set containing indices at which changes \emph{should} be detected - thus serving as the ground truth for this part of the experiment.
 
 Once the query strings provided were executed, the corpus of test data included the following data sets:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-Dirk & Bol.com & Connexxion & Dakota Access Pipeline & Jumbo \\ \hline
-Kamer van Koophandel & Rabobank & Tele2 & UWV & Ziggo\\ \hline
-\end{tabular}
-\end{table}
+\begin{tasks}[label=$\bullet$](3)
+\task Dirk
+\task Bol.com
+\task Connexxion
+\task Dakota Access Pipeline
+\task Jumbo
+\task Kamer van Koophandel
+\task Rabobank
+\task Tele2
+\task UWV
+\task Ziggo 
+\end{tasks}
 
-All data sets were trimmed such that the sample size equals 60 for every set. The sets were exported from the BrandMonitor application in CSV format, with daily conversation volume totals.
+All data sets were trimmed such that the sample size equals 60 days for every set. The sets were exported from the BrandMonitor application in CSV format, with daily conversation volume totals. These CSV files, as mentioned in the introduction, are made available online.
 
 \subsection{Execution}
 
-To perform the experiment, an \textsf{R} script is executed that reads the CSV file containing the data points being analysed, and reads them into a data frame object. At this point, change point analysis is conducted using the following algorithms and test statistics:
+To perform the experiment, an \textsf{R} script is executed that reads the CSV file containing the data points being analysed, and reads them into a data frame object. At this point, change point analysis is conducted using the following test statistics and algorithms:
 
-\begin{itemize}
-    \item Mean, using PELT
-    \item Mean, using SegNeigh
-    \item Mean, using BinSeg
-    \item Variance, using PELT
-    \item Variance, using SegNeigh
-    \item Variance, using BinSeg
-    \item Mean \& Variance, using PELT
-    \item Mean \& Variance, using SegNeigh
-    \item Mean \& Variance using BinSeg
-\end{itemize}
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Test Statistic} & \textbf{Algorithm} \\ \midrule
+Mean & PELT \\
+Mean & SegNeigh \\
+Mean & BinSeg \\
+Variance & PELT \\
+Variance & SegNeigh \\
+Variance & BinSeg \\
+Mean \& Variance & PELT \\
+Mean \& Variance & SegNeigh \\
+Mean \& Variance & BinSeg \\ \bottomrule
+\end{tabular}
+\caption{Test statistic \& algorithm combinations used for real-world data analysis}
+\end{table}
 
 Once all of the analysis methods have been executed successfully, the change points are extracted and used to compute the various scoring metrics, when the change points are compared against the established ground truth detections.
 
@@ -215,5 +272,12 @@ There are some assumptions made when handling this data. Firstly, for the binary
 Secondly, as discussed before, the algorithms being evaluated require some assumption to be made as to the probabilistic distribution of the data being analysed. Diagnostic histogram plots created prior to experimentation showed that the various data sets varied considerably in terms of the probability distribution of data points. It is possible for algorithms configured to use a mean test to be configured to use a CUSUM test statistic that makes no assumption about the data distribution being analysed. Unfortunately, at the time of the experiments, the CUSUM test statistic was not supported for variance or mean/variance tests. The variance and mean/variance tests allow for the selection of other distributions such as poisson and gamma. As such, all algorithm runs were configured to assume a \emph{normal} probability distribution. While this assumption may not hold for all of the data sets, it is necessary to take this step to ensure a like for like comparison as much as possible.
 
 After all of the metrics are calculated and tabulated, it is possible to see which algorithm performed the `best', and also carry out a comparison analysis to see which algorithms provided the most consistent results against all data sets.
+
+This experiment is designed to answer the following research questions:
+
+\begin{description}
+    \item[SQ2] Do existing metrics agree on the `best' approach when used to evaluate change point detection algorithms applied to real-world data?
+    \item[SQ5] Do metrics show that change point detection is a reasonable and effective approach for the use-case of the host organisation?
+\end{description}
 
 \end{document}
