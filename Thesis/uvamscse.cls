@@ -59,25 +59,25 @@
 \renewcommand{\abstract}[2][Abstract]{\renewcommand{\uvaabstract}{\chapter*{#1}\addcontentsline{toc}{chapter}{#1}%
 \par#2\newpage}}
 
-%% Listing environment
-\newcommand{\listofsourcecodename}{List of Listings}
-\newlistof{sourcecode}{lol}{\listofsourcecodename}
-\floatstyle{boxed}
-\newfloat{sourcecode}{thp}{lol}[chapter]
-\floatname{sourcecode}{Listing}
-\renewcommand{\theHsourcecode}{src:\arabic{sourcecode}}
-\newcommand{\sourcecodeautorefname}{Listing}
-\renewcommand{\thesourcecode}{\thechapter.\arabic{sourcecode}}
-%% end of Listing environment
-
-%% Listing environment
-\newenvironment{snippet}{\vspace{2pt}\noindent\begin{boxedminipage}{\textwidth}\footnotesize\ttfamily}{\end{boxedminipage}\vspace{2pt}}
-
-\newenvironment{graybox}{%
-   \begin{lrbox}{\@tempboxa}\begin{minipage}{0.92\columnwidth}\footnotesize}{\end{minipage}\end{lrbox}%
-   \colorbox[gray]{0.92}{\usebox{\@tempboxa}}
-}
-%% end of Listing environment
+%%% Listing environment
+%\newcommand{\listofsourcecodename}{List of Listings}
+%\newlistof{sourcecode}{lol}{\listofsourcecodename}
+%\floatstyle{boxed}
+%\newfloat{sourcecode}{thp}{lol}[chapter]
+%\floatname{sourcecode}{Listing}
+%\renewcommand{\theHsourcecode}{src:\arabic{sourcecode}}
+%\newcommand{\sourcecodeautorefname}{Listing}
+%\renewcommand{\thesourcecode}{\thechapter.\arabic{sourcecode}}
+%%% end of Listing environment
+%
+%%% Listing environment
+%\newenvironment{snippet}{\vspace{2pt}\noindent\begin{boxedminipage}{\textwidth}\footnotesize\ttfamily}{\end{boxedminipage}\vspace{2pt}}
+%
+%\newenvironment{graybox}{%
+%   \begin{lrbox}{\@tempboxa}\begin{minipage}{0.92\columnwidth}\footnotesize}{\end{minipage}\end{lrbox}%
+%   \colorbox[gray]{0.92}{\usebox{\@tempboxa}}
+%}
+%%% end of Listing environment
 
 % todo notes, inc. some custom colours
 \usepackage{xargs}                      % Use more than one optional parameter in a new commands

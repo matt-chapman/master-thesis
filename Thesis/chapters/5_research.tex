@@ -102,8 +102,6 @@ All of the clustering measure values decrease as the computed change point moves
 
 The Adjusted Rand Index once again exhibits behaviour unique to itself, dropping below $0$ at approximately $t=278$. This behaviour is expected from the Adjusted Rand Index, being that the adjusted nature of the metric (allowing for cluster classification occurring by chance) results in a metric capable of returning a value $<0$.
 
-\pagebreak
-
 For readability the hypotheses of this experiment are repeated here:
 
 \begin{hypothesis*}
@@ -228,8 +226,6 @@ As described in \autoref{real world explainer}, this experiment executed change 
 
 What follows is the results of that study. For each data set, the scores provided by the evaluation measures are tabulated and provided in \autoref{fullscores}. The highest score(s) for each measure are highlighted for easy comparison and readability. Further discussion of the results and the extraction of conclusions will can be found in \autoref{results} and \autoref{conclusions}.
 
-\pagebreak
-
 The final plots, including detected change points by each algorithm can also be found in \autoref{changeplots}.
 
 Analysis of the raw data used for \autoref{fig:PrettyPlot} shows that while there is a consensus on the best algorithm, some metrics provide higher scores for algorithms that perform objectively worse than others, when compared through by-eye analysis of the change point plots. Binary classification scores are universally low for all data sets.
@@ -249,13 +245,13 @@ Taking the mean metric score for each algorithm across all of the experiments, w
 \begin{tabular}{@{}rcccc@{}}
 \toprule
 \textbf{Rank} & \textbf{F1 Score} & \textbf{Rand Index} & \textbf{Adjusted Rand Index} & \textbf{BCubed F-Score} \\ \midrule
-1 & Mean Segneigh & Mean SegNeigh & Mean SegNeigh & Mean SegNeigh \\
+1 & Mean SegNeigh & Mean SegNeigh & Mean SegNeigh & Mean SegNeigh \\
 2 & Var BinSeg & Mean BinSeg & Mean BinSeg & Var PELT \\
 3 & Var PELT & Var PELT & Var PELT & Var SegNeigh \\
 4 & Var SegNeigh & Var SegNeigh & Var SegNeigh & Var BinSeg \\
 5 & Mean BinSeg & Var BinSeg & Var BinSeg & Mean BinSeg \\
 6 & MeanVar SegNeigh & MeanVar BinSeg & MeanVar BinSeg & MeanVar BinSeg \\
-7 & Meanvar PELT & MeanVar SegNeigh & MeanVar SegNeigh & MeanVar SegNeigh \\
+7 & MeanVar PELT & MeanVar SegNeigh & MeanVar SegNeigh & MeanVar SegNeigh \\
 8 & MeanVar BinSeg & MeanVar PELT & MeanVar PELT & MeanVar PELT \\
 9 & Mean PELT & Mean PELT & Mean PELT & Mean PELT \\ \bottomrule
 \end{tabular}
@@ -271,10 +267,10 @@ Here it is clear that while there appears to be a consensus on the `best' algori
 \begin{tabular}{@{}rcccc@{}}
 \toprule
 \multicolumn{1}{l}{} & \textbf{F1 Ranks} & \textbf{\begin{tabular}[c]{@{}c@{}}Rand Index\\ Ranks\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted Rand\\ Index Ranks\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed F-Score\\ Ranks\end{tabular}} \\ \midrule
-\textbf{F1 Ranks} &  & 0.278 & 0.278 & 0.778 \\
-\textbf{Rand Index Ranks} & 0.278 &  & 1 & 0.278 \\
-\textbf{Adjusted Rand Index Ranks} & 0.278 & 1 &  & 0.278 \\
-\textbf{BCubed F-Score Ranks} & 0.778 & 0.278 & 0.278 &  \\ \bottomrule
+\textbf{F1 Ranks} & --- & 0.278 & 0.278 & 0.778 \\
+\textbf{Rand Index Ranks} & 0.278 & --- & 1 & 0.278 \\
+\textbf{Adjusted Rand Index Ranks} & 0.278 & 1 & --- & 0.278 \\
+\textbf{BCubed F-Score Ranks} & 0.778 & 0.278 & 0.278 & --- \\ \bottomrule
 \end{tabular}%
 }
 \caption{Calculated Kendall's Tau values between pairs of rankings}
@@ -289,10 +285,10 @@ With these values in \autoref{tab:tau}, for each pair we can test the null hypot
 \begin{tabular}{@{}rcccc@{}}
 \toprule
 \multicolumn{1}{l}{} & \textbf{F1 Ranks} & \textbf{\begin{tabular}[c]{@{}c@{}}Rand Index\\ Ranks\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}Adjusted Rand\\ Index Ranks\end{tabular}} & \textbf{\begin{tabular}[c]{@{}c@{}}BCubed F-Score\\ Ranks\end{tabular}} \\ \midrule
-\textbf{F1 Ranks} &  & 0.3585 & 0.3585 & 0.002425 \\
-\textbf{Rand Index Ranks} & 0.3585 &  & $5.51\times 10^{-6}$ & 0.3585 \\
-\textbf{Adjusted Rand Index Ranks} & 0.3585 & $5.51\times 10^{-6}$ &  & 0.3585 \\
-\textbf{BCubed F-Score Ranks} & 0.002425 & 0.3585 & 0.3585 &  \\ \bottomrule
+\textbf{F1 Ranks} & --- & 0.3585 & 0.3585 & 0.002425 \\
+\textbf{Rand Index Ranks} & 0.3585 & --- & $5.51\times 10^{-6}$ & 0.3585 \\
+\textbf{Adjusted Rand Index Ranks} & 0.3585 & $5.51\times 10^{-6}$ & --- & 0.3585 \\
+\textbf{BCubed F-Score Ranks} & 0.002425 & 0.3585 & 0.3585 & --- \\ \bottomrule
 \end{tabular}%
 }
 \caption{Calculated $p$ values for Kendall's Tau tests}

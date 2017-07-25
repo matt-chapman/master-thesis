@@ -95,27 +95,27 @@ Algorithm \autoref{alg:binseg} describes a pseudocode implementation of the BinS
     A test statistic $\Lambda(.)$ dependent on the data\newline
     An estimator of change point position $\hat{\tau}(.)$\newline
     A rejection threshold $C$.\newline}
-    \Initialise{Let $C=\emptyset$, and $S = \{ \lbrack 1,n \rbrack \}$\newline}
-    \While{$S \neq \emptyset$}{
-        Choose an element of $S$, denote element as $\lbrack s,t \rbrack$\;
+    \Initialise{Let $\mathcal{C} =\emptyset$, and $\mathcal{S} = \{ \lbrack 1,n \rbrack \}$\newline}
+    \While{$\mathcal{S} \neq \emptyset$}{
+        Choose an element of $\mathcal{S}$, denote element as $\lbrack s,t \rbrack$\;
         \If{$\Lambda(y_{s:t}) < C$}{
             remove $\lbrack s,t \rbrack$ from $S$\;
         }
         \If{$\Lambda(y_{s:t}) \geq C$}{
         
-            remove $\lbrack s, t \rbrack$ from $S$\;
-            calculate $r = \hat{\tau}(y_{s:t}) + s - 1$, and add $r$ to $C$\;
+            remove $\lbrack s, t \rbrack$ from $\mathcal{S}$\;
+            calculate $r = \hat{\tau}(y_{s:t}) + s - 1$, and add $r$ to $\mathcal{C}$\;
             
             \If{$r \neq s$}{
-                add $\lbrack s, r \rbrack$ to $S$\;
+                add $\lbrack s, r \rbrack$ to $\mathcal{S}$\;
             }
             
             \If{$r \neq t - 1$}{
-                add $\lbrack r + 1, t \rbrack$ to $S$\;
+                add $\lbrack r + 1, t \rbrack$ to $\mathcal{S}$\;
             }
         }
     }\bigskip
-    \KwOut{the set of change points recorded in $C$}
+    \KwOut{the set of change points recorded in $\mathcal{C}$}
 \end{algorithm}
 
 \section{Algorithm Configuration}

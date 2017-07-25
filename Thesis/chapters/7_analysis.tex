@@ -2,11 +2,10 @@
 
 \begin{document}
 
+\section{Answers to Research Questions}
 \label{conclusions}
 
-This section constitutes the conclusions gleaned from the experiments that were carried out as a part of this thesis. Here, the research questions set out in \autoref{Problem Statement} are answered, based upon the results of the experiments.
-
-\section{Conclusions}
+Here, the research questions set out in \autoref{Problem Statement} are answered, based upon the results of the experiments.\bigskip
 
 \rqanswer{SQ1: In what way are existing metrics deficient when applied to change point detection problems?}{
 There are multiple ways in which the measures evaluated in this thesis are shown to be inappropriate for use for evaluating change point detection approaches.
@@ -31,19 +30,11 @@ When the algorithms were applied to real-world data sets, they behaved inconsist
 
 }
 
-\rqanswer{SQ5: Do metrics show that change point detection is a reasonable and effective approach for the use-case of the host organisation?}{
-
-\noindent The answer to this question has proven inconclusive. There are situations in which the algorithms performed well, detecting change points close to those that constituted the ground truth - but there were also many situations in which the algorithms did not perform in the manner expected. Late, early, and missed detections were common, with algorithms occasionally showing many false positive detections throughout the data set. This poses two more questions: Were the algorithms incorrectly configured in some way? Or perhaps the selection of penalty function was not appropriate for this particular type of data? Taken at face value, the answer to the question is `no' - though taking a closer look at the data provides a more nuanced answer. In order to answer this question fully, further work would certainly need to be carried out.
-}
-
-\section{The Ideal Metric}
-\label{ideal metric}
-
-If the behaviours in \autoref{behaviour} are considered to be the ideal criteria for a measure to fulfil, then it is clear how we would expect an `ideal' measure to be have. This section intends to answer \emph{SQ4}, based on experiences and evidence collected during this project.\bigskip
-
 \rqanswer{SQ4: What would an ideal metric for evaluating change point detection approaches look like?}{
 
-\noindent An ideal measure should provide proper credit to correct detections, as well as correctly penalising for false positives and false negatives accordingly. It would be sufficient for scoring if there was a mechanism for defining the `relevance' of a given change, perhaps by incorporating computation of the area under the curve for the signal around the change when devising the ground truth. This would then provide higher relevance scores for large changes, and lower relevance scores for small changes. In this way, an algorithm could be penalised in a lesser fashion for missing a detection of a less relevant change, and penalised more heavily for missing a detection of a very relevant change.
+\noindent If the behaviours in \autoref{behaviour} are considered to be the ideal criteria for a measure to fulfil, then it is clear how we would expect an `ideal' measure to be have. Based on experiences and evidence collected during this project, the following holds true.
+
+An ideal measure should provide proper credit to correct detections, as well as correctly penalising for false positives and false negatives accordingly. It would be sufficient for scoring if there was a mechanism for defining the `relevance' of a given change, perhaps by incorporating computation of the area under the curve for the signal around the change when devising the ground truth. This would then provide higher relevance scores for large changes, and lower relevance scores for small changes. In this way, an algorithm could be penalised in a lesser fashion for missing a detection of a less relevant change, and penalised more heavily for missing a detection of a very relevant change.
 
 An ideal measure would be unaffected by the number of data points either side of the change. This could be achieved by taking a `slice' of the signal around the ground truth change point, and computing a metric based on the location of the true change point and the detected change point within that slice. This would have the additional benefit of causing a metric to be unaffected by the data points either side of a detected or ground truth change point.
 
@@ -54,7 +45,10 @@ Ideally, there would be a linear relationship between the score, and the relativ
 This is an area that would certainly benefit from further research - the other results of the studies carried out show that there is a need for a change point problem specific measure.
 }
 
+\rqanswer{SQ5: Do metrics show that change point detection is a reasonable and effective approach for the use-case of the host organisation?}{
 
+\noindent The answer to this question has proven inconclusive. There are situations in which the algorithms performed well, detecting change points close to those that constituted the ground truth - but there were also many situations in which the algorithms did not perform in the manner expected. Late, early, and missed detections were common, with algorithms occasionally showing many false positive detections throughout the data set. This poses two more questions: Were the algorithms incorrectly configured in some way? Or perhaps the selection of penalty function was not appropriate for this particular type of data? Taken at face value, the answer to the question is `no' - though taking a closer look at the data provides a more nuanced answer. In order to answer this question fully, further work would certainly need to be carried out.
+}
 
 \section{Threats to Validity}
 \label{threats}

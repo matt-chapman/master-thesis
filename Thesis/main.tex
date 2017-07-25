@@ -16,6 +16,8 @@
 \usepackage{subfiles}
 \usepackage{fancyhdr}
 \usepackage{tasks}
+\usepackage[all]{nowidow}
+
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\leftmark}
@@ -52,7 +54,6 @@
 
 \title{A Meta-Analysis of Metrics for Change Point Detection Algorithms}
 \coverpic[250pt]{figures/Buzzcapture_thunder.png}
-\subtitle{DRAFT v2}
 \date{Spring 2017}
 
 \author{Matt Chapman}
@@ -65,7 +66,7 @@
 		
 	In this study, it is found that many of the established metrics behave inconsistently when applied to change point detection problems, and exhibit properties that bring their usefulness and accuracy into question. It is also found that between certain metrics, there is no correlation or agreement in how algorithms are ranked according to accuracy.
 
-	Concluding, the study also shows that existing change point detection methods are perhaps not the most well suited methods for the use-case and requirements of the host organisation; that is, providing timely notifications of conversation volume increases to clients.}
+	Concluding, the study also shows that existing change point detection algorithms are perhaps not the most well suited methods for the use-case and requirements of the host organisation; that is, providing timely notifications of conversation volume increases to clients.}
 
 \newlength\mylen
 \newcommand\myinput[1]{%
@@ -93,13 +94,13 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Related Works}
+\chapter{Related Work}
 
 \subfile{chapters/9_relatedworks}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Background \& Context}
+\chapter{Background}
 \label{background}
 
 \subfile{chapters/3_background}
@@ -126,9 +127,16 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Analysis \& Conclusions}
+\chapter{Results Discussion}
 
 \subfile{chapters/7_analysis}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Conclusions}
+\label{conclusions2}
+
+\subfile{chapters/10_conclusions}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

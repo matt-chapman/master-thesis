@@ -1,0 +1,20 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+Change point detection algorithms are a widely used type of algorithm that have wide uses in various industries outside of statistics and computer science. In this thesis, several methods for evaluating these algorithms were extracted from existing work on the subject. Simulation studies were carried out to investigate the existence of situations in which these measures are flawed, when applied to change point detection measures. This question is relevant, as there is not a `made for measure' metric for change point detection problems. Instead, measures for other types of problems (binary classification, clustering) are adapted and used for this purpose.
+
+In these studies, it has been shown that several metrics that have been used to evaluate change point detection methods (for example, those used by \citeauthor{Buntain2014} \cite{Buntain2014} and \citeauthor{Matteson2012} \cite{Matteson2012}) behave inconsistently in certain cases.
+
+It was found that properties of the data being evaluated by a change point detection algorithm can have a marked effect on the ability of a metric to correctly evaluate. For example, it has been shown in the simulation studies that the length of the data-set, as well as the data preceding or following a known change point can disrupt the ability to gain insights into the accuracy of a method using the analysed metrics. The ability of multiple metrics to penalise a change point detection algorithm on the basis of late detections (or reward on the basis of early detections), has also been shown to be flawed.
+
+While future work would be required to be able to state that the metrics analysed are \emph{completely} unsuitable for use in this domain, the work carried out in this thesis does provide a sound basis for this further investigation to take place.
+
+Experiments with real-world data, (carried out in a similar fashion to case-studies for the \texttt{changepoint} package \cite{Killick2014} and the those executed by \citeauthor{Buntain2014} \cite{Buntain2014}), were executed to further investigate the measures analysed in the simulation studies, and to ascertain whether or not these measures will disagree when ranking the performance of several change point detection approaches. These experiments also yield interesting results. To run these experiments, multiple algorithms were executed against curated data-sets, and their output compared to a known set of `ground truth' change points.
+
+
+All of the metrics appear to agree on which method performed with the most accuracy, but calculating a correlation co-efficient (in this case Kendall's Tau \cite{KENDALL1938}) shows that there is no correlation between both Rand Indices and F1 Score, and also between both Rand Indices and the BCubed F-Score. Through these calculations, it is shown that it cannot be assumed that there will be agreement between certain metrics when ranking change point detection algorithms according to accuracy. Taking into consideration the organisation's functional requirements, none of the metrics evaluated fulfilled all of them, and thus one cannot be chosen to mathematically prove that one algorithm outperforms the others in terms of accuracy.
+
+Finally, it has also been shown that change point detection algorithms are not the best approach to use for the use-case of the host organisation. There were situations in the real-world data studies that showed that the algorithms were generally ineffective at detecting changes in `postings' volume for online and offline media. The algorithms evaluated often failed to detect changes in a timely manner when the change point plots in \autoref{changeplots} are examined by-eye. Further work would be required to ensure that this low performance was not an artefact of algorithm mis-configuration.
+
+\end{document}

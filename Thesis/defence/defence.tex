@@ -1,0 +1,77 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+
+\usetheme{Madrid}
+\usecolortheme{beaver}
+
+\title[Metrics Meta-Analysis]{A Meta-Analysis of Metrics for Change Point Detection Algorithms}
+\author{Matt Chapman}
+\institute[UVA]{Universiteit van Amsterdam\\%
+    Master Software Engineering%
+}
+\date[August 2017]{Masters Thesis Defence, August 2017}
+
+\logo{%
+    \includegraphics[height=0.75cm, keepaspectratio]{../figures/Buzzcapture_thunder}~%
+    \includegraphics[width=0.75cm, height=0.75cm, keepaspectratio]{../uva}%
+}
+
+\AtBeginSection[]
+{
+    \begin{frame}
+    \frametitle{Contents}
+    \tableofcontents[currentsection]
+    \end{frame}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+    
+\frame{\titlepage}
+
+\frame{
+    \frametitle{Contents}
+    \tableofcontents
+}
+
+\section{Introduction}
+
+\begin{frame}
+    \frametitle{Abstract, Abridged}
+    \begin{itemize}
+        \item Change point detection algorithms are useful!
+        \begin{itemize}
+            \item Manufacturing process control
+            \item IT infrastructure fault \& intrusion detection
+            \item etc...
+        \end{itemize}
+        \item Lots of approaches exist, using various test statistics, \alert{but}: \pause
+        \item Which one is `best' for a situation? How is this measured? Are the measures reliable?
+        \item This thesis shows that established metrics behave \alert{inconsistently} in many situations
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Research Questions}
+    
+    \begin{enumerate}
+        \item Are existing metrics in the field of change point detection effective and accurate?
+        \begin{enumerate}
+                \item In what way are existing metrics deficient when applied to change point detection problems?
+    \item Do existing metrics agree on the `best' approach when used to evaluate change point detection algorithms applied to real-world data?
+    \item Is there a metric more suited than the others, for the purpose of evaluating change point detections according to functional requirements set forth by the host company?
+    \item What would an ideal metric for evaluating change point detection approaches look like?
+    \item Do metrics show that change point detection is a reasonable and effective approach for the use-case of the host organisation?
+        \end{enumerate}
+    \end{enumerate}    
+\end{frame}
+
+
+\section{Experiment Setup}
+    
+\begin{frame}
+
+\end{frame}
+    
+\end{document}
