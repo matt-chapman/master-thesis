@@ -14,7 +14,7 @@ The clustering measures evaluated (Rand, Adjusted Rand, BCubed) show that they a
 
 Clustering measures especially exhibited inconsistent behaviour when penalising for late (or early) detections. In the experiments carried out, the fact that the score \emph{increases} as the detected change point approaches the end of the time series shows that these measures may be unreliable for providing scores for approaches in which detections are extremely late.
 
-Binary Classification metrics performed well in simulation studies, fulfilling all but two of the criteria tested. However, when applied to real-world data and change points detected therein, they proved to be ineffective.
+Binary Classification metrics performed well in simulation studies, fulfilling all but two of the criteria tested. However, when applied to real-world data and change points detected therein, they proved to be not as effective as the clustering measures.
 }
 
 \rqanswer{SQ2: Do existing metrics agree on the `best' approach when used to evaluate change point detection algorithms when applied to real-world data?}{
@@ -24,9 +24,11 @@ Binary Classification metrics performed well in simulation studies, fulfilling a
 When the algorithms were applied to real-world data sets, they behaved inconsistently, to the point where no measure agrees on which approach is `best' for all of the data sets evaluated. When the change point plots are examined by-eye, it is clear that the algorithms underperformed when used in this context. There were cases where the manual ground-truth annotations were \emph{almost} correctly detected by the algorithms, but there were also many situations in which the algorithm output did not closely match the ground truth at all. Despite this, the metrics being used still scored the algorithms highly in many cases (assuming a score $> 0.5$ to be a `successful' run).
 }
 
+\pagebreak
+
 \rqanswer{SQ3: Is there a metric more suited than the others, for the purpose of evaluating change point detections, according to the functional requirements set forth by the host company?}{
 
-\noindent When comparing the requirements against measure behaviour, it can be said that the answer to this question was inconclusive. There was no single measure that fulfilled all of the functional requirement criteria for the selection of change point detection method for this domain. Indeed, it can also be stated that there is also not a single algorithm among those evaluated that fulfilled all of the functional requirements set forth by the host organisation. Concluding, the author asserts that the results of these experiments show that change point detection is perhaps not the optimal method for producing `smart' notifications of changes in conversation volume, and a different approach not evaluated in this work may be more suited for this specific use-case.
+\noindent When comparing the requirements against measure behaviour, the answer to this question was inconclusive. There was no single measure that fulfilled all of the functional requirement criteria for the selection of change point detection method for this domain. Indeed, it can also be stated that there is also not a single algorithm among those evaluated that fulfilled all of the functional requirements set forth by the host organisation. Concluding, the author asserts that the results of these experiments show that change point detection is perhaps not the optimal method for producing `smart' notifications of changes in conversation volume, and a different approach not evaluated in this work may be more suited for this specific use-case.
 
 }
 
@@ -47,7 +49,7 @@ This is an area that would certainly benefit from further research - the other r
 
 \rqanswer{SQ5: Do metrics show that change point detection is a reasonable and effective approach for the use-case of the host organisation?}{
 
-\noindent The answer to this question has proven inconclusive. There are situations in which the algorithms performed well, detecting change points close to those that constituted the ground truth - but there were also many situations in which the algorithms did not perform in the manner expected. Late, early, and missed detections were common, with algorithms occasionally showing many false positive detections throughout the data set. This poses two more questions: Were the algorithms incorrectly configured in some way? Or perhaps the selection of penalty function was not appropriate for this particular type of data? Taken at face value, the answer to the question is `no' - though taking a closer look at the data provides a more nuanced answer. In order to answer this question fully, further work would certainly need to be carried out.
+\noindent The answer to this question has proven inconclusive. There are situations in which the algorithms performed well, detecting change points close to those that constituted the ground truth - but there were also many situations in which the algorithms did not perform in the manner expected. Late, early, and missed detections were common, with algorithms occasionally showing many false positive detections throughout the data set. This poses two more questions: Was the performance of these algorithms an artefact of algorithm configuration? Or, perhaps, was the selection of penalty function not appropriate for this particular type of data? Taken at face value, the answer to the research question is `no' - though taking a closer look at the data provides a more nuanced answer. In order to answer this question fully, further work would certainly need to be carried out.
 }
 
 \section{Threats to Validity}
@@ -59,7 +61,9 @@ It is not uncommon for an experiment or set of experiments to have some threats 
 
 Internal validity is defined as the extent to which bias is avoided and `confounding variables' are controlled to ensure the validity of the results.
 
-The internal validity was well ensured during the experiments carried out in this thesis. Real-world data analysis was carried out by obtaining ground-truth annotations from an independent third-party with domain knowledge of social media data, and variables in the experiments were controlled to ensure the validity of the results. Variations of the experiments were carried out such that data-set length did not confound the tests. For example, when investigating the effect of change point density on metric values, the experiment was carried out twice. Once increasing the change point density by appending data to the data set, and once increasing the change point density by `lifting' change points out of a static data set where all initial values were $0$. Thus, the author does not believe that there are any internal threats to validity in the experiments carried out in this work.
+The internal validity was well ensured during the experiments carried out in this thesis. Real-world data analysis was carried out by obtaining ground-truth annotations from an independent third-party with domain knowledge of social media data, and variables in the experiments were controlled to ensure the validity of the results. Variations of the experiments were carried out such that data-set length did not confound the tests. For example, when investigating the effect of change point density on metric values, the experiment was carried out twice. Once increasing the change point density by appending data to the data set, and once increasing the change point density by `lifting' change points out of a static data set where all initial values were $0$. 
+
+However, the fact that the simulation studies were designed in such a manner that the \emph{objective} was to discover situations in which evaluation measures failed in some way, may mean that there is some element of experimenter bias in effect. This could be mitigated by carrying out additional studies (such as described in \autoref{construct validity}) that cover more of the change point detection metric behaviour feature space, and thus also show situations in which they do behave well and/or correctly.
 
 \subsection{External Validity}
 
@@ -68,8 +72,9 @@ External validity is defined as the extent to which the results of an experiment
 In the studies carried out in this thesis, one external threat to validity is low sample size for the real-world data analysis. As 10 curated data sets were utilised for this part of the study, it can be said that there was not a large enough sample to be able to generalise the conclusions to situations outside of the scope of this thesis. This can be resolved in future work by carrying out experiments that make use of much larger and more varied data sets, in order to show that the conclusions of this thesis (with regards to the real-world data analysis and rankings therein) are also applicable outside of this work.
 
 \subsection{Construct Validity}
+\label{construct validity}
 
-Construct validity is defined as the extent to which an experiment fully tests the situation which it purports to be measuring.
+Construct validity is defined as the extent to which an experiment fully tests the situations which it purports to be measuring.
 
 In the experiments carried out in this thesis, experiments were carried out to evaluate the behaviour of certain metrics used to evaluate change point detection approaches. The conclusions of these experiments are valid, but could be improved by removing certain threats to construct validity.
 

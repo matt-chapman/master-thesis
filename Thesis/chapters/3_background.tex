@@ -4,8 +4,6 @@
 
 \section{Change Detection Algorithms}
 
-Change detection first came about as a quality control measure in manufacturing, and methods within this domain are generally referred to as \emph{control charts}. Since the inception of approaches such as CUSUM \cite{Page1954} that provide the possibility for on-line evaluation of continuous data streams, change detection has grown as a field. With applications such as epidemic detection, online reputation management and infrastructure error detection, change detection is hugely useful both as an academic problem and in production systems of myriad application.
-
 As the name suggests, change point detection methods are methods by which some \emph{change} can be detected in some data, be it a change in mean, variance or some other measure. Change point detection also encompasses the field of anomaly or outlier detection.
 
 This thesis work utilises three different change point detection methods, discussed forthwith.
@@ -14,7 +12,7 @@ This thesis work utilises three different change point detection methods, discus
 
 Pruned Exact Linear Time (\emph{PELT}) is a modern change point detection method proposed by \citeauthor{Killick2011a} in \citetitle{Killick2011a}, in 2012 \cite{Killick2011a}.
 
-PELT is an \emph{exact} method of computing change points, based on segmentation of data streams, in the same manner as Segment Neighbourhood and Binary Segmentation, the two other algorithms being utilised in this work. PELT is a modification of the \emph{Optimal Partitioning} method proposed by \citeauthor{Jackson2003} in 2003 \cite{Jackson2003}.
+PELT is an \emph{exact} method of computing change points, based on segmentation of data streams, in the same manner as Segment Neighbourhoods and Binary Segmentation, the two other algorithms being utilised in this work. PELT is a modification of the \emph{Optimal Partitioning} method proposed by \citeauthor{Jackson2003} in 2003 \cite{Jackson2003}.
 
 Jackson's method has a computational cost of $O(n^2)$, while Killick's PELT method improves on this with a computational complexity of $O(n)$ \cite{Killick2011a}. PELT achieves this by introducing a `pruning' step in the algorithm (as the name suggests) in which as the algorithm iterates, it removes any values of $\tau$ (see Algorithm \autoref{alg:pelt} for definition) that could not possibly be a minima of the operation in line 2 of Algorithm \autoref{alg:pelt}.
 
@@ -43,7 +41,7 @@ Algorithm \autoref{alg:pelt} describes a pseudocode implementation of the PELT a
 
 \subsection{Segment Neighbourhoods}
 
-Proposed by Auger and Lawrence in 1989 \cite{Auger1989}, Segment Neighbourhood (\emph{SegNeigh}) is an example of an exact segmentation algorithm for the detection of change points in data. SegNeigh utilises dynamic programming to search the segmentation space (defined as the maximum number of change points in a given data stream) and then compute the cost function for every possible segmentation of the data. In this way, the location and number of change points can be computed exactly by taking the segmentation that returns the lowest cost function result.
+Proposed by Auger and Lawrence in 1989 \cite{Auger1989}, Segment Neighbourhoods (\emph{SegNeigh}) is an example of an exact segmentation algorithm for the detection of change points in data. SegNeigh utilises dynamic programming to search the segmentation space (defined as the maximum number of change points in a given data stream) and then compute the cost function for every possible segmentation of the data. In this way, the location and number of change points can be computed exactly by taking the segmentation that returns the lowest cost function result.
 
 Segment Neighbourhoods has a computational complexity of $O(n^2)$, significantly higher than that of PELT or Binary Segmentation. However, this additional cost in complexity is offset by improved performance when compared to Binary Segmentation, as shown by \citeauthor{Braun2000} in \citetitle{Braun2000} \cite{Braun2000}.
 
@@ -58,7 +56,7 @@ Algorithm \autoref{alg:segneigh} describes a pseudocode implementation of the Se
     \SetKwInOut{Output}{Output}
     \KwIn{A set of data of the form, $(y_1, y_2, \dots, y_n)$\newline
         A measure of fit $R(.)$ dependent on the data which needs to be minimised.\newline
-        An integer, $M-1$ specifying the maximum number of change points to find.}
+        An integer, $M-1$ specifying the maximum number of change points to find.}\bigskip
     \Initialise{Let $n$ = length of data.\newline
         Calculate $q^1_{i,j} = R(y_{i:j})$ for all $i, j \in \lbrack 1,n \rbrack$ such that $i < j$.\newline}
         
@@ -126,7 +124,7 @@ Change detection is an \emph{unbounded} problem. Left without some system of con
 
 Penalty scores operate as a mechanism for optimising an unbounded problem such as the one being addressed here. Publications on the subject (such as \citetitle{Haynes2014} by \citeauthor{Haynes2014} \cite{Haynes2014}) define the problem as follows: Given time series data points $y_1,\ldots,y_n$, the series will contain $m$ change points such that their locations $\tau_{1:m} = (\tau_1,\ldots,\tau_m)$, where $\{\tau_i \in \mathbb{Z} \mid 1 \leqslant \tau_i \leqslant n-1\}$. $\tau_0$ is assumed to be 0, and $\tau_{m+1}$ is assumed to be $n$. In this way we can state that a given change detection algorithm will split the time series into $m + 1$ segments such that segment $i$ contains the points $y_{(\tau_{i-1}+1):\tau_i} = (y_{\tau_{i-1} + 1},\dots,y_{\tau_i})$. A \emph{cost function} for a segmentation of the data set $y_s$ can be defined as $C = (y_{s+1:t})$. This cost function defines a cost for a given segmentation containing points $y_{s+1:t}$. To illustrate, the cost function $C$, in the context of binary classification, returns a value that increases for an `incorrect' classification and decreases for a `correct' classification. More intuitively, $C$ can be defined as a value that decreases when a change point is introduced into a segmentation being passed as an argument to $C$.
 
-At this point it can be stated that the \emph{constrained minimisation problem} is as follows:
+At this point it can be stated that the \emph{constrained minimisation problem} is \autoref{unbounded}:
 
 \begin{equation}
 \label{unbounded}
@@ -135,23 +133,23 @@ At this point it can be stated that the \emph{constrained minimisation problem} 
 
 \autoref{unbounded} is an equation showing the optimisation problem that change point detection presents. If the equation is taken intuitively, it shows that for a dataset with a \emph{known} number of change points, the segmentation of the data around the change points can be effectively estimated by obtaining the segmentation that returns the minimum total cost based on the sum of cost function $C$.
 
-However, the problem being solved by many change detection algorithms involves an unknown number of change points, at unknown locations. In this case we can estimate the following to obtain the number and location of the change points:
+However, the problem being solved by many change detection algorithms involves an unknown number of change points, at unknown locations. In this case we can estimate the output of \autoref{eqn:penalty} to obtain the number and location of the change points:
 
 \begin{equation}
 \label{eqn:penalty}
     \min_{m} \big\{ Q_m(y_{1:n}) + f(m) \big\}
 \end{equation}
 
-\autoref{eqn:penalty} includes a \emph{penalty function} $f(m)$ that increases proportionally with the number of change points $m$. Essentially, as the segmentation calculated as $Q_m$ increases in size, so does the result of the penalty function $f(m)$. These two elements are at-odds with each other, presenting a problem that requires optimisation to correctly estimate the number and location of change points in the data set $y_s$. If $f(m)$ increases in a linear fashion with $m$, we can define a \emph{penalised minimisation problem} in the following manner:
+\autoref{eqn:penalty} includes a \emph{penalty function} $f(m)$ that increases proportionally with the number of change points $m$. Essentially, as the segmentation calculated as $Q_m$ increases in size, so does the result of the penalty function $f(m)$. These two elements are at-odds with each other, presenting a problem that requires optimisation to correctly estimate the number and location of change points in the data set $y_s$. If $f(m)$ increases in a linear fashion with $m$, we can define the \emph{penalised minimisation problem} in \autoref{bounded}:
 
 \begin{equation}
 \label{bounded}
     Q_m(y_{1:n}, \beta) = \min_{m,\tau_{1:m}} \Bigg\{ \sum^{m+1}_{i=1}[C(y_{(\tau_{i - 1} + 1):\tau_i}) + \beta] \Bigg\}
 \end{equation}
 
-In this equation, $\beta$ is the penalty function defined previously as $f(m)$.
+In \autoref{bounded}, $\beta$ is the penalty function defined previously as $f(m)$.
 
-There are a number of established approaches to calculating penalty values for unbounded problems, chiefly among which are Schwarz Information Criterion (SIC)/Bayesian Information Criterion (BIC) \cite{Schwarz1978}, Akaike Information Criterion (AIC) \cite{Akaike1974} and Hannan-Quinn \cite{Journal2009}. Of these approaches, it is necessary to experiment to find the scheme that produces the `correct' number of change points for a given dataset. The penalty schemes are defined as follows:
+There are a number of established approaches to calculating penalty values for unbounded problems (such as search or information retrieval for example), chiefly among which are Schwarz Information Criterion (SIC)/Bayesian Information Criterion (BIC) \cite{Schwarz1978}, Akaike Information Criterion (AIC) \cite{Akaike1974} and Hannan-Quinn \cite{Journal2009}. Of these approaches, it is necessary to experiment to find the scheme that produces the `correct' number of change points for a given dataset. The penalty schemes are defined as follows:
 
 \begin{align}
     \text{SIC} &= \ln(n) k - 2 \ln(\hat{L})\\
@@ -165,7 +163,7 @@ The penalty function returns a value which is represented by $\beta$ in \autoref
 
 The \texttt{changepoint} package requires the provision of a penalty function for each algorithm, which has been chosen as `SIC' for this research. This decision is based upon advice published in \cite{Eckley2011}, in which it is stated that AIC (while popular in the field of change point detection as a penalty term) tends to asymptotically overestimate $k$.
 
-While the selection of an optimal penalty term for a given data set and change point detection algorithm is an open research question in itself. There exists a method, \emph{Changepoints for a Range of Penalties} (CROPS) \cite{Haynes2014}, in which a change detection algorithm (PELT, in this case) is repeatedly executed in such a fashion that allows for the plotting of the number change points detected against the penalty value used. When conducting analysis against a single, static data source (offline analysis), this method can be useful for ensuring optimal penalty term selection.
+The selection of an optimal penalty term for a given data set and change point detection algorithm is an open research question in itself. There exists a method, \emph{Changepoints for a Range of Penalties} (CROPS) \cite{Haynes2014}, in which a change detection algorithm (PELT, in this case) is repeatedly executed in such a fashion that allows for the plotting of the number change points detected against the penalty value used. When conducting analysis against a single, static data source (offline analysis), this method can be useful for ensuring optimal penalty term selection.
 
 \begin{figure}[h]
 \centering
@@ -176,7 +174,7 @@ While the selection of an optimal penalty term for a given data set and change p
 
 \autoref{fig:CROPS} shows an example of the output of the CROPS algorithm, when executed against the `Rabobank' data set used in the real-world data analysis. To read this output, the optimal penalty value should be chosen such that the plot at that point has begun to level off, showing a fast increase in the number of change points for penalty values lower than this. This example shows an optimal penalty value of about 6 (backed up by the algorithm output of a penalty value of 6.21 for 2 change points - signified by the dash-dot red line on the plot). The penalty value for the same data set computed with SIC is 8.16 (signified by the dotted red line on the plot), which also results in a total of two change points being detected. Because the PELT algorithm has a computational complexity of $O(n)$, if it is necessary to carry out an analysis such as this for a static data set, it would be easy to do so.
 
-However, the usefulness of such a method for application to streaming (online) data sets is questionable.
+However, the utility of such a method for application to streaming (online) data sets is questionable.
 
 
 \subsection{Distribution Assumptions}
@@ -231,7 +229,7 @@ This measure is utilised for testing accuracy in problems of binary classificati
         \end{center}
 	\end{figure}
 		
-	Precision and Recall were proposed by \citeauthor{Kent1955}, in \citetitle{Kent1955}, for the purposes of scoring the effectiveness of information retrieval methods \cite{Kent1955}.
+	Precision and Recall were proposed by \citeauthor{Kent1955}, in \citetitle{Kent1955}, for the purposes of evaluating the accuracy of information retrieval methods \cite{Kent1955}.
 		
 	$Recall$ is computed as the number of correct positive results, divided by the number of positive results that should have been detected. $Precision$ is computed as the number of correct positive results divided by the number of all possible positive results:
 	
@@ -240,26 +238,28 @@ This measure is utilised for testing accuracy in problems of binary classificati
 	    Recall = \frac{TP}{TP + FN}
 	\end{eqnarray}
 		
-	The F1 score calculation (the harmonic mean of both recall and precision) can be described in general terms as follows \cite{VanRijsbergen1979}:
+	The F1 score calculation (the harmonic mean of both recall and precision) can be described in general terms as in \autoref{equ:F1} \cite{VanRijsbergen1979}:
 
 	\begin{equation}
 		F_1 = 2 \cdot \frac{1}{\frac{1}{recall} + \frac{1}{precision}} = 2 \cdot \frac{precision \cdot recall}{precision+recall}
 		\label{equ:F1}
 	\end{equation}
 
-    The F1 score was first proposed by \citeauthor{VanRijsbergen1979} in his seminal work, \citetitle{VanRijsbergen1979}.
+    The F1 score was first proposed by \citeauthor{VanRijsbergen1979} in his seminal work, \citetitle{VanRijsbergen1979} \cite{VanRijsbergen1979}.
 
 	As the F1 score is a binary classification measure, it can only be used to test the precision of an algorithm in a single domain, that is, was the change detected or not. Precision, Recall and F1 Score all provide a score $s$ such that $ \{s\in\mathbb{R} \mid 0\leq s \leq 1\} $.
 
 \subsection{Rand Index}
 
-This measure is for computing the similarity between two clusters of data points. It is used for calculating the overall accuracy of a given clustering approach, when compared against a set of ground truth clusters. It was first proposed by \citeauthor{Rand1971} in \citetitle{Rand1971} \cite{Rand1971}. It was used by \citeauthor{Matteson2012} in \citetitle{Matteson2012} for the purposes of evaluating change point detection approaches \cite{Matteson2012}. The Rand Index is defined as:
+This measure is designed for computing the similarity between two clusters of data points. It is used for calculating the overall accuracy of a given clustering approach, when compared against a set of ground truth clusters. It was first proposed by \citeauthor{Rand1971} in \citetitle{Rand1971} \cite{Rand1971}. It was used by \citeauthor{Matteson2012} in \citetitle{Matteson2012} for the purposes of evaluating change point detection approaches \cite{Matteson2012}. The Rand Index is defined as:
 
 	\begin{equation}
 		R = \frac{a+b}{a+b+c+d}
 	\end{equation}
 	
-	Given a set of data points $S$, partitioned through two different methods, which shall be referred to as $X$ and $Y$, the following can be defined:
+	Given a set of data points $S$, partitioned (clustered) through two different methods, which shall be referred to as $X$ and $Y$, the following can be defined:
+	
+	\pagebreak[3]
 	
 	\begin{itemize}
 		\item $a$ = total number of pairs that were partitioned into the \emph{same} subset by both $X$ and $Y$
@@ -272,13 +272,13 @@ This measure is for computing the similarity between two clusters of data points
 	
 \subsection{Adjusted Rand Index}
 	
-Similar to the Rand Index, but adjusted to take into account the random chance of pairs being assigned to the same cluster by both approaches being compared. While the Rand Index is suited for comparing a segmentation method against a known-good \emph{oracle} method, the adjusted index is also suited to comparing two differing approaches \cite{Matteson2012}. It was first proposed by \citeauthor{Hubert1985} in \citetitle{Hubert1985} \cite{Hubert1985}. It was utilised as a similarity measure for computed clusters created by segmentation of data sets in \cite{Matteson2012}. It is defined as:
+The Adjusted Rand Index is similar to the Rand Index, but adjusted to take into account the random chance of pairs being assigned to the same cluster by both approaches being compared. While the Rand Index is suited for comparing a segmentation method against a known-good \emph{oracle} method, the adjusted index is also suited to comparing two differing approaches \cite{Matteson2012}. It was first proposed by \citeauthor{Hubert1985} in \citetitle{Hubert1985} \cite{Hubert1985}. It was utilised as a similarity measure for computed clusters created by segmentation of data sets by \citeauthor{Matteson2012} \cite{Matteson2012}. It is defined as:
 	
 	\begin{equation}
 	    R_{adjusted} = \frac{R - R_{expected}}{R_{max} - R_{expected}}
 	\end{equation}
 	
-	where $R_{expected}$ is defined as the expected Rand Index score for two completely random classifications of the given data \cite{Matteson2012} and $R_{max}$ is defined as the maximum Rand Index value - generally $1$.
+	where $R_{expected}$ is defined as the expected Rand Index score for two completely random classifications of the given data \cite{Matteson2012} and $R_{max}$ is defined as the maximum Rand Index value - generally $1$. $R$ is defined as the result provided by the `standard' Rand Index.
 	
 	The Adjusted Rand Index provides a score $s$ such that $ \{s\in\mathbb{R} \mid -1\leq s \leq 1\} $. This is different to the score returned by the `basic' Rand Index, in that it is possible for a negative value to be returned.
 		
@@ -301,7 +301,7 @@ This measure was not found to be in use for the purposes of evaluating change po
 	
 	\autoref{eqn:correctness} can be stated intuitively as returning $1$ if and only if both the ground truth and computed clusterings place the element $e$ into the same cluster, returning $0$ in all other cases.
 	
-	Precision and Recall can then be calculated as follows:
+	Precision and Recall can then be calculated as in \autoref{eqn:bcubed-precision} and \autoref{eqn:bcubed-recall}.
 	
     \begin{align}
     \label{eqn:bcubed-precision}

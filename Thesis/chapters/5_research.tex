@@ -2,15 +2,6 @@
 
 \begin{document}
 
-\section{Introduction}
-
-This section of the thesis describes the execution, results and conclusions of each individual study carried out. It is divided into two sections:
-
-\begin{itemize}
-    \item Simulation studies - taking simulated data and simulated algorithm results to analyse the impact of various cases on calculated measures.
-    \item Real-World Data - taking a set of real world twitter data and analysing the ability of change detection algorithms to detect changes in the data compared with established ground truth change points.
-\end{itemize}
-
 \section{Simulation Studies}
 
 The simulation studies carried out are intended to compare each of the measures against the set of criteria described in \autoref{meta analysis explainer}. The simulations are carried out according to the experiment descriptions previously explained, and the execution and results are presented here.
@@ -75,6 +66,8 @@ The experiment run for this criteria is similar to those run in \autoref{sample 
 The Adjusted Rand Index exhibits behaviour unique to itself, with a value approaching 0 as the change points approach either end of time series. From position 150 to 350, the Adjusted Rand Index holds an almost constant value.
 
 From these results it can be inferred that it is only the Adjusted Rand Index that is effected in any meaningful way by the position of the change point in a fixed length data set. For readability, the hypotheses are again stated here:
+
+\pagebreak[3]
 
 \begin{hypothesis*}
     The measures will be affected in some way by additional points before or after the change point. It is also hypothesised that data set length will have an affect on the metric value.
@@ -238,7 +231,7 @@ Analysis of the raw data used for \autoref{fig:PrettyPlot} shows that while ther
 
 \autoref{fig:PrettyPlot} shows a plot of average score values across all real-world data sets, from each algorithm. The error bars are drawn to show 1 standard deviation of error.
 
-Taking the mean metric score for each algorithm across all of the experiments, we can rank the algorithms as follows, using the four main metrics that this research was focussing on:
+Taking the mean metric score for each algorithm across all of the experiments, we can rank the algorithms as shown in \autoref{tab:rankings}, using the four main metrics that this research was focussing on.
 
 \begin{table}[h]
 \centering
@@ -258,6 +251,8 @@ Taking the mean metric score for each algorithm across all of the experiments, w
 \caption{Algorithm Rankings}
 \label{tab:rankings}
 \end{table}
+
+\pagebreak
 
 Here it is clear that while there appears to be a consensus on the `best' algorithm in this limited trial, the remaining rankings vary somewhat. In order to analyse this, the \emph{Kendall's Tau} coefficient of ranking correlation is utilised \cite{KENDALL1938}. This measure produces values of 1 for identical rankings, and -1 for fully different rankings. The results of this calculation are shown in \autoref{tab:tau}.
 

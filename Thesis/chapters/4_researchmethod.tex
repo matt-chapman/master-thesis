@@ -2,28 +2,17 @@
 
 \begin{document}
 
-\section{Introduction}
-
-The purpose of this thesis is twofold: firstly, to conduct a meta analysis of evaluation measures, and how they perform in the domain of change point detection problems. Being that these measures are metrics designed for other problems that are not necessarily change point detection, it stands to reason that there are perhaps situations where families of metrics will disagree with each-other, or disagree with by-eye evaluation by domain experts. The second purpose is to evaluate the veracity of a number of existing change point detection algorithms when they are applied to data from social media.
-
-This thesis consists of two distinct pieces of research:
-
-\begin{itemize}
-  \item Meta-analysis of evaluation measures.
-  \item Application of change detection approaches to real-world data and evaluation based on requirements elicitation and evaluation measures.
-\end{itemize}
-
 \section{Evaluation Pipeline Construction}
 
 This thesis will analyse three different change detection algorithms: \emph{Pruned Exact Linear Time} \cite{Killick2011a}, \emph{Binary Segmentation} \cite{Jackson2003} and \emph{Segment Neighbourhoods} \cite{Auger1989}. These will be referred to as \emph{PELT}, \emph{BinSeg} and \emph{SegNeigh} respectively. The algorithms have been briefly discussed in a previous chapter (\autoref{background}), along with the chosen critical values such as \emph{penalty scoring} and \emph{assumed underlying distribution}.
 
-The algorithms will then be applied to a collection of datasets falling into two categories: real-world conversation volume data taken from online social media as well as print media, TV and radio sources, and simulated data generated according to certain constraints which will also be discussed here.
+The algorithms are then applied to a collection of datasets falling into two categories: real-world conversation volume data taken from online social media as well as print media, TV and radio sources, and simulated data generated according to certain constraints which will also be discussed here.
 
-The results provided by each technique will then be evaluated according to the following measures: Precision, Recall, F1 score, Rand Index, Adjusted Rand Index, Bcubed Precision, Bcubed Recall and Bcubed F-Score. A meta-analysis will take place to evaluate the effectiveness of these methods when compared with each other and by-eye analysis from social media domain experts.
+The results provided by each technique will then be evaluated according to the following measures: Precision, Recall, F1 score, Rand Index, Adjusted Rand Index, BCubed Precision, BCubed Recall and BCubed F-Score. A meta-analysis will take place to evaluate the effectiveness of these methods when compared with each other and by-eye analysis from social media domain experts.
 
-The method of evaluating the approaches will be developed using a combination of Python and \textsf{R}. \textsf{R} is a combined language and environment created for the purpose of statistical computing \cite{RCoreTeam2017}.
+The method of evaluating the approaches will be developed using a combination of Python and \textsf{R}. \textsf{R} is a combined high-level programming language and environment created for the purpose of statistical computing \cite{RCoreTeam2017}.
 
-Python is being utilised also due to the availability of relevant software packages for the purposes of evaluation measure calculation.
+Python is being utilised also due to the availability of relevant software packages for the purposes of evaluation measure calculation, as well as the author's previous experience with the language.
 
 \subsection{Calculation of Changepoint Locations}
 
@@ -35,9 +24,9 @@ Python is being utilised also due to the availability of relevant software packa
 
 For the calculation of Precision, Recall and F1 Score, the \textsf{R} package \texttt{caret} is being utilised. \texttt{caret} is an acronym for `Classification and Regression Training, and provides a number of tools for data manipulation, model creation and tuning, and performance measurements. Through the use of this package, it is possible to generate a \emph{confusion matrix} based on algorithm output, and generate various performance measures based upon this. \texttt{caret} was written by Max Kuhn, and is provided free of charge under the GPL license \cite{FromJedWing2017}.
 
-For the calculation of the Rand Index and Adjusted Rand Index, the \textsf{R} package \texttt{phyclust} is being used. This package was developed by Wei-Chen Chen, for the purposes of providing a phyloclustering implementation. While this approach is not something being examined in this thesis, the package does provide an implementation of the Rand Index and Adjusted Rand Index metrics, which are relevant to this research. This package is also provided free of charge under the GPL license \cite{Chen2011}.
+For the calculation of the Rand Index and Adjusted Rand Index, the \textsf{R} package \texttt{phyclust} is being used. This package was developed by Wei-Chen Chen, for the purposes of providing a phyloclustering implementation. While this is not something being examined in this thesis, the package does provide an implementation of the Rand Index and Adjusted Rand Index metrics, which are relevant to this research. This package is also provided free of charge under the GPL license \cite{Chen2011}.
 
-Calculating the BCubed precision, recall and f-score metrics is being carried out in Python, using the \texttt{python-bcubed} project. This is a small utility library for the calculation of BCubed metrics, developed by Hugo Hromic and provided under the MIT license \cite{Hromic2016}. In order to interface with this library via \textsf{R}, the package \texttt{rPython} is being used. This package provides functionality for running Python code and retrieving results in \textsf{R}, and was developed by Carlos J. Gil Bellosta. It is provided under a GPL-2 license \cite{Bellosta2015}.
+Calculation of the BCubed precision, recall and f-score metrics is being carried out in Python, using the \texttt{python-bcubed} project. This is a small utility library for the calculation of BCubed metrics, developed by Hugo Hromic and provided under the MIT license \cite{Hromic2016}. In order to interface with this library via \textsf{R}, the package \texttt{rPython} is being used. This package provides functionality for running Python code and retrieving results in \textsf{R}, and was developed by Carlos J. Gil Bellosta. It is provided under a GPL-2 license \cite{Bellosta2015}.
 
 Additionally, the \texttt{ROCR} package was utilised during the research phase of this project to generate Receiver Operating Characteristic (ROC) curves - a method used by some publications to evaluate change point detection methods. While ROC curves are not being utilised to produce the results published in this thesis, it was nonetheless an important part of the research, and provided useful insights into binary classification as a field and as a method of evaluation. \texttt{ROCR} was developed by Tobias Sing et. al. and is provided free of charge under a GPL license \cite{Sing2005}
 
@@ -79,7 +68,7 @@ For each experiment, a null hypothesis $H_0$ is defined, along with an alternati
 
 \subsubsection{Experiment 1: Increasing the `head', variable length}
 
-This experiment involves increasing the `head' (sample size prior to a single known change point) of a time series, prepending to and thus lengthening the time series. The time series contains a single known change point, and a detected change point provided by a pseudo-algorithm is placed such that it is placed with a $\Delta \tau$ of 5.
+This experiment involves increasing the `head' (sample size prior to a single known change point) of a time series, prepending to and thus lengthening the time series. The time series contains a single known change point, and a detected change point provided by a pseudo-algorithm is placed such that $\Delta \tau = 5$.
 
 For each prepended point, all of the evaluation metrics are calculated and plotted. The experiment evaluates both criteria 1 and 2.
 
@@ -224,9 +213,9 @@ The experiment is being carried out using conversation volume data taken from Bu
 
 Brandmonitor harvests postings from various social media APIs (in addition to connections with print, TV and radio media) and makes them searchable through a bespoke interface as well as providing a number of useful metrics for reputation management.
 
-In order to gain data for this experiment, Social Media Analysts from Buzzcapture were requested to provide query strings for the Brandmonitor application, showing a situation where they feel a client should have been informed of a distinct change in conversation volume. The data was then manually annotated by Buzzcapture's Head of Research, with the points at which they believe a notification should be sent to a client due to a change in conversation volume. In this way, bias is avoided when establishing the ground truth for the data - the author of this work was not involved in this annotation process other than providing instructions for carrying out the annotation. The result of this exercise is then a set of time series' showing the conversation volume over time for a given brand. This is accompanied by a separate data set containing indices at which changes \emph{should} be detected - thus serving as the ground truth for this part of the experiment.
+In order to gain data for this experiment, Social Media Analysts from Buzzcapture were asked to provide query strings for the Brandmonitor application, showing a situation where they feel a client should have been informed of a distinct change in conversation volume. The data was then manually annotated by Buzzcapture's Head of Research, with the points at which they believed a notification should be sent to a client due to a change in conversation volume. In this way, bias is avoided when establishing the ground truth for the data - the author of this work was not involved in this annotation process other than providing instructions for carrying out the annotation. The result of this exercise is then a set of time series' showing the conversation volume over time for a given brand. This is accompanied by a separate data set containing indices at which changes \emph{should} be detected - thus serving as the ground truth for this part of the experiment.
 
-Once the query strings provided were executed, the corpus of test data included the following data sets:
+Once the query strings provided were executed, the corpus of test data included the following data sets, each pertaining to a specific brand:
 
 \begin{tasks}[label=$\bullet$](3)
 \task Dirk
@@ -245,7 +234,7 @@ All data sets were trimmed such that the sample size equals 60 days for every se
 
 \subsection{Execution}
 
-To perform the experiment, an \textsf{R} script is executed that reads the CSV file containing the data points being analysed, and reads them into a data frame object. At this point, change point analysis is conducted using the following test statistics and algorithms:
+To perform the experiment, an \textsf{R} script is executed that reads the CSV file containing the data points being analysed, and stores them in a data frame object. At this point, change point analysis is conducted using the following test statistics and algorithms:
 
 \begin{table}[h]
 \centering
@@ -269,7 +258,9 @@ Once all of the analysis methods have been executed successfully, the change poi
 
 There are some assumptions made when handling this data. Firstly, for the binary classification measure, as the data being used in this study consists of daily conversation volume statistics, anything other than an \emph{exact} detection when compared with the ground truth is considered a \emph{failure}. Detections of a change a day after the true change point are too late for useful notifications to be sent in a production system. Detections prior to the true change point, while possibly useful in some way for predicting a future change (certainly in a production system), are also considered a \emph{failure}. The clustering measures should not be affected by this assumption, as by their nature they should provide a more granular score for detections slightly before or after the ground truth change point.
 
-Secondly, as discussed before, the algorithms being evaluated require some assumption to be made as to the probabilistic distribution of the data being analysed. Diagnostic histogram plots created prior to experimentation showed that the various data sets varied considerably in terms of the probability distribution of data points. It is possible for algorithms configured to use a mean test to be configured to use a CUSUM test statistic that makes no assumption about the data distribution being analysed. Unfortunately, at the time of the experiments, the CUSUM test statistic was not supported for variance or mean/variance tests. The variance and mean/variance tests allow for the selection of other distributions such as poisson and gamma. As such, all algorithm runs were configured to assume a \emph{normal} probability distribution. While this assumption may not hold for all of the data sets, it is necessary to take this step to ensure a like for like comparison as much as possible.
+Secondly, as discussed before, the algorithms being evaluated require some assumption to be made as to the probabilistic distribution of the data being analysed. Diagnostic histogram plots created prior to experimentation showed that the various data sets varied considerably in terms of the probability distribution of data points. It is possible for algorithms configured to use a change in mean as the trigger statistic to be configured to use a CUSUM test statistic that makes no assumption about the data distribution being analysed. Unfortunately, at the time of the experiments, the CUSUM test statistic was not supported for variance or mean/variance tests. The variance and mean/variance tests allow for the selection of other distributions such as poisson and gamma. As such, all algorithm runs were configured to assume a \emph{normal} probability distribution. While this assumption may not hold for all of the data sets, it is necessary to take this step to ensure a like for like comparison as much as possible.
+
+\pagebreak[3]
 
 After all of the metrics are calculated and tabulated, it is possible to see which algorithm performed the `best', and also carry out a comparison analysis to see which algorithms provided the most consistent results against all data sets.
 
